@@ -1,0 +1,801 @@
+{% extends "base.html" %}
+{% block title %}Home | Placement Portal{% endblock %}
+{% block content %}
+
+<!-- Animated Background -->
+<div class="animated-bg">
+    <div class="gradient-sphere"></div>
+    <div class="gradient-sphere-2"></div>
+</div>
+
+<!-- Hero Section with 3D Elements -->
+<section class="hero-section position-relative overflow-hidden">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row min-vh-80 align-items-center py-5">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                <div class="badge-container mb-4">
+                    <span class="tech-badge">
+                        <i class="fas fa-robot me-2"></i>AI-Powered
+                    </span>
+                    <span class="tech-badge ms-2">
+                        <i class="fas fa-shield-alt me-2"></i>Secure
+                    </span>
+                </div>
+                <h1 class="display-3 fw-bold gradient-text mb-4">
+                    Welcome to the Future of <span class="text-primary">Campus Recruitment</span>
+                </h1>
+                <p class="lead text-secondary-light mb-4">
+                    Experience the next-generation placement management system with real-time analytics, 
+                    smart matching, and seamless collaboration.
+                </p>
+                
+                <div class="stats-container d-flex gap-4 mb-5">
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">500+</div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">10k+</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">95%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000">
+                <div class="hero-visual">
+                    <div class="floating-card card-1 glass-effect">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Real-time Analytics</span>
+                    </div>
+                    <div class="floating-card card-2 glass-effect">
+                        <i class="fas fa-magic"></i>
+                        <span>AI Matching</span>
+                    </div>
+                    <div class="floating-card card-3 glass-effect">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Portal</span>
+                    </div>
+                    <div class="cube-container">
+                        <div class="cube">
+                            <div class="cube-face front glass-effect"></div>
+                            <div class="cube-face back glass-effect"></div>
+                            <div class="cube-face right glass-effect"></div>
+                            <div class="cube-face left glass-effect"></div>
+                            <div class="cube-face top glass-effect"></div>
+                            <div class="cube-face bottom glass-effect"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section with Enhanced Glass Icons -->
+<section class="features-section py-6 position-relative">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-badge">POWERFUL FEATURES</span>
+            <h2 class="display-5 fw-bold gradient-text mt-3">Why Industry Leaders Choose Us</h2>
+            <p class="text-secondary-light">Revolutionizing campus recruitment with cutting-edge technology</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for feature in [
+                {'icon': 'brain', 'title': 'AI-Powered Matching', 'desc': 'Smart algorithms match students with ideal opportunities', 'gradient': 'primary-gradient'},
+                {'icon': 'check-circle', 'title': 'Smart Workflows', 'desc': 'Automated approval processes with real-time updates', 'gradient': 'success-gradient'},
+                {'icon': 'file-alt', 'title': 'Digital Portfolios', 'desc': 'Rich media resumes with video introductions', 'gradient': 'danger-gradient'},
+                {'icon': 'chart-simple', 'title': 'Analytics Dashboard', 'desc': 'Comprehensive insights and predictive analytics', 'gradient': 'info-gradient'},
+                {'icon': 'filter', 'title': 'Smart Filters', 'desc': 'Advanced blacklisting and compliance tools', 'gradient': 'warning-gradient'},
+                {'icon': 'rocket', 'title': 'Instant Applications', 'desc': 'One-click apply with intelligent form filling', 'gradient': 'secondary-gradient'}
+            ] %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="feature-card glass-card h-100">
+                    <div class="card-content">
+                        <div class="feature-icon-wrapper {{ feature.gradient }}">
+                            <i class="fas fa-{{ feature.icon }}"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="feature-title">{{ feature.title }}</h5>
+                        <p class="feature-desc text-secondary-light">{{ feature.desc }}</p>
+                        <div class="feature-hover-effect"></div>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- How It Works - Timeline -->
+<section class="timeline-section py-6 position-relative">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div style="height: 25px;"></div>
+            <h2 class="display-5 fw-bold gradient-text mt-3">Three Steps to Success</h2>
+            <p class="text-secondary-light">Your journey to a successful placement starts here</p>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="row">
+                {% for step in [
+                    {'num': '01', 'title': 'Create Account', 'desc': 'Quick registration with role-based profiles', 'icon': 'user-plus'},
+                    {'num': '02', 'title': 'Get Verified', 'desc': 'Fast-track approval process with admin', 'icon': 'shield-alt'},
+                    {'num': '03', 'title': 'Achieve Goals', 'desc': 'Connect, apply, and secure your future', 'icon': 'trophy'}
+                ] %}
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="{{ loop.index * 200 }}">
+                    <div class="timeline-item text-center">
+                        <div class="timeline-number">{{ step.num }}</div>
+                        <div class="timeline-icon glass-effect">
+                            <i class="fas fa-{{ step.icon }}"></i>
+                        </div>
+                        <h4>{{ step.title }}</h4>
+                        <p class="text-secondary-light">{{ step.desc }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Key Features & Benefits Section - Replacing Testimonials -->
+<section class="benefits-section py-6">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div style="height: 50px;"></div>
+            <h2 class="display-5 fw-bold gradient-text mt-3">Key Features & Benefits</h2>
+            <p class="text-secondary-light">Everything you need for successful campus placements</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="benefit-card glass-card">
+                    <div class="benefit-icon-wrapper">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h5 class="benefit-title">Lightning Fast</h5>
+                    <p class="benefit-desc">Process applications and shortlist candidates in minutes, not days</p>
+                    <div class="benefit-stats">
+                        <span class="stat-highlight">90%</span>
+                        <span class="stat-label">faster processing</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="benefit-card glass-card">
+                    <div class="benefit-icon-wrapper success">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h5 class="benefit-title">Smart Analytics</h5>
+                    <p class="benefit-desc">Real-time insights into application trends and success rates</p>
+                    <div class="benefit-stats">
+                        <span class="stat-highlight">15+</span>
+                        <span class="stat-label">analytics metrics</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="benefit-card glass-card">
+                    <div class="benefit-icon-wrapper warning">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5 class="benefit-title">Secure & Compliant</h5>
+                    <p class="benefit-desc">Enterprise-grade security with data protection and privacy</p>
+                    <div class="benefit-stats">
+                        <span class="stat-highlight">100%</span>
+                        <span class="stat-label">data encrypted</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="benefit-card glass-card">
+                    <div class="benefit-icon-wrapper info">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h5 class="benefit-title">24/7 Support</h5>
+                    <p class="benefit-desc">Dedicated support team available round the clock</p>
+                    <div class="benefit-stats">
+                        <span class="stat-highlight">&lt;1hr</span>
+                        <span class="stat-label">response time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 100px;"></div>
+    </div>
+</section>
+
+<!-- CTA Section with Parallax -->
+<section class="cta-section py-6 position-relative overflow-hidden">
+    <div class="parallax-bg"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8" data-aos="zoom-in">
+                <div style="height: 25px;"></div>
+                <h2 class="display-5 fw-bold text-white mb-4">Ready to Transform Your Placement Process?</h2>
+                <p class="text-white-50 mb-5">Join thousands of successful recruitments happening on our platform</p>
+                {% if not current_user.is_authenticated %}
+                <div class="button-group">
+                    <a href="{{ url_for('register_student') }}" class="btn btn-light btn-lg btn-glow-light me-3 glass-effect">
+                        <i class="fas fa-user-graduate me-2"></i>Get Started as Student
+                    </a>
+                    <a href="{{ url_for('register_company') }}" class="btn btn-outline-light btn-lg glass-effect">
+                        <i class="fas fa-building me-2"></i>Register Company
+                    </a>
+                </div>
+                {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg btn-glow-light glass-effect">
+                    <i class="fas fa-tachometer-alt me-2"></i>Access Dashboard
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add these enhanced styles -->
+<style>
+:root {
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+}
+
+/* Glass Effect Base */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+/* Animated Background */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.gradient-sphere {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.1) 70%);
+    border-radius: 50%;
+    top: -400px;
+    right: -200px;
+    animation: float 20s ease-in-out infinite;
+}
+
+.gradient-sphere-2 {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 13, 255, 0.15) 0%, rgba(107, 115, 255, 0.1) 70%);
+    border-radius: 50%;
+    bottom: -300px;
+    left: -200px;
+    animation: float 15s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(50px, 50px) rotate(120deg); }
+    66% { transform: translate(-50px, 50px) rotate(240deg); }
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+}
+
+.gradient-text {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tech-badge {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #667eea;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 30px -10px rgba(102, 126, 234, 0.2);
+    display: inline-block;
+}
+
+/* Stats */
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Hero Visual */
+.hero-visual {
+    position: relative;
+    height: 500px;
+}
+
+.cube-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    perspective: 1000px;
+}
+
+.cube {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate 20s infinite linear;
+}
+
+@keyframes rotate {
+    from { transform: rotateX(0) rotateY(0); }
+    to { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+.cube-face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.front { transform: translateZ(100px); }
+.back { transform: rotateY(180deg) translateZ(100px); }
+.right { transform: rotateY(90deg) translateZ(100px); }
+.left { transform: rotateY(-90deg) translateZ(100px); }
+.top { transform: rotateX(90deg) translateZ(100px); }
+.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+.floating-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    animation: float-card 3s ease-in-out infinite;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    z-index: 10;
+}
+
+.card-1 { top: 20%; right: 10%; animation-delay: 0s; }
+.card-2 { top: 40%; left: 10%; animation-delay: 0.5s; }
+.card-3 { bottom: 20%; right: 20%; animation-delay: 1s; }
+
+@keyframes float-card {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Enhanced Feature Icons */
+.feature-card {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px 25px;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.feature-icon-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s ease;
+}
+
+.feature-icon-wrapper i {
+    font-size: 2.5rem;
+    color: white;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+    z-index: 2;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-icon-wrapper {
+    transform: rotate(5deg) scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+}
+
+.feature-card:hover .feature-icon-wrapper i {
+    transform: scale(1.1);
+    filter: drop-shadow(0 10px 20px rgba(102, 126, 234, 0.5));
+}
+
+.icon-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.feature-card:hover .icon-glow {
+    opacity: 1;
+}
+
+/* Gradient variants for icons */
+.primary-gradient {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+}
+
+.success-gradient {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+}
+
+.danger-gradient {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
+}
+
+.info-gradient {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
+}
+
+.warning-gradient {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3));
+}
+
+.secondary-gradient {
+    background: linear-gradient(135deg, rgba(107, 114, 128, 0.3), rgba(75, 85, 99, 0.3));
+}
+
+.feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+    color: var(--dark);
+}
+
+.feature-desc {
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 2;
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+.feature-hover-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+    z-index: 1;
+    border-radius: 25px;
+}
+
+.feature-card:hover .feature-hover-effect {
+    transform: scaleX(1);
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.feature-card:hover .card-glow {
+    opacity: 1;
+}
+
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding: 50px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, #764ba2, #667eea, transparent);
+}
+
+.timeline-item {
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-number {
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(102, 126, 234, 0.1);
+    margin-bottom: -30px;
+}
+
+.timeline-icon {
+    width: 90px;
+    height: 90px;
+    margin: 25px auto;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.2rem;
+    position: relative;
+    animation: pulse 2s infinite;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3); }
+    50% { box-shadow: 0 25px 45px rgba(102, 126, 234, 0.5); }
+    100% { box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3); }
+}
+
+/* Benefits Section */
+.benefits-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.benefit-card {
+    padding: 30px 25px;
+    border-radius: 25px;
+    text-align: center;
+    transition: all 0.4s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 100%;
+}
+
+.benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.benefit-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1.8rem;
+    transition: all 0.4s ease;
+}
+
+.benefit-icon-wrapper.success { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3)); }
+.benefit-icon-wrapper.warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3)); }
+.benefit-icon-wrapper.info { background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3)); }
+
+.benefit-card:hover .benefit-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.benefit-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.benefit-desc {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.benefit-stats {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-highlight {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    line-height: 1.2;
+}
+
+.stat-highlight.success { color: #10b981; }
+.stat-highlight.warning { color: #f59e0b; }
+.stat-highlight.info { color: #3b82f6; }
+
+/* Platform Statistics */
+.platform-stats {
+    margin-top: 50px;
+}
+
+.stat-circle {
+    text-align: center;
+}
+
+.circle-progress {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: glow 2s infinite;
+}
+
+.circle-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.5); }
+}
+
+.stat-circle p {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+    min-height: 400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+}
+
+.parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 0 L60 30 L30 60 L0 30 Z" fill="white" fill-opacity="0.05"/></svg>');
+    opacity: 0.1;
+    animation: move 20s linear infinite;
+}
+
+@keyframes move {
+    from { background-position: 0 0; }
+    to { background-position: 100% 100%; }
+}
+
+.btn-glow-light {
+    box-shadow: 0 10px 30px -5px rgba(255, 255, 255, 0.3);
+}
+
+/* Section Badge */
+.section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 30px;
+    color: #667eea;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-visual {
+        display: none;
+    }
+    
+    .timeline-line {
+        display: none;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .cube-container {
+        transform: scale(0.7) translate(-50%, -50%);
+    }
+}
+</style>
+
+<!-- Add AOS animation library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        once: true,
+        duration: 1000,
+    });
+</script>
+
+<!-- Add Font Awesome if not already included -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+{% endblock %}

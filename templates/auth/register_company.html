@@ -1,0 +1,861 @@
+{% extends "base.html" %}
+{% block title %}Company Registration{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Animated Background Elements -->
+            <div class="position-relative">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
+                
+                <!-- Main Registration Card -->
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-duration="1000">
+                    <!-- Header with Gradient -->
+                    <div class="card-header-gradient">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="gradient-title mb-2">
+                                    <i class="fas fa-building me-3"></i>Company Registration
+                                </h2>
+                                <p class="text-muted-light mb-0">Join our network of innovative companies</p>
+                            </div>
+                            <div class="header-badge">
+                                <span class="badge-futuristic">
+                                    <i class="fas fa-shield-alt me-2"></i>Verified Platform
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Approval Alert - Same functionality -->
+                    <div class="alert-futuristic info-alert" data-aos="fade-right" data-aos-delay="200">
+                        <div class="alert-icon-wrapper">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h6 class="alert-heading">⏳ Pending Approval Required</h6>
+                            <p class="alert-text mb-0">
+                                After registration, your account will be pending admin approval. 
+                                You can only login after approval.
+                            </p>
+                        </div>
+                        <div class="alert-decoration"></div>
+                    </div>
+
+                    <!-- Registration Form - ALL FIELDS PRESERVED -->
+                    <div class="form-wrapper">
+                        <form method="POST" action="" class="futuristic-form" id="companyRegForm">
+                            {{ form.hidden_tag() }}
+
+                            <!-- Company Name -->
+                            <div class="input-group-futuristic mb-4">
+                                {{ form.company_name.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-building input-icon"></i>
+                                    {% if form.company_name.errors %}
+                                        {{ form.company_name(class="form-control-futuristic is-invalid", placeholder="e.g., Google, Microsoft, etc.") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.company_name.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.company_name(class="form-control-futuristic", placeholder="e.g., Google, Microsoft, etc.") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="input-group-futuristic mb-4">
+                                {{ form.email.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    {% if form.email.errors %}
+                                        {{ form.email(class="form-control-futuristic is-invalid", placeholder="company@example.com") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.email.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.email(class="form-control-futuristic", placeholder="company@example.com") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">This will be your login email</small>
+                            </div>
+
+                            <!-- Row for HR Name and Contact -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic mb-4">
+                                        {{ form.hr_name.label(class="form-label-futuristic") }}
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-user-tie input-icon"></i>
+                                            {% if form.hr_name.errors %}
+                                                {{ form.hr_name(class="form-control-futuristic is-invalid", placeholder="HR Contact Person") }}
+                                                <div class="invalid-feedback-futuristic">
+                                                    {% for error in form.hr_name.errors %}
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.hr_name(class="form-control-futuristic", placeholder="HR Contact Person") }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic mb-4">
+                                        {{ form.hr_contact.label(class="form-label-futuristic") }}
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-phone-alt input-icon"></i>
+                                            {% if form.hr_contact.errors %}
+                                                {{ form.hr_contact(class="form-control-futuristic is-invalid", placeholder="10-digit mobile number") }}
+                                                <div class="invalid-feedback-futuristic">
+                                                    {% for error in form.hr_contact.errors %}
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.hr_contact(class="form-control-futuristic", placeholder="10-digit mobile number") }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Website -->
+                            <div class="input-group-futuristic mb-4">
+                                {{ form.website.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-globe input-icon"></i>
+                                    {% if form.website.errors %}
+                                        {{ form.website(class="form-control-futuristic is-invalid", placeholder="https://www.company.com") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.website.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.website(class="form-control-futuristic", placeholder="https://www.company.com") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Optional but recommended</small>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="input-group-futuristic mb-4">
+                                {{ form.description.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                    {% if form.description.errors %}
+                                        {{ form.description(class="form-control-futuristic is-invalid", rows="4", 
+                                            placeholder="Tell us about your company, what you do, etc.") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.description.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.description(class="form-control-futuristic", rows="4", 
+                                            placeholder="Tell us about your company, what you do, etc.") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Row for Password and Confirm Password -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic mb-4">
+                                        {{ form.password.label(class="form-label-futuristic") }}
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-lock input-icon"></i>
+                                            {% if form.password.errors %}
+                                                {{ form.password(class="form-control-futuristic is-invalid", placeholder="Minimum 6 characters", id="password") }}
+                                                <div class="invalid-feedback-futuristic">
+                                                    {% for error in form.password.errors %}
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.password(class="form-control-futuristic", placeholder="Minimum 6 characters", id="password") }}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Password strength indicator -->
+                                        <div class="password-strength mt-2">
+                                            <div class="strength-bar"></div>
+                                            <div class="strength-bar"></div>
+                                            <div class="strength-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic mb-4">
+                                        {{ form.confirm_password.label(class="form-label-futuristic") }}
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-check-circle input-icon"></i>
+                                            {% if form.confirm_password.errors %}
+                                                {{ form.confirm_password(class="form-control-futuristic is-invalid", placeholder="Re-enter password", id="confirm_password") }}
+                                                <div class="invalid-feedback-futuristic">
+                                                    {% for error in form.confirm_password.errors %}
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.confirm_password(class="form-control-futuristic", placeholder="Re-enter password", id="confirm_password") }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms Checkbox -->
+                            <div class="mb-4">
+                                <div class="form-check futuristic-check">
+                                    <input type="checkbox" class="form-check-input" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="terms-link">Terms and Conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn-submit-futuristic w-100", id="submitBtn") }}
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer-futuristic">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <p class="mb-0">
+                                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                                    Already have a company account? <a href="{{ url_for('login') }}" class="footer-link">Login here</a>
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <div class="trust-badges">
+                                    <span class="badge-item"><i class="fas fa-lock"></i> SSL Secure</span>
+                                    <span class="badge-item"><i class="fas fa-check-circle"></i> Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal - Same content -->
+<div class="modal fade futuristic-modal" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-contract me-2"></i>Terms and Conditions
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="terms-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>1. Account Approval</h6>
+                            <p>Your company account must be approved by the institute placement cell before you can post drives.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>2. Accurate Information</h6>
+                            <p>You must provide accurate information about your company and job opportunities.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>3. Drive Management</h6>
+                            <p>All placement drives must be approved by admin before they are visible to students.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>4. Student Data</h6>
+                            <p>Student information should only be used for recruitment purposes.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>5. Code of Conduct</h6>
+                            <p>Companies must maintain professional conduct throughout the recruitment process.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-accept" data-bs-dismiss="modal">
+                    <i class="fas fa-check-circle me-2"></i>I Understand
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* All the CSS styles from previous response remain exactly the same */
+:root {
+    --gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    --gradient-2: linear-gradient(45deg, #667eea, #764ba2);
+    --glass-effect: rgba(255, 255, 255, 0.95);
+    --shadow-neon: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] {
+    --glass-effect: rgba(15, 23, 42, 0.95);
+}
+
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Main Card */
+.futuristic-card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl), var(--shadow-neon);
+    position: relative;
+    z-index: 1;
+}
+
+.card-header-gradient {
+    background: var(--gradient-1);
+    padding: 30px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Alert */
+.alert-futuristic {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    border-left: 4px solid #3b82f6;
+    border-radius: 20px;
+    padding: 20px 25px;
+    margin: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    transform: rotate(10deg);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Form Wrapper */
+.form-wrapper {
+    padding: 30px 40px;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.6;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 1rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic.is-invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+textarea.form-control-futuristic {
+    resize: vertical;
+    min-height: 100px;
+    padding-top: 15px;
+}
+
+textarea.form-control-futuristic + .input-icon {
+    top: 20px;
+    transform: none;
+}
+
+.invalid-feedback-futuristic {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: var(--gray);
+    opacity: 0.8;
+}
+
+/* Password Strength */
+.password-strength {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    flex: 1;
+    background: var(--gray);
+    opacity: 0.3;
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+/* Terms Checkbox */
+.futuristic-check {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+}
+
+.futuristic-check .form-check-input {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--primary);
+    background: transparent;
+    cursor: pointer;
+    margin-left: -35px;
+    margin-top: 2px;
+}
+
+.futuristic-check .form-check-input:checked {
+    background: var(--gradient-1);
+    border-color: transparent;
+}
+
+.futuristic-check .form-check-input:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.futuristic-check .form-check-label {
+    color: var(--dark);
+    font-size: 0.95rem;
+}
+
+.terms-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+}
+
+.terms-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gradient-1);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.terms-link:hover::after {
+    transform: scaleX(1);
+}
+
+/* Submit Button */
+.btn-submit-futuristic {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--gradient-1);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+.btn-submit-futuristic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-submit-futuristic:hover::before {
+    left: 100%;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px var(--primary);
+}
+
+.btn-submit-futuristic:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Card Footer */
+.card-footer-futuristic {
+    background: rgba(0, 0, 0, 0.02);
+    padding: 20px 40px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.trust-badges {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.badge-item i {
+    color: var(--primary);
+}
+
+.footer-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.futuristic-modal .modal-content {
+    background: var(--glass-effect);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+}
+
+.futuristic-modal .modal-header {
+    border-bottom: 1px solid var(--glass-border);
+    padding: 20px 25px;
+}
+
+.futuristic-modal .modal-title {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.futuristic-modal .modal-body {
+    padding: 25px;
+}
+
+.futuristic-modal .modal-footer {
+    border-top: 1px solid var(--glass-border);
+    padding: 20px 25px;
+}
+
+.terms-timeline {
+    position: relative;
+    padding: 5px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    box-shadow: 0 0 15px var(--primary);
+}
+
+.timeline-content h6 {
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--dark);
+    font-size: 1rem;
+}
+
+.timeline-content p {
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.btn-accept {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    background: var(--gradient-1);
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-accept:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-header-gradient {
+        padding: 25px 20px;
+    }
+    
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-wrapper {
+        padding: 20px;
+    }
+    
+    .alert-futuristic {
+        flex-direction: column;
+        text-align: center;
+        margin: 20px;
+    }
+    
+    .badge-futuristic {
+        display: inline-block;
+        margin-top: 10px;
+    }
+    
+    .trust-badges {
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .card-footer-futuristic .row {
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Website URL validation - Original functionality preserved
+    const websiteInput = document.querySelector('input[name="website"]');
+    if (websiteInput) {
+        websiteInput.addEventListener('blur', function() {
+            let website = this.value;
+            if (website && !website.startsWith('http')) {
+                if (!confirm('Website URL should start with http:// or https://. Continue anyway?')) {
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    // Password strength indicator - Enhanced visual feedback
+    const password = document.getElementById('password');
+    const strengthBars = document.querySelectorAll('.strength-bar');
+    
+    if (password) {
+        password.addEventListener('input', function() {
+            const val = this.value;
+            let strength = 0;
+            
+            if (val.length >= 6) strength++;
+            if (val.match(/[a-z]/) && val.match(/[A-Z]/)) strength++;
+            if (val.match(/[0-9]/) && val.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            strengthBars.forEach((bar, index) => {
+                if (index < strength) {
+                    bar.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    bar.style.opacity = '1';
+                } else {
+                    bar.style.background = '';
+                    bar.style.opacity = '0.3';
+                }
+            });
+        });
+    }
+
+    // Password match validation
+    const confirmPassword = document.getElementById('confirm_password');
+    if (confirmPassword && password) {
+        confirmPassword.addEventListener('input', function() {
+            if (this.value && this.value !== password.value) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+    }
+
+    // Form submit with loading state
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            const termsChecked = document.getElementById('terms').checked;
+            if (!termsChecked) {
+                e.preventDefault();
+                alert('Please agree to the Terms and Conditions');
+                return;
+            }
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Registering...';
+            submitBtn.disabled = true;
+        });
+    }
+});
+</script>
+{% endblock %}

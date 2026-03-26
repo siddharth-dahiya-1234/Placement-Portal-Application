@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% block title %}Manage Placement Drives{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/drives.css') }}">
+<div class="container-fluid px-4 mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+    </div>
+
+    <!-- Page Header with Creative Design -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="creative-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="fas fa-briefcase" aria-hidden="true"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="glowing-text">
+                            <span class="text-gradient">Drive</span> Management
+                        </h1>
+                        <p class="card-subtitle header-subtitle">
+                            <i class="fas fa-bolt me-2" aria-hidden="true"></i>Review and approve placement drives in real-time
+                        </p>
+                    </div>
+                </div>
+                <div class="header-stats-badge">
+                    <div class="stat-badge-item">
+                        <span class="badge-number">{{ drives|length }}</span>
+                        <span class="badge-label">Total</span>
+                    </div>
+                    <div class="stat-badge-divider"></div>
+                    <div class="stat-badge-item">
+                        <span class="badge-number">{{ drives|selectattr('status', 'equalto', 'pending')|list|length }}</span>
+                        <span class="badge-label">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Creative Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-primary" data-aos="fade-up" data-aos-delay="100">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-briefcase" aria-hidden="true"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number count-up" data-target="{{ drives|length }}">{{ drives|length }}</div>
+                        <div class="stats-label">Total Drives</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-arrow-up" aria-hidden="true"></i> All Time
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-success" data-aos="fade-up" data-aos-delay="200">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">{{ drives|selectattr('status', 'equalto', 'approved')|list|length }}</div>
+                        <div class="stats-label">Approved</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-check" aria-hidden="true"></i> Active
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-warning" data-aos="fade-up" data-aos-delay="300">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">{{ drives|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+                        <div class="stats-label">Pending</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-hourglass-half" aria-hidden="true"></i> Awaiting
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-info" data-aos="fade-up" data-aos-delay="400">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">{{ drives|selectattr('status', 'equalto', 'closed')|list|length }}</div>
+                        <div class="stats-label">Closed</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-check-double" aria-hidden="true"></i> Completed
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="creative-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="creative-card-header">
+            <div class="header-left">
+                <div class="header-icon-wrapper">
+                    <i class="fas fa-list-ul" aria-hidden="true"></i>
+                </div>
+                <div>
+                    <h3 class="card-title">Placement Drives Overview</h3>
+                    <p class="card-subtitle">Manage and monitor all placement activities</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input type="text" id="driveSearch" placeholder="Search drives..." class="search-input">
+                </div>
+                <button class="filter-btn" id="filterBtn" type="button">
+                    <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                    <span>Filter</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="creative-card-body">
+            <div class="table-container">
+                <table class="creative-table" id="drivesTable">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1" aria-hidden="true"></i> ID</th>
+                            <th><i class="fas fa-building me-1" aria-hidden="true"></i> Company</th>
+                            <th><i class="fas fa-briefcase me-1" aria-hidden="true"></i> Job Title</th>
+                            <th><i class="fas fa-tag me-1" aria-hidden="true"></i> Package</th>
+                            <th><i class="fas fa-map-marker-alt me-1" aria-hidden="true"></i> Location</th>
+                            <th><i class="fas fa-calendar-times me-1" aria-hidden="true"></i> Deadline</th>
+                            <th><i class="fas fa-calendar-alt me-1" aria-hidden="true"></i> Drive Date</th>
+                            <th><i class="fas fa-star me-1" aria-hidden="true"></i> CGPA</th>
+                            <th><i class="fas fa-code-branch me-1" aria-hidden="true"></i> Branches</th>
+                            <th><i class="fas fa-tag me-1" aria-hidden="true"></i> Status</th>
+                            <th><i class="fas fa-cog me-1" aria-hidden="true"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for drive in drives %}
+                        <tr class="drive-row" data-status="{{ drive.status }}">
+                            <td><span class="id-badge">#{{ drive.id }}</span></td>
+                            <td>
+                                <div class="company-cell">
+                                    <div class="company-avatar">
+                                        {{ (drive.company.company_name[:1]|upper) if drive.company.company_name else '' }}
+                                    </div>
+                                    <div class="company-info">
+                                        <strong>{{ drive.company.company_name }}</strong>
+                                        <small>{{ drive.company.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="job-title">{{ drive.job_title }}</span></td>
+                            <td><span class="package-chip">{{ drive.package }} LPA</span></td>
+                            <td><span class="location-chip"><i class="fas fa-map-pin me-1" aria-hidden="true"></i>{{ drive.location }}</span></td>
+                            <td>
+                                <div class="date-chip deadline">
+                                    <i class="far fa-calendar-alt me-1" aria-hidden="true"></i>
+                                    {{ drive.application_deadline.strftime('%d %b, %Y') if drive.application_deadline else '—' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="date-chip drive">
+                                    <i class="far fa-calendar-check me-1" aria-hidden="true"></i>
+                                    {{ drive.drive_date.strftime('%d %b, %Y') if drive.drive_date else '—' }}
+                                </div>
+                            </td>
+                            <td><span class="cgpa-chip">{{ drive.min_cgpa }}</span></td>
+                            <td>
+                                <div class="branches-dropdown">
+                                    <span class="branches-chip" role="button" tabindex="0" aria-expanded="false" aria-controls="branches-{{ drive.id }}">
+                                        <i class="fas fa-code-branch me-1" aria-hidden="true"></i>
+                                        {{ (drive.allowed_branches or '').split(',')|length }} branches
+                                    </span>
+                                    <div class="branches-tooltip" id="branches-{{ drive.id }}">
+                                        {% for branch in (drive.allowed_branches or '').split(',') if branch %}
+                                            <span class="branch-tag">{{ branch }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="status-container">
+                                    <span class="status-chip {{ drive.status }}">
+                                        <span class="status-indicator"></span>
+                                        {{ drive.status|title }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="action-menu">
+                                    {% if drive.status == 'pending' %}
+                                        <form method="post" action="{{ url_for('approve_drive', drive_id=drive.id) }}" class="d-inline" onsubmit="return confirm('Approve this drive?')">
+                                            {{ csrf_token() }}
+                                            <button type="submit" class="action-icon approve" title="Approve Drive"><i class="fas fa-check" aria-hidden="true"></i></button>
+                                        </form>
+                                        <form method="post" action="{{ url_for('reject_drive', drive_id=drive.id) }}" class="d-inline" onsubmit="return confirm('Reject this drive?')">
+                                            {{ csrf_token() }}
+                                            <button type="submit" class="action-icon reject" title="Reject Drive"><i class="fas fa-times" aria-hidden="true"></i></button>
+                                        </form>
+                                    {% endif %}
+
+                                    <form method="post" action="{{ url_for('admin_close_drive', drive_id=drive.id) }}" class="d-inline" onsubmit="return confirm('Close this drive? Students cannot apply after closing.')">
+                                        {{ csrf_token() }}
+                                        <button type="submit" class="action-icon close" title="Close Drive"><i class="fas fa-lock" aria-hidden="true"></i></button>
+                                    </form>
+
+                                    <button type="button" class="action-icon view" data-drive-id="{{ drive.id }}" title="View Details">
+                                        <i class="fas fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="11">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-briefcase" aria-hidden="true"></i>
+                                    </div>
+                                    <h4>No Drives Found</h4>
+                                    <p>Companies haven't created any placement drives yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="creative-card-footer">
+            <div class="pagination-info">
+                Showing <span class="fw-bold">1-{{ drives|length }}</span> of <span class="fw-bold">{{ drives|length }}</span> drives
+            </div>
+            <div class="pagination-controls">
+                <button class="page-btn" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Drive Details Modal -->
+<div class="modal fade" id="driveModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-content creative-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-briefcase me-2" aria-hidden="true"></i>
+                    <span id="modalTitle"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/drives.js') }}" defer></script>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+/* Styles moved from templates/admin/drives.html
+   NOTE: The original template contained a large inline CSS block.
+   Paste the full CSS from the template into this file to restore styling,
+   or keep incremental edits here. Minimal helper rules follow for accessibility.
+*/
+
+.branches-tooltip { display: none; }
+.branches-tooltip.show { display: block; }
+
+.action-menu form.d-inline { display: inline; }
+
+/* Add more rules by copying the original inline CSS into this file. */

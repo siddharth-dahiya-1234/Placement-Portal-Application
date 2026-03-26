@@ -1,0 +1,1089 @@
+{% extends "base.html" %}
+{% block title %}Login | Placement Portal{% endblock %}
+{% block content %}
+
+<!-- Animated Background -->
+<div class="login-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="grid-overlay"></div>
+</div>
+
+<!-- Login Container -->
+<div class="login-wrapper">
+    <div class="container">
+        <div class="row min-vh-100 align-items-center justify-content-center">
+            <div class="col-lg-10">
+                <div class="login-card" data-aos="fade-up" data-aos-duration="1000">
+                    <!-- Decorative Elements -->
+                    <div class="login-decoration">
+                        <div class="decoration-circle"></div>
+                        <div class="decoration-circle-2"></div>
+                        <div class="decoration-line"></div>
+                    </div>
+
+                    <div class="row g-0">
+                        <!-- Left Panel - Branding -->
+                        <div class="col-lg-5 d-none d-lg-block">
+                            <div class="login-brand-panel">
+                                <div class="brand-content" data-aos="fade-right" data-aos-duration="1000">
+                                    <!-- Animated Logo -->
+                                    <div class="brand-logo-wrapper">
+                                        <div class="brand-logo">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <div class="brand-logo-glow"></div>
+                                    </div>
+                                    
+                                    <h2 class="brand-title">Welcome Back!</h2>
+                                    <p class="brand-subtitle">Access your placement dashboard</p>
+                                                                        
+                                    <!-- Stats -->
+                                    <div class="brand-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-number">500+</div>
+                                            <div class="stat-label">Companies</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">10k+</div>
+                                            <div class="stat-label">Students</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">95%</div>
+                                            <div class="stat-label">Success</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel - Login Form -->
+                        <div class="col-lg-7">
+                            <div class="login-form-panel">
+                                <div class="form-content">
+                                    <!-- Mobile Brand (visible on mobile) -->
+                                    <div class="mobile-brand text-center d-lg-none mb-4">
+                                        <div class="mobile-logo">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <h3>Welcome Back!</h3>
+                                        <p class="text-muted">Login to continue your journey</p>
+                                    </div>
+
+                                    <!-- Form Header -->
+                                    <div class="form-header">
+                                        <h4 class="form-title">Sign In to Your Account</h4>
+                                        <p class="form-subtitle">Enter your credentials to access your dashboard</p>
+                                    </div>
+
+                                    <!-- Login Form -->
+                                    <form method="POST" action="" class="login-form" id="loginForm">
+                                        {{ form.hidden_tag() }}
+
+                                        <!-- Email Field -->
+                                        <div class="form-group mb-4">
+                                            <div class="input-wrapper">
+                                                <div class="input-icon">
+                                                    <i class="fas fa-envelope"></i>
+                                                </div>
+                                                {% if form.email.errors %}
+                                                    {{ form.email(class="form-control is-invalid", placeholder="Enter your email") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in form.email.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ form.email(class="form-control", placeholder="Enter your email") }}
+                                                {% endif %}
+                                                <div class="input-focus-effect"></div>
+                                            </div>
+                                            <div class="input-hint">We'll never share your email</div>
+                                        </div>
+
+                                        <!-- Password Field -->
+                                        <div class="form-group mb-4">
+                                            <div class="input-wrapper">
+                                                <div class="input-icon">
+                                                    <i class="fas fa-lock"></i>
+                                                </div>
+                                                {% if form.password.errors %}
+                                                    {{ form.password(class="form-control is-invalid", placeholder="Enter your password", id="password") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in form.password.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ form.password(class="form-control", placeholder="Enter your password", id="password") }}
+                                                {% endif %}
+                                                <button type="button" class="password-toggle" onclick="togglePassword()">
+                                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                                </button>
+                                                <div class="input-focus-effect"></div>
+                                            </div>
+                                            <div class="password-strength" id="passwordStrength">
+                                                <div class="strength-bar"></div>
+                                                <div class="strength-bar"></div>
+                                                <div class="strength-bar"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Remember Me & Forgot Password -->
+                                        <div class="form-row d-flex justify-content-between align-items-center mb-4">
+                                            <div class="remember-me">
+                                                <label class="checkbox-container">
+                                                    <input type="checkbox" name="remember" id="remember">
+                                                    <span class="checkmark"></span>
+                                                    <span class="remember-text">Remember me</span>
+                                                </label>
+                                            </div>
+                                            <a href="#" class="forgot-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                                                Forgot Password?
+                                            </a>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div class="form-group mb-4">
+                                            {{ form.submit(class="btn-submit") }}
+                                            <div class="btn-shine"></div>
+                                        </div>
+
+                                        <!-- Social Login -->
+                                        <div class="social-login">
+                                            <p class="social-text">Or continue with</p>
+                                            <div class="social-buttons">
+                                                <button type="button" class="social-btn google">
+                                                    <i class="fab fa-google"></i>
+                                                    <span>Google</span>
+                                                </button>
+                                                <button type="button" class="social-btn github">
+                                                    <i class="fab fa-github"></i>
+                                                    <span>GitHub</span>
+                                                </button>
+                                                <button type="button" class="social-btn linkedin">
+                                                    <i class="fab fa-linkedin-in"></i>
+                                                    <span>LinkedIn</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Register Links -->
+                                        <div class="register-links text-center">
+                                            <p class="mb-2">Don't have an account?</p>
+                                            <div class="register-buttons">
+                                                <a href="{{ url_for('register_student') }}" class="register-btn student">
+                                                    <i class="fas fa-user-graduate"></i>
+                                                    Register as Student
+                                                </a>
+                                                <a href="{{ url_for('register_company') }}" class="register-btn company">
+                                                    <i class="fas fa-building"></i>
+                                                    Register as Company
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Send Reset Link</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add custom styles -->
+<style>
+/* Login Page Specific Styles */
+.login-wrapper {
+    min-height: 100vh;
+    position: relative;
+    padding: 80px 0;
+    overflow: hidden;
+}
+
+/* Animated Background */
+.login-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: orb-float 20s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+    top: -200px;
+    right: -200px;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0) 70%);
+    bottom: -200px;
+    left: -200px;
+    animation-delay: -5s;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(236, 72, 153, 0) 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+@keyframes orb-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, 50px) scale(1.1); }
+    66% { transform: translate(-50px, 50px) scale(0.9); }
+}
+
+/* Login Card */
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 40px;
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 60px 120px -20px rgba(0, 0, 0, 0.4);
+}
+
+/* Decorative Elements */
+.login-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.decoration-circle {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    opacity: 0.1;
+    animation: rotate 20s linear infinite;
+}
+
+.decoration-circle-2 {
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    opacity: 0.1;
+    animation: rotate 15s linear infinite reverse;
+}
+
+.decoration-line {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent 70%);
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Brand Panel */
+.login-brand-panel {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    height: 100%;
+    padding: 60px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.brand-logo-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 40px;
+}
+
+.brand-logo {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: logo-float 3s ease-in-out infinite;
+}
+
+.brand-logo-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+    filter: blur(20px);
+    opacity: 0.5;
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.brand-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+/* Feature Items */
+.brand-features {
+    margin: 40px 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.feature-text h6 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.feature-text p {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Testimonial */
+.brand-testimonial {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 40px 0;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-quote {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 3rem;
+    opacity: 0.2;
+    color: white;
+}
+
+.testimonial-text {
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    background: white;
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-info strong {
+    font-size: 0.9rem;
+}
+
+.author-info span {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Stats */
+.brand-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Form Panel */
+.login-form-panel {
+    padding: 60px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    height: 100%;
+}
+
+.form-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.form-subtitle {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+/* Input Fields */
+.input-wrapper {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px 45px 15px 45px;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    font-size: 0.95rem;
+    transition: var(--transition);
+    position: relative;
+    z-index: 1;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 10px 30px -10px var(--primary);
+}
+
+.input-focus-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    opacity: 0;
+    transition: var(--transition);
+    pointer-events: none;
+}
+
+.form-control:focus ~ .input-focus-effect {
+    opacity: 0.1;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+.input-hint {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-top: 5px;
+    margin-left: 15px;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 0 15px;
+}
+
+.strength-bar {
+    height: 3px;
+    flex: 1;
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.password-strength[data-strength="1"] .strength-bar:nth-child(1) {
+    background: #ef4444;
+}
+
+.password-strength[data-strength="2"] .strength-bar:nth-child(-n+2) {
+    background: #f59e0b;
+}
+
+.password-strength[data-strength="3"] .strength-bar {
+    background: #10b981;
+}
+
+/* Checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 2px solid var(--gray);
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    transition: var(--transition);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkmark:after {
+    content: '';
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.remember-text {
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.forgot-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.forgot-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 30px -10px var(--primary);
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shine 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    to { left: 100%; }
+}
+
+/* Social Login */
+.social-login {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.social-text {
+    position: relative;
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.social-text::before,
+.social-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+.social-text::before {
+    left: 0;
+}
+
+.social-text::after {
+    right: 0;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.social-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--dark);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.social-btn.google:hover {
+    background: #ea4335;
+    color: white;
+}
+
+.social-btn.github:hover {
+    background: #333;
+    color: white;
+}
+
+.social-btn.linkedin:hover {
+    background: #0077b5;
+    color: white;
+}
+
+/* Register Buttons */
+.register-links {
+    margin-top: 20px;
+}
+
+.register-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.register-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.register-btn.student {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.register-btn.student:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.register-btn.company {
+    background: rgba(236, 72, 153, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+.register-btn.company:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Modal Styles */
+.modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+}
+
+.modal-header {
+    border-bottom-color: var(--glass-border);
+}
+
+.modal-footer {
+    border-top-color: var(--glass-border);
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .login-card {
+        margin: 20px;
+    }
+    
+    .login-form-panel {
+        padding: 40px 20px;
+    }
+    
+    .mobile-logo {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-wrapper {
+        padding: 20px 0;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .register-buttons {
+        flex-direction: column;
+    }
+    
+    .social-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .social-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<!-- Add JavaScript -->
+<script>
+// Toggle password visibility
+function togglePassword() {
+    const password = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (password.type === 'password') {
+        password.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        password.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Password strength indicator
+document.getElementById('password')?.addEventListener('input', function(e) {
+    const password = e.target.value;
+    const strengthIndicator = document.getElementById('passwordStrength');
+    
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/) && password.match(/[^a-zA-Z0-9]/)) strength++;
+    
+    strengthIndicator.setAttribute('data-strength', strength);
+});
+
+// Form validation animation
+document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+    const btn = this.querySelector('.btn-submit');
+    btn.innerHTML = 'Logging in... <i class="fas fa-spinner fa-spin"></i>';
+});
+
+// Social login handlers
+document.querySelectorAll('.social-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Add your social login logic here
+        console.log('Social login clicked:', this.classList);
+    });
+});
+
+// Forgot password modal
+document.querySelector('[data-bs-target="#forgotPasswordModal"]')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    // You can pre-fill the email if needed
+    const email = document.querySelector('[name="email"]')?.value;
+    if (email) {
+        document.querySelector('#forgotPasswordModal input[type="email"]').value = email;
+    }
+});
+
+// Remember me functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const rememberCheckbox = document.getElementById('remember');
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    
+    if (savedEmail && rememberCheckbox) {
+        document.querySelector('[name="email"]').value = savedEmail;
+        rememberCheckbox.checked = true;
+    }
+    
+    document.getElementById('loginForm')?.addEventListener('submit', function() {
+        if (rememberCheckbox && rememberCheckbox.checked) {
+            const email = document.querySelector('[name="email"]').value;
+            localStorage.setItem('rememberedEmail', email);
+        } else {
+            localStorage.removeItem('rememberedEmail');
+        }
+    });
+});
+
+// Input animations
+document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', function() {
+        this.closest('.input-wrapper').classList.add('focused');
+    });
+    
+    input.addEventListener('blur', function() {
+        this.closest('.input-wrapper').classList.remove('focused');
+    });
+});
+
+// Add floating labels effect
+document.querySelectorAll('.form-control').forEach(input => {
+    if (input.value) {
+        input.closest('.form-group').classList.add('filled');
+    }
+    
+    input.addEventListener('input', function() {
+        if (this.value) {
+            this.closest('.form-group').classList.add('filled');
+        } else {
+            this.closest('.form-group').classList.remove('filled');
+        }
+    });
+});
+</script>
+{% endblock %}

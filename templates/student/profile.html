@@ -1,0 +1,1040 @@
+{% extends "base.html" %}
+{% block title %}My Profile | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-user-circle me-3"></i>My Profile
+                        </h2>
+                        <p class="text-muted-light mb-0">Manage your personal information and track your placement journey</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>Student Profile
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Profile Card - Left Column -->
+            <div class="col-lg-4">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-id-card me-3"></i>
+                            <h5 class="mb-0 text-white">Profile Picture</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body-futuristic text-center">
+                        <div class="profile-avatar-large mb-3">
+                            <i class="fas fa-user-circle fa-6x" style="color: var(--primary);"></i>
+                        </div>
+                        
+                        <h3 class="profile-name">{{ student.full_name }}</h3>
+                        <p class="profile-roll">{{ student.roll_number }}</p>
+                        
+                        <div class="profile-divider"></div>
+                        
+                        <div class="profile-details-list">
+                            <div class="profile-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Email</span>
+                                    <span class="detail-value">{{ student.user.email }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Contact</span>
+                                    <span class="detail-value">{{ student.contact }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Course</span>
+                                    <span class="detail-value">{{ student.course }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-code-branch"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Branch</span>
+                                    <span class="detail-value">{{ student.branch }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-resume-section mt-4">
+                            <h6 class="resume-title">
+                                <i class="fas fa-file-pdf me-2"></i>Resume
+                            </h6>
+                            {% if student.resume_path %}
+                            <a href="{{ url_for('static', filename='uploads/' + student.resume_path) }}" 
+                               target="_blank" class="resume-link">
+                                <i class="fas fa-eye"></i>
+                                <span>View Current Resume</span>
+                            </a>
+                            {% else %}
+                            <span class="no-resume">
+                                <i class="fas fa-times-circle"></i>
+                                No resume uploaded
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile Form - Right Column -->
+            <div class="col-lg-8">
+                <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="150">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-edit me-3"></i>
+                            <h5 class="mb-0 text-white">Edit Profile</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body-futuristic">
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Full Name</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-user input-icon"></i>
+                                            <input type="text" name="full_name" class="form-control-futuristic" 
+                                                   value="{{ student.full_name }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Contact Number</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-phone-alt input-icon"></i>
+                                            <input type="text" name="contact" class="form-control-futuristic" 
+                                                   value="{{ student.contact }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Course</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-graduation-cap input-icon"></i>
+                                            <input type="text" class="form-control-futuristic" 
+                                                   value="{{ student.course }}" readonly disabled>
+                                        </div>
+                                        <small class="form-text-futuristic">Contact admin to change course</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Branch</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-code-branch input-icon"></i>
+                                            <input type="text" class="form-control-futuristic" 
+                                                   value="{{ student.branch }}" readonly disabled>
+                                        </div>
+                                        <small class="form-text-futuristic">Contact admin to change branch</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Current Semester</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-layer-group input-icon"></i>
+                                            <input type="number" name="semester" class="form-control-futuristic" 
+                                                   value="{{ student.semester }}" min="1" max="8" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">CGPA</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-star input-icon"></i>
+                                            <input type="number" name="cgpa" class="form-control-futuristic" 
+                                                   value="{{ student.cgpa }}" step="0.01" min="0" max="10" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="input-group-futuristic">
+                                        <label class="form-label-futuristic">Passing Year</label>
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-calendar-alt input-icon"></i>
+                                            <input type="number" name="passing_year" class="form-control-futuristic" 
+                                                   value="{{ student.passing_year }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="upload-area" id="uploadArea">
+                                        <div class="upload-icon">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </div>
+                                        <div class="upload-text">
+                                            <h6>Upload New Resume</h6>
+                                            <p>PDF only (Max 2MB)</p>
+                                        </div>
+                                        <input type="file" name="resume" class="file-input" id="resumeFile" accept=".pdf">
+                                        <div class="file-info" id="fileInfo" style="display: none;">
+                                            <i class="fas fa-file-pdf text-danger"></i>
+                                            <span id="fileName"></span>
+                                            <span id="fileSize"></span>
+                                            <button type="button" class="remove-file" onclick="removeFile()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text-futuristic">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Current resume: 
+                                        {% if student.resume_path %}
+                                            <a href="{{ url_for('static', filename='uploads/' + student.resume_path) }}" 
+                                               target="_blank" class="current-resume-link">View Current Resume</a>
+                                        {% else %}
+                                            No resume uploaded
+                                        {% endif %}
+                                    </small>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn-submit-futuristic">
+                                            <i class="fas fa-save me-2"></i>Save Changes
+                                        </button>
+                                        <a href="{{ url_for('student_dashboard') }}" class="btn-cancel-futuristic">
+                                            <i class="fas fa-times me-2"></i>Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Placement Statistics Card -->
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-line me-3"></i>
+                            <h5 class="mb-0 text-white">Placement Statistics</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body-futuristic">
+                        <div class="stats-grid">
+                            <div class="stat-item-large">
+                                <div class="stat-icon-wrapper primary">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-value">{{ student.applications|length }}</span>
+                                    <span class="stat-label">Total Applications</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item-large">
+                                <div class="stat-icon-wrapper success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-value">
+                                        {{ student.applications|selectattr('status', 'equalto', 'selected')|list|length }}
+                                    </span>
+                                    <span class="stat-label">Selected</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item-large">
+                                <div class="stat-icon-wrapper info">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <span class="stat-value">
+                                        {{ student.applications|selectattr('status', 'equalto', 'shortlisted')|list|length }}
+                                    </span>
+                                    <span class="stat-label">Shortlisted</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if student.applications %}
+                        <div class="recent-applications-preview mt-4">
+                            <h6 class="preview-title">
+                                <i class="fas fa-history me-2"></i>Recent Applications
+                            </h6>
+                            <div class="preview-list">
+                                {% for app in student.applications[:3] %}
+                                <div class="preview-item">
+                                    <div class="company-mini">
+                                        <div class="mini-avatar">
+                                            {{ app.drive.company.company_name[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <strong>{{ app.drive.company.company_name }}</strong>
+                                            <p>{{ app.drive.job_title }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="status-chip small {{ app.status }}">
+                                        {{ app.status }}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Profile Avatar Large */
+.profile-avatar-large {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary)20, var(--secondary)20);
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.profile-avatar-large i {
+    filter: drop-shadow(0 10px 15px -5px var(--primary));
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.profile-roll {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.profile-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 15px 0;
+}
+
+/* Profile Details List */
+.profile-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.profile-detail-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.detail-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+/* Resume Section */
+.profile-resume-section {
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    border: 1px dashed var(--glass-border);
+}
+
+.resume-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.resume-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #ef444420, #dc262620);
+    color: #ef4444;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    transition: var(--transition);
+    border: 1px solid #ef444430;
+}
+
+.resume-link:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.no-resume {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #6b728020;
+    color: #6b7280;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic:disabled,
+.form-control-futuristic[readonly] {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--glass-border);
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* Upload Area */
+.upload-area {
+    border: 2px dashed rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+    background: rgba(99, 102, 241, 0.02);
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.upload-text h6 {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 3px;
+}
+
+.upload-text p {
+    color: var(--gray);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.file-info i {
+    font-size: 1.2rem;
+}
+
+#fileName {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+#fileSize {
+    color: var(--gray);
+    font-size: 0.75rem;
+}
+
+.remove-file {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    transition: var(--transition);
+}
+
+.remove-file:hover {
+    color: #ef4444;
+}
+
+.current-resume-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.current-resume-link:hover {
+    text-decoration: underline;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-submit-futuristic {
+    flex: 1;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-cancel-futuristic {
+    flex: 1;
+    padding: 12px 25px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--gray);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+}
+
+/* Statistics Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.stat-item-large {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.stat-item-large:hover {
+    transform: translateY(-2px);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.stat-icon-wrapper {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.stat-icon-wrapper.primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon-wrapper.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon-wrapper.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Recent Applications Preview */
+.preview-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--dark);
+}
+
+.preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.preview-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.preview-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.company-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.company-mini strong {
+    font-size: 0.8rem;
+    color: var(--dark);
+}
+
+.company-mini p {
+    font-size: 0.65rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.status-chip.small {
+    padding: 2px 8px;
+    font-size: 0.6rem;
+}
+
+.status-chip.small.applied {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
+.status-chip.small.shortlisted {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.status-chip.small.selected {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-chip.small.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-avatar-large i {
+        font-size: 4rem;
+    }
+    
+    .profile-name {
+        font-size: 1.3rem;
+    }
+}
+</style>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+    
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('resumeFile');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+
+    if (uploadArea && fileInput) {
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop area when dragging over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFileSelect();
+        }
+
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Validate file type
+                if (file.type !== 'application/pdf') {
+                    alert('Please upload a PDF file only.');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Validate file size (2MB max)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must be less than 2MB.');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Display file info
+                fileName.textContent = file.name;
+                fileSize.textContent = `(${(file.size / 1024).toFixed(2)} KB)`;
+                fileInfo.style.display = 'flex';
+                
+                // Hide upload text
+                uploadArea.querySelector('.upload-text').style.opacity = '0.3';
+            }
+        }
+    }
+
+    // Remove file function
+    window.removeFile = function() {
+        const fileInput = document.getElementById('resumeFile');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadArea = document.querySelector('.upload-area');
+        
+        fileInput.value = '';
+        fileInfo.style.display = 'none';
+        uploadArea.querySelector('.upload-text').style.opacity = '1';
+    };
+</script>
+{% endblock %}

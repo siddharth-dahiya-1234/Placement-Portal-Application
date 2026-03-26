@@ -1,0 +1,1356 @@
+{% extends "base.html" %}
+{% block title %}Applications for {{ drive.job_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+    </div>
+
+    <!-- Back Button with Creative Style -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{{ url_for('company_dashboard') }}" class="back-button-creative">
+                <i class="fas fa-arrow-left me-2"></i>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Drive Details Creative Card -->
+    <div class="creative-card mb-5" data-aos="fade-up">
+        <div class="creative-card-header">
+            <div class="header-left">
+                <div class="header-icon-wrapper">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <h3 class="card-title">{{ drive.job_title }}</h3>
+                    <p class="card-subtitle">{{ drive.company.company_name }}</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="drive-status-badge {{ drive.status }}">
+                    <i class="fas 
+                        {% if drive.status == 'approved' %}fa-check-circle
+                        {% elif drive.status == 'pending' %}fa-clock
+                        {% elif drive.status == 'closed' %}fa-lock
+                        {% else %}fa-times-circle{% endif %} me-2">
+                    </i>
+                    {{ drive.status|title }}
+                </span>
+            </div>
+        </div>
+
+        <div class="creative-card-body">
+            <div class="drive-details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Package</span>
+                        <span class="detail-value">{{ drive.package }} LPA</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value">{{ drive.location }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Min CGPA</span>
+                        <span class="detail-value">{{ drive.min_cgpa }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Deadline</span>
+                        <span class="detail-value">{{ drive.application_deadline.strftime('%d %b, %Y') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drive-description mt-4">
+                <h6 class="description-title">
+                    <i class="fas fa-align-left me-2"></i>Job Description
+                </h6>
+                <p class="description-text">{{ drive.job_description }}</p>
+            </div>
+
+            <div class="drive-branches mt-3">
+                <h6 class="branches-title">
+                    <i class="fas fa-code-branch me-2"></i>Allowed Branches
+                </h6>
+                <div class="branch-tags-container">
+                    {% for branch in drive.allowed_branches.split(',') %}
+                        <span class="branch-tag">{{ branch }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-primary" data-aos="fade-up" data-aos-delay="100">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">{{ applications|length }}</div>
+                        <div class="stats-label">Total Applications</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-arrow-up"></i> All Time
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-success" data-aos="fade-up" data-aos-delay="200">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">
+                            {{ applications|selectattr('status', 'equalto', 'selected')|list|length }}
+                        </div>
+                        <div class="stats-label">Selected</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-check"></i> Hired
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-info" data-aos="fade-up" data-aos-delay="300">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">
+                            {{ applications|selectattr('status', 'equalto', 'shortlisted')|list|length }}
+                        </div>
+                        <div class="stats-label">Shortlisted</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-star"></i> In Process
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card card-danger" data-aos="fade-up" data-aos-delay="400">
+                <div class="stats-card-inner">
+                    <div class="stats-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number">
+                            {{ applications|selectattr('status', 'equalto', 'rejected')|list|length }}
+                        </div>
+                        <div class="stats-label">Rejected</div>
+                        <div class="stats-trend">
+                            <i class="fas fa-times"></i> Not Selected
+                        </div>
+                    </div>
+                    <div class="stats-glow"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Table Card -->
+    <div class="creative-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="creative-card-header">
+            <div class="header-left">
+                <div class="header-icon-wrapper">
+                    <i class="fas fa-list-ul"></i>
+                </div>
+                <div>
+                    <h3 class="card-title">Student Applications</h3>
+                    <p class="card-subtitle">Review and manage candidate applications</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="applicationSearch" placeholder="Search students..." class="search-input">
+                </div>
+                <div class="filter-dropdown">
+                    <button class="filter-btn" id="filterBtn">
+                        <i class="fas fa-filter me-2"></i>
+                        <span>Filter by Status</span>
+                        <i class="fas fa-chevron-down ms-2"></i>
+                    </button>
+                    <div class="filter-menu" id="filterMenu">
+                        <div class="filter-option" data-filter="all">All Applications</div>
+                        <div class="filter-option" data-filter="applied">Applied</div>
+                        <div class="filter-option" data-filter="shortlisted">Shortlisted</div>
+                        <div class="filter-option" data-filter="selected">Selected</div>
+                        <div class="filter-option" data-filter="rejected">Rejected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="creative-card-body">
+            {% if applications %}
+            <div class="table-container">
+                <table class="creative-table" id="applicationsTable">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-id-card me-1"></i> Roll Number</th>
+                            <th><i class="fas fa-user-graduate me-1"></i> Student Name</th>
+                            <th><i class="fas fa-book me-1"></i> Course</th>
+                            <th><i class="fas fa-code-branch me-1"></i> Branch</th>
+                            <th><i class="fas fa-star me-1"></i> CGPA</th>
+                            <th><i class="fas fa-calendar-alt me-1"></i> Applied On</th>
+                            <th><i class="fas fa-file-pdf me-1"></i> Resume</th>
+                            <th><i class="fas fa-tag me-1"></i> Status</th>
+                            <th><i class="fas fa-edit me-1"></i> Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="application-row" data-status="{{ app.status }}" data-student="{{ app.student.full_name.lower() }} {{ app.student.roll_number.lower() }}">
+                            <td><span class="roll-badge">{{ app.student.roll_number }}</span></td>
+                            <td>
+                                <div class="student-cell">
+                                    <div class="student-avatar">
+                                        {{ app.student.full_name[0]|upper }}
+                                    </div>
+                                    <div class="student-info">
+                                        <strong>{{ app.student.full_name }}</strong>
+                                        <small>{{ app.student.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ app.student.course }}</td>
+                            <td><span class="branch-chip">{{ app.student.branch }}</span></td>
+                            <td><span class="cgpa-chip">{{ app.student.cgpa }}</span></td>
+                            <td>
+                                <span class="date-chip">
+                                    <i class="far fa-calendar-alt me-1"></i>
+                                    {{ app.application_date.strftime('%d %b, %Y') }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if app.student.resume_path %}
+                                <a href="{{ url_for('static', filename='uploads/' + app.student.resume_path) }}" 
+                                   target="_blank" class="resume-link" title="View Resume">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>Resume.pdf</span>
+                                </a>
+                                {% else %}
+                                <span class="no-resume">
+                                    <i class="fas fa-times-circle me-1"></i>No Resume
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-chip {{ app.status }}">
+                                    <span class="status-indicator"></span>
+                                    {{ app.status|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST" 
+                                      action="{{ url_for('update_application_status', app_id=app.id) }}"
+                                      class="status-update-form"
+                                      id="form-{{ app.id }}">
+                                    <div class="status-select-wrapper">
+                                        <select name="status" class="status-select" onchange="this.form.submit()">
+                                            <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>
+                                                Applied
+                                            </option>
+                                            <option value="shortlisted" {% if app.status == 'shortlisted' %}selected{% endif %}>
+                                                Shortlist
+                                            </option>
+                                            <option value="selected" {% if app.status == 'selected' %}selected{% endif %}>
+                                                Select
+                                            </option>
+                                            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>
+                                                Reject
+                                            </option>
+                                        </select>
+                                        <i class="fas fa-chevron-down select-arrow"></i>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>No Applications Yet</h4>
+                <p>Students haven't applied for this drive. Check back later.</p>
+                <div class="empty-state-decoration">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="creative-card-footer">
+            <div class="pagination-info" id="paginationInfo">
+                Showing <span class="fw-bold" id="showingCount">{{ applications|length }}</span> of <span class="fw-bold">{{ applications|length }}</span> applications
+            </div>
+            <div class="bulk-actions">
+                <button class="bulk-btn" id="exportBtn" onclick="exportToCSV()">
+                    <i class="fas fa-download me-2"></i>
+                    Export List
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Elements */
+.floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.15;
+    animation: floatAnimation 20s infinite;
+}
+
+.element-1 {
+    width: 300px;
+    height: 300px;
+    background: #6366f1;
+    top: -100px;
+    right: -100px;
+    animation-delay: 0s;
+}
+
+.element-2 {
+    width: 400px;
+    height: 400px;
+    background: #8b5cf6;
+    bottom: -150px;
+    left: -150px;
+    animation-delay: -5s;
+}
+
+.element-3 {
+    width: 250px;
+    height: 250px;
+    background: #ec4899;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes floatAnimation {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, 30px) scale(1.1); }
+    50% { transform: translate(20px, -30px) scale(0.9); }
+    75% { transform: translate(-30px, 20px) scale(1.05); }
+}
+
+/* Back Button */
+.back-button-creative {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.back-button-creative:hover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px #6366f1;
+}
+
+/* Creative Card */
+.creative-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 1;
+}
+
+.creative-card-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+}
+
+.card-title {
+    margin: 0;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.card-subtitle {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Drive Status Badge */
+.drive-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.drive-status-badge.approved {
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+    border: 1px solid #10b98140;
+}
+
+.drive-status-badge.pending {
+    background: linear-gradient(135deg, #f59e0b20, #d9770620);
+    color: #f59e0b;
+    border: 1px solid #f59e0b40;
+}
+
+.drive-status-badge.closed {
+    background: linear-gradient(135deg, #6b728020, #4b556320);
+    color: #6b7280;
+    border: 1px solid #6b728040;
+}
+
+/* Drive Details Grid */
+.drive-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    border-radius: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.detail-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Drive Description */
+.drive-description {
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.02);
+    border-radius: 20px;
+    border: 1px dashed rgba(99, 102, 241, 0.2);
+}
+
+.description-title,
+.branches-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.description-text {
+    color: var(--gray);
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Branch Tags */
+.branch-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.branch-tag {
+    background: linear-gradient(135deg, #6366f120, #8b5cf620);
+    color: #6366f1;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #6366f130;
+    transition: all 0.3s ease;
+}
+
+.branch-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px -5px #6366f1;
+}
+
+/* Stats Cards */
+.stats-card {
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.stats-card-inner {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 25px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover .stats-card-inner {
+    transform: translateY(-5px);
+    border-color: transparent;
+}
+
+.stats-card:hover .stats-glow {
+    opacity: 1;
+}
+
+.stats-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    filter: blur(20px);
+}
+
+.stats-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+}
+
+.card-primary .stats-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.card-success .stats-icon { background: linear-gradient(135deg, #10b981, #059669); }
+.card-info .stats-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.card-danger .stats-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+.stats-content {
+    flex: 1;
+}
+
+.stats-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stats-label {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.stats-trend {
+    font-size: 0.8rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Header Right Elements */
+.header-right {
+    display: flex;
+    gap: 10px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+}
+
+.search-input {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 10px 20px 10px 45px;
+    color: var(--dark);
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    width: 300px;
+}
+
+/* Filter Dropdown */
+.filter-dropdown {
+    position: relative;
+}
+
+.filter-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #6366f1;
+}
+
+.filter-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 10px;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+}
+
+.filter-dropdown:hover .filter-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.filter-option {
+    padding: 12px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--dark);
+}
+
+.filter-option:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    transform: translateX(5px);
+}
+
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+}
+
+.creative-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.creative-table thead th {
+    padding: 20px;
+    font-weight: 600;
+    color: var(--gray);
+    border-bottom: 2px solid var(--glass-border);
+    white-space: nowrap;
+}
+
+.creative-table tbody td {
+    padding: 20px;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--dark);
+}
+
+.creative-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.creative-table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    transform: scale(1.01);
+    box-shadow: 0 10px 30px -10px #6366f1;
+}
+
+/* Student Cell */
+.student-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-info small {
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+/* Badges */
+.roll-badge {
+    font-weight: 700;
+    color: #6366f1;
+    font-size: 1rem;
+}
+
+.branch-chip {
+    background: linear-gradient(135deg, #3b82f620, #2563eb20);
+    color: #3b82f6;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    border: 1px solid #3b82f630;
+}
+
+.cgpa-chip {
+    background: linear-gradient(135deg, #f59e0b20, #d9770620);
+    color: #f59e0b;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #f59e0b30;
+    white-space: nowrap;
+}
+
+.date-chip {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Resume Link */
+.resume-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #ef444420, #dc262620);
+    color: #ef4444;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    border: 1px solid #ef444430;
+}
+
+.resume-link:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px -5px #ef4444;
+}
+
+.resume-link i {
+    font-size: 1rem;
+}
+
+.no-resume {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: #6b728020;
+    color: #6b7280;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* Status Chip */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-chip.applied {
+    background: linear-gradient(135deg, #6b728020, #4b556320);
+    color: #6b7280;
+}
+.status-chip.applied .status-indicator {
+    background: #6b7280;
+    box-shadow: 0 0 10px #6b7280;
+}
+
+.status-chip.shortlisted {
+    background: linear-gradient(135deg, #3b82f620, #2563eb20);
+    color: #3b82f6;
+}
+.status-chip.shortlisted .status-indicator {
+    background: #3b82f6;
+    box-shadow: 0 0 10px #3b82f6;
+}
+
+.status-chip.selected {
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+}
+.status-chip.selected .status-indicator {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-chip.rejected {
+    background: linear-gradient(135deg, #ef444420, #dc262620);
+    color: #ef4444;
+}
+.status-chip.rejected .status-indicator {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Status Select */
+.status-update-form {
+    width: 100%;
+}
+
+.status-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.status-select {
+    width: 100%;
+    padding: 8px 30px 8px 12px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--dark);
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    transition: all 0.3s ease;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    pointer-events: none;
+    font-size: 0.8rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #6366f120, #8b5cf620);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #6366f1;
+    margin: 0 auto 25px;
+    animation: bounce 2s infinite;
+}
+
+.empty-state h4 {
+    color: var(--dark);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+.empty-state-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.empty-state-decoration span {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    animation: float 6s infinite;
+}
+
+.empty-state-decoration span:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.empty-state-decoration span:nth-child(2) {
+    bottom: 30%;
+    right: 15%;
+    animation-delay: -2s;
+}
+
+.empty-state-decoration span:nth-child(3) {
+    top: 40%;
+    right: 25%;
+    animation-delay: -4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -20px); }
+}
+
+/* Card Footer */
+.creative-card-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.pagination-info {
+    color: var(--gray);
+}
+
+.bulk-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 10px 25px;
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.bulk-btn:hover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #6366f1;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .stats-number,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .creative-table tbody td,
+[data-theme="dark"] .student-info strong,
+[data-theme="dark"] .detail-value,
+[data-theme="dark"] .description-title,
+[data-theme="dark"] .branches-title {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .filter-option {
+    color: var(--light);
+}
+
+[data-theme="dark"] .filter-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .status-select {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+}
+
+[data-theme="dark"] .bulk-btn {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .creative-table {
+        min-width: 1200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .creative-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-right {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .search-input:focus {
+        width: 100%;
+    }
+    
+    .filter-dropdown {
+        width: 100%;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filter-menu {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .drive-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bulk-actions {
+        width: 100%;
+    }
+    
+    .bulk-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .pagination-info {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('applicationSearch');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.application-row');
+            
+            rows.forEach(row => {
+                const studentData = row.getAttribute('data-student') || '';
+                if (studentData.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            updateShowingCount();
+        });
+    }
+    
+    // Filter functionality
+    const filterOptions = document.querySelectorAll('.filter-option');
+    filterOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            const rows = document.querySelectorAll('.application-row');
+            const filterBtn = document.getElementById('filterBtn').querySelector('span');
+            
+            filterBtn.textContent = filter === 'all' ? 'All Applications' : 
+                                   filter.charAt(0).toUpperCase() + filter.slice(1) + ' Only';
+            
+            rows.forEach(row => {
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else {
+                    const status = row.getAttribute('data-status');
+                    row.style.display = status === filter ? '' : 'none';
+                }
+            });
+            
+            updateShowingCount();
+        });
+    });
+    
+    // Update showing count
+    function updateShowingCount() {
+        const visibleRows = document.querySelectorAll('.application-row[style=""]').length;
+        const totalRows = document.querySelectorAll('.application-row').length;
+        const showingCount = document.getElementById('showingCount');
+        const paginationInfo = document.getElementById('paginationInfo');
+        
+        if (showingCount) {
+            showingCount.textContent = visibleRows;
+        }
+        
+        if (paginationInfo) {
+            paginationInfo.innerHTML = `Showing <span class="fw-bold">${visibleRows}</span> of <span class="fw-bold">${totalRows}</span> applications`;
+        }
+    }
+    
+    // Auto-submit on status change (already handled by onchange)
+    
+    // Animate stats numbers
+    const statsNumbers = document.querySelectorAll('.stats-number');
+    statsNumbers.forEach(stat => {
+        const target = parseInt(stat.textContent);
+        if (!isNaN(target) && target > 0) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    stat.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    stat.textContent = Math.floor(current);
+                }
+            }, 20);
+        }
+    });
+    
+    // Row hover effect
+    const rows = document.querySelectorAll('.application-row');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.01)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
+
+// Export to CSV function
+function exportToCSV() {
+    const rows = document.querySelectorAll('.application-row');
+    if (rows.length === 0) return;
+    
+    let csv = 'Roll Number,Student Name,Email,Course,Branch,CGPA,Applied On,Status\n';
+    
+    rows.forEach(row => {
+        if (row.style.display !== 'none') {
+            const roll = row.querySelector('.roll-badge').textContent;
+            const studentName = row.querySelector('.student-info strong').textContent;
+            const email = row.querySelector('.student-info small').textContent;
+            const course = row.cells[2].textContent;
+            const branch = row.querySelector('.branch-chip').textContent;
+            const cgpa = row.querySelector('.cgpa-chip').textContent;
+            const appliedOn = row.querySelector('.date-chip').textContent.replace(/[^\d\s\w]/g, '').trim();
+            const status = row.querySelector('.status-chip').textContent.trim();
+            
+            csv += `${roll},${studentName},${email},${course},${branch},${cgpa},${appliedOn},${status}\n`;
+        }
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'applications.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // Additional scripts if needed (the main scripts are already included above)
+</script>
+{% endblock %}

@@ -1,0 +1,462 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 600;
+}
+.badge-pending {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.badge-approved {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+/* Back Button Styles - Final working version */
+.back-button {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+/* Keep color separate without !important so it can change on hover */
+.back-button,
+.back-button i {
+    color: var(--dark) !important;
+}
+
+/* Make sure the icon is visible */
+.back-button i {
+    display: inline-block;
+    opacity: 1;
+    visibility: visible;
+    font-size: 1.1rem;
+    transition: var(--transition);
+}
+
+/* Hover effects */
+.back-button:hover {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    border-color: transparent !important;
+    transform: scale(1.1);
+}
+
+.back-button:hover,
+.back-button:hover i {
+    color: white !important;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .back-button,
+[data-theme="dark"] .back-button i {
+    color: var(--light);
+}
+
+[data-theme="dark"] .back-button:hover,
+[data-theme="dark"] .back-button:hover i {
+    color: white !important;
+}
+.badge-rejected {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.badge-applied {
+    background-color: #17a2b8;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.badge-shortlisted {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.badge-selected {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+/* Simple Register Dropdown - Minimal Styling */
+.register-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.register-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 8px 0;
+    color: inherit; /* Let parent handle theme */
+}
+
+.register-btn i:last-child {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.register-dropdown:hover .register-btn i:last-child {
+    transform: rotate(180deg);
+}
+
+.register-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 8px 0;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.register-dropdown:hover .register-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(5px);
+}
+
+.register-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: inherit; /* Let parent handle theme */
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.register-dropdown-item:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+}
+
+.register-dropdown-item i {
+    width: 20px;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.register-dropdown-item span {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Add this to your dashboard CSS - This creates the effects WITHOUT a background */
+.dashboard-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Floating elements that don't have their own background */
+.dashboard-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: 
+        radial-gradient(circle at 10% 20%, var(--primary) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, var(--secondary) 0%, transparent 35%),
+        radial-gradient(circle at 30% 70%, var(--accent) 0%, transparent 40%);
+    opacity: 0.08;
+    animation: backgroundShift 30s ease infinite alternate;
+}
+
+/* Subtle grid overlay */
+.dashboard-container::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background-image: 
+        linear-gradient(var(--primary) 1px, transparent 1px),
+        linear-gradient(90deg, var(--primary) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.02;
+    animation: gridMove 60s linear infinite;
+}
+
+/* Floating particles - using pseudo-elements */
+.dashboard-container .particle {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--primary);
+    filter: blur(80px);
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: -1;
+    animation: floatAround 25s infinite alternate;
+}
+
+.dashboard-container .particle:nth-child(1) {
+    top: -100px;
+    right: -100px;
+    background: var(--primary);
+    animation-delay: 0s;
+}
+
+.dashboard-container .particle:nth-child(2) {
+    bottom: -150px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: var(--secondary);
+    animation-delay: -5s;
+}
+
+.dashboard-container .particle:nth-child(3) {
+    top: 40%;
+    right: 20%;
+    width: 250px;
+    height: 250px;
+    background: var(--accent);
+    animation-delay: -10s;
+}
+
+@keyframes backgroundShift {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 5% 5%;
+    }
+}
+
+@keyframes gridMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 60px 60px;
+    }
+}
+
+@keyframes floatAround {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(30px, -30px) scale(1.1);
+    }
+}
+
+.stat-card {
+    border-radius: 15px;
+    padding: 25px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card i {
+    font-size: 3rem;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    opacity: 0.3;
+}
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.stat-card .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+.stat-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.stat-success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+.stat-info {
+    background: linear-gradient(135deg, #17ead9 0%, #6078ea 100%);
+}
+.stat-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.table-custom {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.table-custom thead {
+    background: #343a40;
+    color: white;
+}
+.table-custom th {
+    font-weight: 600;
+    border: none;
+}
+.table-custom td {
+    vertical-align: middle;
+    padding: 15px;
+}
+.btn-action {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin: 2px;
+}
+.btn-approve {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+.btn-approve:hover {
+    background: #218838;
+    color: white;
+}
+.btn-reject {
+    background: #dc3545;
+    color: white;
+    border: none;
+}
+.btn-reject:hover {
+    background: #c82333;
+    color: white;
+}
+.form-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+}
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 0;
+    margin-bottom: 30px;
+}
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+.search-bar {
+    background: white;
+    border-radius: 30px;
+    padding: 5px 5px 5px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.search-bar input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+}
+.search-bar button {
+    border-radius: 30px;
+    padding: 10px 30px;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+@media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    .table-responsive {
+        border: 0;
+    }
+    .btn-action {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+    }
+}

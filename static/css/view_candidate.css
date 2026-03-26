@@ -1,0 +1,10 @@
+/* view_candidate.css
+   Moved from inline <style> in templates/company/view_candidate.html
+   Paste the original CSS here to restore full styling.
+   For now this file contains helper rules only.
+*/
+
+.floating-shape { pointer-events: none; }
+
+/* Ensure modal styles are available as fallback */
+.futuristic-modal { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; }

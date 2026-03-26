@@ -1,0 +1,1283 @@
+{% extends "base.html" %}
+{% block title %}Analytics & Reports | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-chart-pie me-3"></i>Analytics & Reports
+                        </h2>
+                        <p class="text-muted-light mb-0">Comprehensive insights and performance metrics</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>Admin Portal
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon stat-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_students }}</div>
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up text-success"></i> +12% this month
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="150">
+                    <div class="stat-icon stat-success">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_companies }}</div>
+                        <div class="stat-label">Total Companies</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up text-success"></i> +5 new this month
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon stat-info">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_drives }}</div>
+                        <div class="stat-label">Total Drives</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up text-success"></i> {{ approved_drives }} active
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="250">
+                    <div class="stat-icon stat-warning">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_applications }}</div>
+                        <div class="stat-label">Total Applications</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up text-success"></i> {{ selected_apps }} selected
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-chart-line me-3"></i>
+                                <h5 class="mb-0 text-white">Application Trends</h5>
+                            </div>
+                            <div class="time-range-selector">
+                                <button class="range-btn active" data-range="6">6 Months</button>
+                                <button class="range-btn" data-range="12">1 Year</button>
+                                <button class="range-btn" data-range="24">2 Years</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="chart-container">
+                            <canvas id="applicationTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="350">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-pie me-3"></i>
+                            <h5 class="mb-0 text-white">Drive Status</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="chart-container pie-chart">
+                            <canvas id="driveStatusChart"></canvas>
+                        </div>
+                        <div class="chart-legend mt-3">
+                            <div class="legend-item">
+                                <span class="legend-color approved"></span>
+                                <span>Approved ({{ approved_drives }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color pending"></span>
+                                <span>Pending ({{ pending_drives }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color closed"></span>
+                                <span>Closed ({{ closed_drives }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color rejected"></span>
+                                <span>Rejected ({{ rejected_drives }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-pie me-3"></i>
+                            <h5 class="mb-0 text-white">Application Status</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="chart-container pie-chart">
+                            <canvas id="applicationStatusChart"></canvas>
+                        </div>
+                        <div class="chart-legend mt-3">
+                            <div class="legend-item">
+                                <span class="legend-color applied"></span>
+                                <span>Applied ({{ applied_apps }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color shortlisted"></span>
+                                <span>Shortlisted ({{ shortlisted_apps }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color selected"></span>
+                                <span>Selected ({{ selected_apps }})</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color rejected"></span>
+                                <span>Rejected ({{ rejected_apps }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="450">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-bar me-3"></i>
+                            <h5 class="mb-0 text-white">Top Companies by Applications</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="chart-container">
+                            <canvas id="topCompaniesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Distribution & Success Rate -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-code-branch me-3"></i>
+                            <h5 class="mb-0 text-white">Branch Distribution</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="chart-container">
+                            <canvas id="branchChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="550">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-trophy me-3"></i>
+                            <h5 class="mb-0 text-white">Placement Success Rate</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <div class="success-rate-container">
+                            <div class="success-rate-circle">
+                                <div class="circle-progress" data-value="{{ success_rate|default(78) }}">
+                                    <span class="circle-value">{{ success_rate|default(78) }}%</span>
+                                </div>
+                                <p>Overall Success Rate</p>
+                            </div>
+                            <div class="success-stats">
+                                <div class="success-stat-item">
+                                    <span class="stat-label">Total Placed</span>
+                                    <span class="stat-number">{{ selected_apps }}</span>
+                                </div>
+                                <div class="success-stat-item">
+                                    <span class="stat-label">Average Package</span>
+                                    <span class="stat-number">{{ avg_package|default('8.5') }} LPA</span>
+                                </div>
+                                <div class="success-stat-item">
+                                    <span class="stat-label">Highest Package</span>
+                                    <span class="stat-number">{{ highest_package|default('45') }} LPA</span>
+                                </div>
+                                <div class="success-stat-item">
+                                    <span class="stat-label">Active Drives</span>
+                                    <span class="stat-number">{{ approved_drives }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Export -->
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-history me-3"></i>
+                            <h5 class="mb-0 text-white">Recent Activity</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic p-0">
+                        <div class="activity-timeline">
+                            {% for activity in recent_activities %}
+                            <div class="activity-item">
+                                <div class="activity-icon {{ activity.type }}">
+                                    <i class="fas {{ activity.icon }}"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">{{ activity.text }}</p>
+                                    <span class="activity-time">{{ activity.time }}</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="empty-state-mini p-4">
+                                <i class="fas fa-history"></i>
+                                <p>No recent activity</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="650">
+                    <div class="card-header-gradient-secondary">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-download me-3"></i>
+                            <h5 class="mb-0 text-white">Export Reports</h5>
+                        </div>
+                    </div>
+                    <div class="card-body-futuristic">
+                        <p class="text-muted mb-4">Download comprehensive reports in various formats</p>
+                        
+                        <div class="export-options">
+                            <a href="{{ url_for('export_reports') }}?type=summary&format=csv" class="export-card">
+                                <div class="export-icon csv">
+                                    <i class="fas fa-file-csv"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Summary Report</h6>
+                                    <p>CSV format • All metrics</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('export_reports') }}?type=applications&format=excel" class="export-card">
+                                <div class="export-icon excel">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Applications Report</h6>
+                                    <p>Excel format • Detailed applications</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('export_reports') }}?type=students&format=pdf" class="export-card">
+                                <div class="export-icon pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Students Report</h6>
+                                    <p>PDF format • Student statistics</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('export_reports') }}?type=companies&format=pdf" class="export-card">
+                                <div class="export-icon pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Companies Report</h6>
+                                    <p>PDF format • Company analytics</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('export_reports') }}?type=drives&format=excel" class="export-card">
+                                <div class="export-icon excel">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Drives Report</h6>
+                                    <p>Excel format • Drive performance</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('export_reports') }}?type=complete&format=zip" class="export-card">
+                                <div class="export-icon zip">
+                                    <i class="fas fa-file-archive"></i>
+                                </div>
+                                <div class="export-content">
+                                    <h6>Complete Package</h6>
+                                    <p>ZIP format • All reports</p>
+                                </div>
+                                <i class="fas fa-download export-arrow"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="schedule-report mt-4">
+                            <h6 class="schedule-title">
+                                <i class="fas fa-clock me-2"></i>Schedule Automated Reports
+                            </h6>
+                            <div class="schedule-options">
+                                <label class="schedule-option">
+                                    <input type="radio" name="schedule" value="daily">
+                                    <span class="radio-custom"></span>
+                                    Daily
+                                </label>
+                                <label class="schedule-option">
+                                    <input type="radio" name="schedule" value="weekly" checked>
+                                    <span class="radio-custom"></span>
+                                    Weekly
+                                </label>
+                                <label class="schedule-option">
+                                    <input type="radio" name="schedule" value="monthly">
+                                    <span class="radio-custom"></span>
+                                    Monthly
+                                </label>
+                            </div>
+                            <button class="btn-schedule mt-3" onclick="scheduleReports()">
+                                <i class="fas fa-bell me-2"></i>Set Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Stat Cards */
+.stat-card-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-futuristic:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon.stat-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon.stat-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.stat-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-icon.stat-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-trend {
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-top: 5px;
+}
+
+/* Chart Container */
+.chart-container {
+    height: 250px;
+    position: relative;
+}
+
+.chart-container.pie-chart {
+    height: 200px;
+}
+
+/* Time Range Selector */
+.time-range-selector {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 3px;
+}
+
+.range-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 25px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.range-btn.active {
+    background: white;
+    color: var(--primary);
+}
+
+/* Chart Legend */
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+}
+
+.legend-color.approved {
+    background: #10b981;
+}
+
+.legend-color.pending {
+    background: #f59e0b;
+}
+
+.legend-color.closed {
+    background: #6b7280;
+}
+
+.legend-color.rejected {
+    background: #ef4444;
+}
+
+.legend-color.applied {
+    background: #f59e0b;
+}
+
+.legend-color.shortlisted {
+    background: var(--primary);
+}
+
+.legend-color.selected {
+    background: #10b981;
+}
+
+/* Success Rate Container */
+.success-rate-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.success-rate-circle {
+    text-align: center;
+}
+
+.circle-progress {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: conic-gradient(#10b981 0deg, #10b981 {{ success_rate|default(78) * 3.6 }}deg, #f0f0f0 {{ success_rate|default(78) * 3.6 }}deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.circle-progress::before {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+}
+
+.circle-value {
+    position: relative;
+    z-index: 2;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.success-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    flex: 1;
+}
+
+.success-stat-item {
+    text-align: center;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+}
+
+.success-stat-item .stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-bottom: 5px;
+}
+
+.success-stat-item .stat-number {
+    font-size: 1.3rem;
+    color: var(--primary);
+}
+
+/* Activity Timeline */
+.activity-timeline {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.activity-item:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.student {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.activity-icon.company {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.activity-icon.drive {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.activity-icon.application {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-text {
+    font-size: 0.85rem;
+    color: var(--dark);
+    margin: 0 0 2px;
+}
+
+.activity-time {
+    font-size: 0.65rem;
+    color: var(--gray);
+}
+
+/* Export Options */
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.export-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.export-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+    border-color: var(--primary);
+}
+
+.export-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.export-icon.csv {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.export-icon.excel {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.export-icon.pdf {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.export-icon.zip {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.export-content {
+    flex: 1;
+}
+
+.export-content h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 2px;
+    color: var(--dark);
+}
+
+.export-content p {
+    font-size: 0.7rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+.export-arrow {
+    color: var(--gray);
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.export-card:hover .export-arrow {
+    transform: translateX(5px);
+    color: var(--primary);
+}
+
+/* Schedule Report */
+.schedule-report {
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    border: 1px dashed var(--glass-border);
+}
+
+.schedule-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.schedule-options {
+    display: flex;
+    gap: 20px;
+}
+
+.schedule-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--dark);
+}
+
+.schedule-option input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--gray);
+    position: relative;
+    transition: var(--transition);
+}
+
+.schedule-option input[type="radio"]:checked + .radio-custom {
+    border-color: var(--primary);
+}
+
+.schedule-option input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.btn-schedule {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-schedule:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Empty State Mini */
+.empty-state-mini {
+    text-align: center;
+}
+
+.empty-state-mini i {
+    font-size: 2rem;
+    color: var(--gray);
+    opacity: 0.3;
+    margin-bottom: 8px;
+}
+
+.empty-state-mini p {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .export-content h6,
+[data-theme="dark"] .schedule-title,
+[data-theme="dark"] .schedule-option,
+[data-theme="dark"] .activity-text,
+[data-theme="dark"] .legend-item span:last-child,
+[data-theme="dark"] .success-stat-item .stat-number {
+    color: var(--light);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .success-rate-container {
+        flex-direction: column;
+    }
+    
+    .time-range-selector {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-header-gradient-secondary .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .schedule-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .export-card {
+        padding: 10px;
+    }
+}
+</style>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Application Trends Chart
+    const trendCtx = document.getElementById('applicationTrendsChart')?.getContext('2d');
+    if (trendCtx) {
+        const months = {{ monthly_apps|map(attribute='month')|list|tojson }};
+        const counts = {{ monthly_apps|map(attribute='count')|list|tojson }};
+        
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Applications',
+                    data: counts,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(99, 102, 241, 0.1)'
+                        },
+                        ticks: {
+                            color: 'var(--gray)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: 'var(--gray)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Drive Status Chart
+    const driveCtx = document.getElementById('driveStatusChart')?.getContext('2d');
+    if (driveCtx) {
+        new Chart(driveCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Approved', 'Pending', 'Closed', 'Rejected'],
+                datasets: [{
+                    data: [{{ approved_drives }}, {{ pending_drives }}, {{ closed_drives }}, {{ rejected_drives }}],
+                    backgroundColor: [
+                        '#10b981',
+                        '#f59e0b',
+                        '#6b7280',
+                        '#ef4444'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    }
+
+    // Application Status Chart
+    const appStatusCtx = document.getElementById('applicationStatusChart')?.getContext('2d');
+    if (appStatusCtx) {
+        new Chart(appStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Applied', 'Shortlisted', 'Selected', 'Rejected'],
+                datasets: [{
+                    data: [{{ applied_apps }}, {{ shortlisted_apps }}, {{ selected_apps }}, {{ rejected_apps }}],
+                    backgroundColor: [
+                        '#f59e0b',
+                        '#6366f1',
+                        '#10b981',
+                        '#ef4444'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    }
+
+    // Top Companies Chart
+    const companiesCtx = document.getElementById('topCompaniesChart')?.getContext('2d');
+    if (companiesCtx) {
+        // Sample data - replace with actual data from backend
+        new Chart(companiesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['TCS', 'Infosys', 'Microsoft', 'Google', 'Amazon'],
+                datasets: [{
+                    label: 'Applications Received',
+                    data: [245, 198, 156, 143, 132],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(236, 72, 153, 0.8)'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(99, 102, 241, 0.1)'
+                        },
+                        ticks: {
+                            color: 'var(--gray)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: 'var(--gray)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Branch Distribution Chart
+    const branchCtx = document.getElementById('branchChart')?.getContext('2d');
+    if (branchCtx) {
+        // Sample data - replace with actual data from backend
+        new Chart(branchCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Computer Science', 'Information Technology', 'Electronics', 'Mechanical', 'Civil'],
+                datasets: [{
+                    data: [45, 25, 15, 10, 5],
+                    backgroundColor: [
+                        '#6366f1',
+                        '#10b981',
+                        '#f59e0b',
+                        '#3b82f6',
+                        '#ec4899'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: 'var(--gray)',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Time range buttons
+    document.querySelectorAll('.range-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Here you would fetch new data based on the range
+        });
+    });
+
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Schedule reports function
+function scheduleReports() {
+    const schedule = document.querySelector('input[name="schedule"]:checked')?.value;
+    if (schedule) {
+        alert(`Reports scheduled for ${schedule} delivery. You will receive them via email.`);
+    } else {
+        alert('Please select a schedule frequency');
+    }
+}
+</script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

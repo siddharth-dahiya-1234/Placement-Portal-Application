@@ -1,0 +1,1282 @@
+{% extends "base.html" %}
+{% block title %}Search Results | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-search me-3"></i>Search Results
+                        </h2>
+                        <p class="text-muted-light mb-0">
+                            {% if query %}
+                                Found {{ results|length }} result{% if results|length != 1 %}s{% endif %} for "{{ query }}"
+                            {% else %}
+                                Enter a search term to find opportunities
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-clock me-2"></i>{{ results|length }} Results
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar-section mb-4" data-aos="fade-up" data-aos-delay="50">
+            <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                <div class="search-wrapper glass-card">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="q" class="search-input" 
+                           placeholder="Search for drives, companies, students, opportunities..." 
+                           value="{{ query }}"
+                           autocomplete="off"
+                           id="searchInput">
+                    <button type="submit" class="search-button">
+                        <span>Search</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Filters -->
+        <div class="search-filters mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="filters-wrapper glass-card">
+                <div class="filter-group">
+                    <span class="filter-label">Filter by:</span>
+                    <button class="filter-btn {% if not selected_filter or selected_filter == 'all' %}active{% endif %}" 
+                            data-filter="all" onclick="applyFilter('all')">
+                        <i class="fas fa-globe me-2"></i>All
+                    </button>
+                    
+                    {% if current_user.role == 'student' %}
+                    <button class="filter-btn {% if selected_filter == 'drives' %}active{% endif %}" 
+                            data-filter="drives" onclick="applyFilter('drives')">
+                        <i class="fas fa-briefcase me-2"></i>Drives
+                    </button>
+                    <button class="filter-btn {% if selected_filter == 'companies' %}active{% endif %}" 
+                            data-filter="companies" onclick="applyFilter('companies')">
+                        <i class="fas fa-building me-2"></i>Companies
+                    </button>
+                    {% elif current_user.role == 'company' %}
+                    <button class="filter-btn {% if selected_filter == 'students' %}active{% endif %}" 
+                            data-filter="students" onclick="applyFilter('students')">
+                        <i class="fas fa-user-graduate me-2"></i>Students
+                    </button>
+                    {% elif current_user.role == 'admin' %}
+                    <button class="filter-btn {% if selected_filter == 'students' %}active{% endif %}" 
+                            data-filter="students" onclick="applyFilter('students')">
+                        <i class="fas fa-user-graduate me-2"></i>Students
+                    </button>
+                    <button class="filter-btn {% if selected_filter == 'companies' %}active{% endif %}" 
+                            data-filter="companies" onclick="applyFilter('companies')">
+                        <i class="fas fa-building me-2"></i>Companies
+                    </button>
+                    <button class="filter-btn {% if selected_filter == 'drives' %}active{% endif %}" 
+                            data-filter="drives" onclick="applyFilter('drives')">
+                        <i class="fas fa-briefcase me-2"></i>Drives
+                    </button>
+                    {% endif %}
+                </div>
+                
+                <div class="sort-group">
+                    <span class="filter-label">Sort by:</span>
+                    <select class="sort-select" onchange="applySort(this.value)">
+                        <option value="relevance" {% if sort == 'relevance' %}selected{% endif %}>Relevance</option>
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
+                        <option value="name_asc" {% if sort == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+                        <option value="name_desc" {% if sort == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-summary mb-3" data-aos="fade-up" data-aos-delay="150">
+            <p class="summary-text">
+                <i class="fas fa-info-circle me-2"></i>
+                Showing <strong>{{ results|length }}</strong> results
+                {% if query %}
+                    for "<strong>{{ query }}</strong>"
+                {% endif %}
+                {% if selected_filter and selected_filter != 'all' %}
+                    in <strong>{{ selected_filter|title }}</strong>
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div class="results-grid" data-aos="fade-up" data-aos-delay="200">
+            {% if results %}
+                {% for result in results %}
+                    {% if result.type == 'drive' %}
+                        <!-- Drive Result Card -->
+                        <div class="result-card glass-card" data-result-type="drive">
+                            <div class="result-type-badge drive">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Drive</span>
+                            </div>
+                            
+                            <div class="result-content">
+                                <div class="result-header">
+                                    <div class="company-info">
+                                        <div class="company-avatar">
+                                            {{ result.company_name[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <h3 class="result-title">{{ result.job_title }}</h3>
+                                            <p class="company-name">{{ result.company_name }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="package-badge">{{ result.package }} LPA</span>
+                                </div>
+
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ result.location }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Deadline: {{ result.deadline }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-star"></i>
+                                        <span>Min CGPA: {{ result.min_cgpa }}</span>
+                                    </div>
+                                </div>
+
+                                <p class="result-description">{{ result.description|truncate(150) }}</p>
+
+                                <div class="result-footer">
+                                    <div class="eligibility-tags">
+                                        {% for branch in result.branches[:3] %}
+                                        <span class="branch-tag">{{ branch }}</span>
+                                        {% endfor %}
+                                        {% if result.branches|length > 3 %}
+                                        <span class="branch-tag more">+{{ result.branches|length - 3 }}</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <a href="{{ url_for('view_drive', drive_id=result.id) }}" class="view-btn">
+                                        <span>View Drive</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% elif result.type == 'company' %}
+                        <!-- Company Result Card -->
+                        <div class="result-card glass-card" data-result-type="company">
+                            <div class="result-type-badge company">
+                                <i class="fas fa-building"></i>
+                                <span>Company</span>
+                            </div>
+                            
+                            <div class="result-content">
+                                <div class="result-header">
+                                    <div class="company-info">
+                                        <div class="company-avatar large">
+                                            {{ result.name[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <h3 class="result-title">{{ result.name }}</h3>
+                                            <p class="company-industry">{{ result.industry|default('Technology') }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="status-badge {{ result.status }}">
+                                        {{ result.status }}
+                                    </span>
+                                </div>
+
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ result.location|default('Remote') }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>{{ result.drives_count }} active drives</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Member since {{ result.joined }}</span>
+                                    </div>
+                                </div>
+
+                                <p class="result-description">{{ result.description|truncate(150) }}</p>
+
+                                <div class="result-footer">
+                                    <div class="company-metrics">
+                                        <span class="metric">
+                                            <i class="fas fa-users"></i>
+                                            {{ result.total_applications }} applications
+                                        </span>
+                                    </div>
+                                    
+                                    <a href="{{ url_for('admin_view_company', company_id=result.id) }}" class="view-btn">
+                                        <span>View Company</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% elif result.type == 'student' %}
+                        <!-- Student Result Card -->
+                        <div class="result-card glass-card" data-result-type="student">
+                            <div class="result-type-badge student">
+                                <i class="fas fa-user-graduate"></i>
+                                <span>Student</span>
+                            </div>
+                            
+                            <div class="result-content">
+                                <div class="result-header">
+                                    <div class="student-info">
+                                        <div class="student-avatar">
+                                            {{ result.name[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <h3 class="result-title">{{ result.name }}</h3>
+                                            <p class="student-roll">{{ result.roll_number }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="cgpa-badge">{{ result.cgpa }} CGPA</span>
+                                </div>
+
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span>{{ result.course }} - {{ result.branch }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{ result.email }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Semester {{ result.semester }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="skills-section">
+                                    {% for skill in result.skills[:4] %}
+                                    <span class="skill-tag">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if result.skills|length > 4 %}
+                                    <span class="skill-tag more">+{{ result.skills|length - 4 }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="result-footer">
+                                    <div class="student-metrics">
+                                        <span class="metric">
+                                            <i class="fas fa-file-alt"></i>
+                                            {{ result.applications_count }} applications
+                                        </span>
+                                    </div>
+                                    
+                                    <a href="{{ url_for('admin_view_student', student_id=result.id) }}" class="view-btn">
+                                        <span>View Profile</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Pagination -->
+                <div class="pagination-section" data-aos="fade-up" data-aos-delay="250">
+                    <div class="pagination-info">
+                        Showing <span class="fw-bold">1-{{ results|length }}</span> of 
+                        <span class="fw-bold">{{ total_results|default(results|length) }}</span> results
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn" {% if current_page == 1 %}disabled{% endif %}>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">...</button>
+                        <button class="page-btn">10</button>
+                        <button class="page-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- No Results State -->
+                <div class="no-results glass-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    {% if query %}
+                        <h3>No Results Found</h3>
+                        <p class="text-muted">
+                            We couldn't find any matches for "{{ query }}"
+                        </p>
+                        
+                        <div class="suggestions">
+                            <h4 class="suggestions-title">Suggestions:</h4>
+                            <ul class="suggestions-list">
+                                <li><i class="fas fa-check-circle"></i> Check your spelling</li>
+                                <li><i class="fas fa-check-circle"></i> Try more general keywords</li>
+                                <li><i class="fas fa-check-circle"></i> Try different keywords</li>
+                                <li><i class="fas fa-check-circle"></i> Browse categories instead</li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <h3>Enter a Search Term</h3>
+                        <p class="text-muted">
+                            Type something in the search box above to find opportunities
+                        </p>
+                    {% endif %}
+
+                    <!-- Popular Searches -->
+                    <div class="popular-searches mt-4">
+                        <h4 class="popular-title">Popular Searches:</h4>
+                        <div class="search-tags">
+                            <a href="{{ url_for('search') }}?q=Software Engineer" class="search-tag">Software Engineer</a>
+                            <a href="{{ url_for('search') }}?q=Data Scientist" class="search-tag">Data Scientist</a>
+                            <a href="{{ url_for('search') }}?q=TCS" class="search-tag">TCS</a>
+                            <a href="{{ url_for('search') }}?q=Infosys" class="search-tag">Infosys</a>
+                            <a href="{{ url_for('search') }}?q=10 LPA" class="search-tag">10 LPA</a>
+                            <a href="{{ url_for('search') }}?q=Computer Science" class="search-tag">Computer Science</a>
+                        </div>
+                    </div>
+
+                    <!-- Browse Categories - FIXED SECTION -->
+                    <div class="browse-categories mt-4">
+                        <h4 class="categories-title">Browse by Category:</h4>
+                        <div class="category-grid">
+                            {% if current_user.role == 'student' %}
+                            <a href="{{ url_for('student_dashboard') }}" class="category-card glass-card">
+                                <i class="fas fa-briefcase"></i>
+                                <span>All Drives</span>
+                            </a>
+                            <!-- Fixed: Students don't have browse_companies, so link to search with filter -->
+                            <a href="{{ url_for('search') }}?filter=companies" class="category-card glass-card">
+                                <i class="fas fa-building"></i>
+                                <span>Companies</span>
+                            </a>
+                            
+                            {% elif current_user.role == 'company' %}
+                            <a href="{{ url_for('browse_candidates') }}" class="category-card glass-card">
+                                <i class="fas fa-users"></i>
+                                <span>All Students</span>
+                            </a>
+                            <a href="{{ url_for('company_dashboard') }}" class="category-card glass-card">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Analytics</span>
+                            </a>
+                            
+                            {% elif current_user.role == 'admin' %}
+                            <a href="{{ url_for('admin_students') }}" class="category-card glass-card">
+                                <i class="fas fa-user-graduate"></i>
+                                <span>Students</span>
+                            </a>
+                            <a href="{{ url_for('admin_companies') }}" class="category-card glass-card">
+                                <i class="fas fa-building"></i>
+                                <span>Companies</span>
+                            </a>
+                            <a href="{{ url_for('admin_drives') }}" class="category-card glass-card">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Drives</span>
+                            </a>
+                            
+                            {% else %}
+                            <!-- For non-authenticated users -->
+                            <a href="{{ url_for('index') }}" class="category-card glass-card">
+                                <i class="fas fa-home"></i>
+                                <span>Home</span>
+                            </a>
+                            <a href="{{ url_for('login') }}" class="category-card glass-card">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Login</span>
+                            </a>
+                            <a href="{{ url_for('register_student') }}" class="category-card glass-card">
+                                <i class="fas fa-user-graduate"></i>
+                                <span>Student Register</span>
+                            </a>
+                            <a href="{{ url_for('register_company') }}" class="category-card glass-card">
+                                <i class="fas fa-building"></i>
+                                <span>Company Register</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* All your existing styles remain exactly the same */
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Search Bar */
+.search-bar-section {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 60px;
+    padding: 5px 5px 5px 25px;
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+    transition: var(--transition);
+}
+
+.search-wrapper:hover,
+.search-wrapper:focus-within {
+    box-shadow: 0 30px 60px -10px rgba(99, 102, 241, 0.4);
+    border-color: var(--primary);
+}
+
+.search-icon {
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 15px 15px 10px;
+    border: none;
+    background: transparent;
+    color: var(--dark);
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.search-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-button:hover {
+    transform: translateX(5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Search Filters */
+.filters-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-right: 5px;
+}
+
+.filter-btn {
+    padding: 6px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--gray);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+}
+
+.sort-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-select {
+    padding: 6px 30px 6px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    background: var(--glass-bg);
+    color: var(--dark);
+    font-size: 0.8rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+/* Results Summary */
+.results-summary {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.summary-text {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Results Grid */
+.results-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Result Card */
+.result-card {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.result-card:hover::before {
+    opacity: 1;
+}
+
+.result-type-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    z-index: 2;
+}
+
+.result-type-badge.drive {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid #10b98130;
+}
+
+.result-type-badge.company {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid var(--primary)30;
+}
+
+.result-type-badge.student {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid #f59e0b30;
+}
+
+.result-content {
+    flex: 1;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.company-info, .student-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.company-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.company-avatar.large {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+}
+
+.student-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.result-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 5px;
+    color: var(--dark);
+}
+
+.company-name, .student-roll, .company-industry {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.package-badge {
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #10b98130;
+}
+
+.cgpa-badge {
+    background: linear-gradient(135deg, #f59e0b20, #d9770620);
+    color: #f59e0b;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #f59e0b30;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.approved {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.result-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.detail-item i {
+    color: var(--primary);
+    font-size: 0.8rem;
+}
+
+.result-description {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+/* Skills & Tags */
+.skills-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.skill-tag {
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #3b82f620, #2563eb20);
+    color: #3b82f6;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    border: 1px solid #3b82f630;
+}
+
+.skill-tag.more {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.eligibility-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.branch-tag {
+    padding: 3px 8px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    font-size: 0.65rem;
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.branch-tag.more {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+/* Result Footer */
+.result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.company-metrics, .student-metrics {
+    display: flex;
+    gap: 15px;
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+.metric i {
+    color: var(--primary);
+}
+
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.view-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.pagination-info {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.page-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.page-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* No Results State */
+.no-results {
+    text-align: center;
+    padding: 60px 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+}
+
+.no-results-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--primary)20, var(--accent)20);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+/* Suggestions */
+.suggestions {
+    max-width: 400px;
+    margin: 20px auto 0;
+    text-align: left;
+}
+
+.suggestions-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.suggestions-list li i {
+    color: #10b981;
+    font-size: 0.8rem;
+}
+
+/* Popular Searches */
+.popular-searches {
+    margin-top: 20px;
+}
+
+.popular-title, .categories-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.search-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.search-tag {
+    padding: 6px 14px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.search-tag:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Category Grid */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.category-card i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.category-card span {
+    font-size: 0.8rem;
+    color: var(--dark);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .result-title,
+[data-theme="dark"] .no-results h3,
+[data-theme="dark"] .suggestions-title,
+[data-theme="dark"] .popular-title,
+[data-theme="dark"] .categories-title,
+[data-theme="dark"] .category-card span {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .search-wrapper {
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        padding: 0;
+        gap: 10px;
+    }
+    
+    .search-input {
+        width: 100%;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 50px;
+        padding: 12px 20px;
+    }
+    
+    .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .filters-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        justify-content: center;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .result-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .view-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .pagination-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<script>
+// Apply filter
+function applyFilter(filter) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('filter', filter);
+    url.searchParams.set('page', '1'); // Reset to first page
+    window.location.href = url.toString();
+}
+
+// Apply sort
+function applySort(sort) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', sort);
+    url.searchParams.set('page', '1'); // Reset to first page
+    window.location.href = url.toString();
+}
+
+// Live search suggestions (optional)
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    let timeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            // You can implement live search suggestions here
+            // This would require an API endpoint
+        }, 500);
+    });
+}
+
+// AOS initialization
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    }
+});
+</script>
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

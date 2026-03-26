@@ -1,0 +1,1771 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard | Placement Portal{% endblock %}
+{% block content %}
+
+<!-- Animated Background -->
+<div class="dashboard-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="particle-network" id="particleNetwork"></div>
+</div>
+
+<div class="dashboard-wrapper">
+    <div class="container-fluid px-4">
+        <!-- Header with Welcome Message -->
+        <div class="dashboard-header" data-aos="fade-down">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="welcome-section">
+                        <div class="welcome-badge">
+                            <i class="fas fa-crown"></i>
+                            <span>Administrator Access</span>
+                        </div>
+                        <h1 class="welcome-title">
+                            Welcome back, <span class="gradient-text">Admin</span>
+                        </h1>
+                        <p class="welcome-subtitle">
+                            Here's what's happening with your placement portal today.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="date-time-widget">
+                        <div class="date-display">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span id="currentDate"></span>
+                        </div>
+                        <div class="time-display">
+                            <i class="fas fa-clock"></i>
+                            <span id="currentTime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards with 3D Effect -->
+        <div class="kpi-grid">
+            <div class="row g-4">
+                <!-- Total Students Card -->
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="kpi-card student-card">
+                        <div class="card-glow"></div>
+                        <div class="card-bg-pattern"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="card-icon-bg">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">Total Students</h3>
+                                <div class="card-value" id="studentCount" data-target="{{ total_students }}">0</div>
+                                <div class="card-trend positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>12% increase this month</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('admin_students') }}" class="card-link">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Companies Card -->
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="kpi-card company-card">
+                        <div class="card-glow"></div>
+                        <div class="card-bg-pattern"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="card-icon-bg">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">Total Companies</h3>
+                                <div class="card-value" id="companyCount" data-target="{{ total_companies }}">0</div>
+                                <div class="card-trend positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>8 new this week</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('admin_companies') }}" class="card-link">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placement Drives Card -->
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="kpi-card drive-card">
+                        <div class="card-glow"></div>
+                        <div class="card-bg-pattern"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="card-icon-bg">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title"> See Drives</h3>
+                                <div class="card-value" id="driveCount" data-target="{{ total_drives }}">0</div>
+                                <div class="card-trend">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ upcoming_drives|default(5) }} upcoming</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('admin_drives') }}" class="card-link">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applications Card -->
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="kpi-card application-card">
+                        <div class="card-glow"></div>
+                        <div class="card-bg-pattern"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="card-icon-bg">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">Applications</h3>
+                                <div class="card-value" id="appCount" data-target="{{ total_applications }}">0</div>
+                                <div class="card-trend">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>{{ pending_applications|default(45) }} pending review</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="card-link">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions-bar" data-aos="fade-up">
+            <div class="actions-wrapper">
+                <div class="actions-label">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quick Actions</span>
+                </div>
+                <div class="actions-buttons">
+                    <a href="{{ url_for('admin_companies') }}" class="action-btn">
+                        <i class="fas fa-building"></i>
+                        <span>Companies</span>
+                    </a>
+                    <a href="{{ url_for('admin_students') }}" class="action-btn">
+                        <i class="fas fa-users"></i>
+                        <span>Students</span>
+                    </a>
+                    <a href="{{ url_for('admin_drives') }}" class="action-btn">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Drives</span>
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Overview -->
+        <div class="analytics-section" data-aos="fade-up">
+            <div class="row g-4">
+                <!-- Chart Column -->
+                <div class="col-xl-8">
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <div class="header-left">
+                                <h5 class="card-title">Placement Analytics</h5>
+                                <p class="card-subtitle">Monthly overview of applications and placements</p>
+                            </div>
+                            <div class="header-right">
+                                <div class="time-filter">
+                                    <button class="filter-btn active">Week</button>
+                                    <button class="filter-btn">Month</button>
+                                    <button class="filter-btn">Year</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="placementChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Column -->
+                <div class="col-xl-4">
+                    <div class="stats-grid">
+                        <!-- Completion Rate -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Placement Rate</span>
+                                <span class="stat-percentage">78%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 78%"></div>
+                            </div>
+                            <div class="stat-footer">
+                                <span class="stat-compare">
+                                    <i class="fas fa-arrow-up text-success"></i> +5% vs last month
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Company Engagement -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Company Engagement</span>
+                                <span class="stat-percentage">92%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 92%"></div>
+                            </div>
+                            <div class="stat-footer">
+                                <span class="stat-compare">
+                                    <i class="fas fa-building"></i> 45 active companies
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Student Participation -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Student Participation</span>
+                                <span class="stat-percentage">64%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 64%"></div>
+                            </div>
+                            <div class="stat-footer">
+                                <span class="stat-compare">
+                                    <i class="fas fa-user-graduate"></i> 2,847 active
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="quick-stats">
+                            <div class="quick-stat-item">
+                                <div class="quick-stat-icon">
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
+                                <div class="quick-stat-info">
+                                    <span class="quick-stat-value">24</span>
+                                    <span class="quick-stat-label">Pending Approvals</span>
+                                </div>
+                            </div>
+                            <div class="quick-stat-item">
+                                <div class="quick-stat-icon">
+                                    <i class="fas fa-calendar-week"></i>
+                                </div>
+                                <div class="quick-stat-info">
+                                    <span class="quick-stat-value">12</span>
+                                    <span class="quick-stat-label">Drives This Week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Approvals Section -->
+        <div class="approvals-section">
+            <div class="row g-4">
+                <!-- Pending Companies -->
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="approval-card">
+                        <div class="card-header">
+                            <div class="header-left">
+                                <div class="header-icon warning">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="header-title">
+                                    <h5>Pending Company Approvals</h5>
+                                    <span class="badge-count">{{ pending_companies|length }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('admin_companies') }}" class="view-all">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="card-body">
+                            {% if pending_companies %}
+                                <div class="approval-list">
+                                    {% for company in pending_companies %}
+                                    <div class="approval-item">
+                                        <div class="company-info">
+                                            <div class="company-avatar">
+                                                {{ company.company_name[0]|upper }}
+                                            </div>
+                                            <div class="company-details">
+                                                <h6>{{ company.company_name }}</h6>
+                                                <p>
+                                                    <i class="fas fa-user-tie"></i> {{ company.hr_name }} • 
+                                                    <i class="fas fa-envelope"></i> {{ company.hr_email }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="approval-actions">
+                                            <a href="{{ url_for('approve_company', company_id=company.id) }}" 
+                                               class="action-icon approve" title="Approve">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="{{ url_for('reject_company', company_id=company.id) }}" 
+                                               class="action-icon reject" title="Reject">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                            <a href="#" class="action-icon view" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                        <div class="approval-progress">
+                                            <div class="progress-dots">
+                                                <span class="dot active"></span>
+                                                <span class="dot active"></span>
+                                                <span class="dot"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h6>All Caught Up!</h6>
+                                    <p>No pending company approvals</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Drives -->
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="approval-card">
+                        <div class="card-header">
+                            <div class="header-left">
+                                <div class="header-icon warning">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="header-title">
+                                    <h5>Pending Drive Approvals</h5>
+                                    <span class="badge-count">{{ pending_drives|length }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('admin_drives') }}" class="view-all">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <div class="card-body">
+                            {% if pending_drives %}
+                                <div class="approval-list">
+                                    {% for drive in pending_drives %}
+                                    <div class="approval-item">
+                                        <div class="drive-info">
+                                            <div class="drive-avatar" style="background: linear-gradient(135deg, {{ drive.company.company_color|default('#6366f1') }}, {{ drive.company.company_color2|default('#8b5cf6') }})">
+                                                {{ drive.job_title[0]|upper }}
+                                            </div>
+                                            <div class="drive-details">
+                                                <h6>{{ drive.job_title }}</h6>
+                                                <p>
+                                                    <i class="fas fa-building"></i> {{ drive.company.company_name }} • 
+                                                    <i class="fas fa-calendar"></i> Deadline: {{ drive.application_deadline.strftime('%d %b, %Y') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="approval-actions">
+                                            <a href="{{ url_for('approve_drive', drive_id=drive.id) }}" 
+                                               class="action-icon approve" title="Approve">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="{{ url_for('reject_drive', drive_id=drive.id) }}" 
+                                               class="action-icon reject" title="Reject">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                            <a href="#" class="action-icon view" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                        <div class="drive-meta">
+                                            <span class="badge bg-{{ drive.urgency|default('info') }}">
+                                                {{ drive.applications_count|default(0) }} applicants
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <h6>No Pending Drives</h6>
+                                    <p>All placement drives have been reviewed</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Insights -->
+        <div class="insights-section mt-4" data-aos="fade-up">
+            <div class="row g-4">
+                <!-- Recent Activity -->
+                <div class="col-lg-7">
+                    <div class="activity-card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                            <div class="activity-filter">
+                                <select class="form-select">
+                                    <option>All Activities</option>
+                                    <option>Companies</option>
+                                    <option>Students</option>
+                                    <option>Drives</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                {% for activity in recent_activities|default([]) %}
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-{{ activity.color }}">
+                                        <i class="fas fa-{{ activity.icon }}"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <h6>{{ activity.title }}</h6>
+                                            <span class="timeline-time">{{ activity.time }}</span>
+                                        </div>
+                                        <p>{{ activity.description }}</p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <!-- Sample activities for demo -->
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-success">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <h6>Company Approved</h6>
+                                            <span class="timeline-time">2 min ago</span>
+                                        </div>
+                                        <p>Microsoft India has been approved and can now post drives</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-info">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <h6>New Student Registration</h6>
+                                            <span class="timeline-time">15 min ago</span>
+                                        </div>
+                                        <p>25 new students registered from Computer Science department</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-warning">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <h6>Drive Posted</h6>
+                                            <span class="timeline-time">1 hour ago</span>
+                                        </div>
+                                        <p>Google posted a new drive for Software Engineer positions</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-primary">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <h6>Applications Received</h6>
+                                            <span class="timeline-time">3 hours ago</span>
+                                        </div>
+                                        <p>45 new applications received for Amazon SDE role</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <a href="#" class="view-all-activity">
+                                View All Activity <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights & Recommendations -->
+                <div class="col-lg-5">
+                    <div class="insights-card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-lightbulb"></i> AI Insights</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="insights-list">
+                                <div class="insight-item">
+                                    <div class="insight-icon warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h6>Pending Approvals Alert</h6>
+                                        <p>5 companies waiting for approval for more than 48 hours</p>
+                                        <a href="#" class="insight-action">Review Now →</a>
+                                    </div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-icon success">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h6>Increased Applications</h6>
+                                        <p>Application rate up 23% compared to last week</p>
+                                        <a href="#" class="insight-action">View Analytics →</a>
+                                    </div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-icon info">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h6>Upcoming Deadlines</h6>
+                                        <p>3 drives closing in the next 48 hours</p>
+                                        <a href="#" class="insight-action">View Drives →</a>
+                                    </div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-icon primary">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h6>Top Performing Companies</h6>
+                                        <p>TCS, Microsoft, Google leading in placements this month</p>
+                                        <a href="#" class="insight-action">View Rankings →</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="ai-assistant">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Assistant: Everything looks good. Need help with anything?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+/* Dashboard Background */
+.dashboard-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+[data-theme="dark"] .dashboard-background {
+    background: linear-gradient(135deg, #1a1c2c 0%, #2d3748 100%);
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #667eea, #764ba2);
+    top: -200px;
+    right: -200px;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #ff6b6b, #feca57);
+    bottom: -200px;
+    left: -200px;
+    animation: orbFloat 15s ease-in-out infinite reverse;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #48dbfb, #1dd1a1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbFloat 25s ease-in-out infinite;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, 50px) scale(1.1); }
+    66% { transform: translate(-50px, 50px) scale(0.9); }
+}
+
+/* Particle Network */
+.particle-network {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Dashboard Wrapper */
+.dashboard-wrapper {
+    padding: 100px 0 40px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header Styles */
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.welcome-section {
+    position: relative;
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: var(--primary);
+}
+
+.welcome-badge i {
+    font-size: 0.9rem;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.welcome-subtitle {
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+/* Date Time Widget */
+.date-time-widget {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.date-display, .time-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--dark);
+}
+
+.date-display {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.time-display {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* KPI Cards */
+.kpi-card {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.8), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.kpi-card:hover .card-glow {
+    opacity: 0.2;
+}
+
+.card-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="white" stroke-width="2"/></svg>');
+    background-size: 30px 30px;
+    opacity: 0.1;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    padding: 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.student-card .card-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.company-card .card-icon {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+}
+
+.drive-card .card-icon {
+    background: linear-gradient(135deg, #48dbfb, #1dd1a1);
+}
+
+.application-card .card-icon {
+    background: linear-gradient(135deg, #ff9ff3, #f368e0);
+}
+
+.card-icon-bg {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 5rem;
+    color: rgba(0,0,0,0.05);
+    z-index: 1;
+}
+
+.card-body {
+    flex: 1;
+}
+
+.card-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray);
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.card-trend {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+}
+
+.card-trend.positive {
+    color: #10b981;
+}
+
+.card-trend i {
+    font-size: 0.8rem;
+}
+
+.card-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.card-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: gap 0.3s ease;
+}
+
+.card-link:hover {
+    gap: 10px;
+    color: var(--accent);
+}
+
+/* Quick Actions Bar */
+.quick-actions-bar {
+    margin: 30px 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 10px 20px;
+}
+
+.actions-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.actions-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 20px;
+    border-right: 1px solid var(--glass-border);
+}
+
+.actions-label i {
+    color: var(--primary);
+}
+
+.actions-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: var(--dark);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.action-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Analytics Section */
+.analytics-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 25px;
+    height: 100%;
+}
+
+.time-filter {
+    display: flex;
+    gap: 5px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 30px;
+    padding: 3px;
+}
+
+.filter-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 25px;
+    background: transparent;
+    color: var(--gray);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.stat-percentage {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: rgba(99,102,241,0.1);
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+/* Quick Stats */
+.quick-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.quick-stat-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quick-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.quick-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.quick-stat-label {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+/* Approval Cards */
+.approval-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.header-icon.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-title h5 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.badge-count {
+    background: var(--primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+}
+
+.view-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: gap 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.view-all:hover {
+    gap: 10px;
+    color: var(--accent);
+}
+
+/* Approval Items */
+.approval-list {
+    padding: 10px;
+}
+
+.approval-item {
+    position: relative;
+    padding: 15px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.approval-item:hover {
+    background: rgba(99,102,241,0.05);
+}
+
+.company-info, .drive-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 2;
+}
+
+.company-avatar, .drive-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.company-details h6, .drive-details h6 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.company-details p, .drive-details p {
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.company-details p i, .drive-details p i {
+    margin-right: 3px;
+}
+
+.approval-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.action-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.action-icon.approve {
+    background: #10b981;
+}
+
+.action-icon.reject {
+    background: #ef4444;
+}
+
+.action-icon.view {
+    background: var(--gray);
+}
+
+.action-icon:hover {
+    transform: scale(1.1);
+}
+
+.approval-progress {
+    flex: 1;
+    min-width: 100px;
+}
+
+.progress-dots {
+    display: flex;
+    gap: 3px;
+    justify-content: flex-end;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gray);
+    opacity: 0.3;
+}
+
+.dot.active {
+    background: var(--primary);
+    opacity: 1;
+}
+
+.drive-meta {
+    flex: 1;
+    text-align: right;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(99,102,241,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.empty-state h6 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary), var(--accent));
+    opacity: 0.2;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 25px;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    z-index: 2;
+}
+
+.timeline-icon.bg-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.timeline-icon.bg-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.timeline-icon.bg-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.timeline-icon.bg-primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.timeline-content {
+    padding-left: 20px;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.timeline-header h6 {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.timeline-time {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.timeline-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.view-all-activity {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    color: var(--primary);
+    text-decoration: none;
+    border-top: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.view-all-activity:hover {
+    color: var(--accent);
+    gap: 10px;
+}
+
+/* Insights Card */
+.insights-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.insights-list {
+    padding: 20px;
+}
+
+.insight-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.insight-item:last-child {
+    border-bottom: none;
+}
+
+.insight-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.insight-icon.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.insight-icon.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.insight-icon.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.insight-icon.primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+}
+
+.insight-content h6 {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.insight-content p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.insight-action {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.ai-assistant {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background: rgba(99,102,241,0.1);
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+.ai-assistant i {
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .date-time-widget {
+        margin-top: 20px;
+    }
+    
+    .actions-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .actions-label {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .kpi-card .card-value {
+        font-size: 2.5rem;
+    }
+    
+    .approval-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .company-info, .drive-info {
+        width: 100%;
+    }
+    
+    .approval-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+</style>
+
+<!-- Add JavaScript -->
+<script>
+// Live date and time update
+function updateDateTime() {
+    const now = new Date();
+    
+    // Format date
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+    
+    // Format time
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
+}
+
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Counter animation for KPI cards
+function animateValue(element, start, end, duration) {
+    const range = end - start;
+    const increment = range / (duration / 16);
+    let current = start;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= end) {
+            element.textContent = end.toLocaleString();
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 16);
+}
+
+// Start counter animations when elements are in view
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const element = entry.target;
+            const target = parseInt(element.getAttribute('data-target'));
+            animateValue(element, 0, target, 2000);
+            observer.unobserve(element);
+        }
+    });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.card-value[data-target]').forEach(element => {
+    observer.observe(element);
+});
+
+// Placement Chart
+const ctx = document.getElementById('placementChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Applications',
+            data: [65, 78, 90, 85, 95, 110, 125, 140, 155, 170, 185, 200],
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            tension: 0.4,
+            fill: true
+        }, {
+            label: 'Placements',
+            data: [45, 52, 68, 70, 75, 85, 95, 105, 115, 125, 135, 150],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: true,
+                    color: 'rgba(0,0,0,0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Particle Network Animation
+function createParticleNetwork() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    document.querySelector('.particle-network').appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    
+    function init() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+            ctx.fill();
+        });
+        
+        // Draw connections
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.1)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(draw);
+    }
+    
+    init();
+    draw();
+    
+    window.addEventListener('resize', init);
+}
+
+createParticleNetwork();
+
+// Filter button functionality
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Update chart data based on filter
+        const filter = this.textContent.toLowerCase();
+        updateChartData(filter);
+    });
+});
+
+function updateChartData(filter) {
+    const chart = Chart.getChart('placementChart');
+    
+    if (filter === 'week') {
+        chart.data.labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        chart.data.datasets[0].data = [12, 19, 15, 17, 24, 10, 8];
+        chart.data.datasets[1].data = [8, 12, 10, 13, 18, 7, 5];
+    } else if (filter === 'month') {
+        chart.data.labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+        chart.data.datasets[0].data = [45, 52, 48, 55];
+        chart.data.datasets[1].data = [32, 38, 35, 42];
+    } else {
+        chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        chart.data.datasets[0].data = [65, 78, 90, 85, 95, 110, 125, 140, 155, 170, 185, 200];
+        chart.data.datasets[1].data = [45, 52, 68, 70, 75, 85, 95, 105, 115, 125, 135, 150];
+    }
+    
+    chart.update();
+}
+
+// Confirmation for reject actions
+document.querySelectorAll('.action-icon.reject').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        if (!confirm('Are you sure you want to reject this item?')) {
+            e.preventDefault();
+        }
+    });
+});
+
+// Auto-refresh data (simulated)
+setInterval(() => {
+    // Refresh KPI data
+    document.querySelectorAll('.card-value[data-target]').forEach(element => {
+        const currentValue = parseInt(element.textContent.replace(/,/g, ''));
+        const target = parseInt(element.getAttribute('data-target'));
+        const increase = Math.floor(Math.random() * 5);
+        
+        if (currentValue < target + 10) {
+            const newValue = currentValue + increase;
+            element.textContent = newValue.toLocaleString();
+            element.setAttribute('data-target', newValue);
+        }
+    });
+}, 30000); // Refresh every 30 seconds
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

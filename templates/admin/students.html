@@ -1,0 +1,1000 @@
+{% extends "base.html" %}
+{% block title %}Manage Students | Placement Portal{% endblock %}
+{% block content %}
+
+<!-- Animated Background -->
+<div class="dashboard-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="particle-network" id="particleNetwork"></div>
+</div>
+
+<div class="admin-wrapper">
+    <div class="container-fluid px-4">
+        <!-- Header Section -->
+        <div class="admin-header" data-aos="fade-down">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="welcome-section">
+                        <div class="welcome-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Admin Panel</span>
+                        </div>
+                        <h1 class="welcome-title">
+                            <i class="fas fa-users"></i> Manage <span class="gradient-text">Students</span>
+                        </h1>
+                        <p class="welcome-subtitle">
+                            View, search, and manage student accounts
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Search Bar -->
+                    <div class="search-wrapper">
+                        <form method="GET" action="{{ url_for('admin_students') }}" class="search-form">
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" name="search" class="search-input" 
+                                       placeholder="Search by name, roll, or contact..." value="{{ search }}">
+                                <button type="submit" class="search-btn">Search</button>
+                                {% if search %}
+                                <a href="{{ url_for('admin_students') }}" class="search-clear">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row" data-aos="fade-up">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="stat-card total-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Total Students</span>
+                            <span class="stat-value" id="totalStudents">{{ students|length }}</span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card approved-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Active</span>
+                            <span class="stat-value" id="activeStudents">
+                                {{ students|selectattr('user.is_active', 'equalto', true)|list|length }}
+                            </span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card pending-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Deactivated</span>
+                            <span class="stat-value" id="inactiveStudents">
+                                {{ students|selectattr('user.is_active', 'equalto', false)|list|length }}
+                            </span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table Card -->
+        <div class="table-card" data-aos="fade-up">
+            <div class="table-header">
+                <div class="header-left">
+                    <h5 class="table-title">
+                        <i class="fas fa-list"></i>
+                        All Students
+                    </h5>
+                </div>
+                <div class="header-right">
+                    <span class="students-count">{{ students|length }} total</span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Roll No.</th>
+                            <th>Student</th>
+                            <th>Course & Branch</th>
+                            <th>Semester</th>
+                            <th>Contact</th>
+                            <th>CGPA</th>
+                            <th>Passing Year</th>
+                            <th>Resume</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr class="fade-in" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+                            <td>
+                                <span class="student-id">#{{ student.id }}</span>
+                            </td>
+                            <td>
+                                <span class="roll-number"><strong>{{ student.roll_number }}</strong></span>
+                            </td>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">
+                                        {{ student.full_name[0]|upper }}
+                                    </div>
+                                    <div class="student-name">
+                                        <strong>{{ student.full_name }}</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-details">
+                                    <span class="course">{{ student.course }}</span>
+                                    <span class="branch">{{ student.branch }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="semester-badge">Sem {{ student.semester }}</span>
+                            </td>
+                            <td>
+                                <span class="contact-info">
+                                    <i class="fas fa-phone"></i> {{ student.contact }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="cgpa-badge {% if student.cgpa >= 8 %}high{% elif student.cgpa >= 6 %}medium{% else %}low{% endif %}">
+                                    {{ student.cgpa }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="passing-year">{{ student.passing_year }}</span>
+                            </td>
+                            <td>
+                                {% if student.resume_path %}
+                                <a href="{{ url_for('static', filename='uploads/' + student.resume_path) }}" 
+                                   target="_blank" class="resume-link">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>View</span>
+                                </a>
+                                {% else %}
+                                <span class="no-resume">
+                                    <i class="fas fa-times-circle"></i>
+                                    No Resume
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if student.user.is_active %}
+                                    <span class="status-badge active">
+                                        <i class="fas fa-check-circle"></i>
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge inactive">
+                                        <i class="fas fa-ban"></i>
+                                        Deactivated
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('toggle_student_status', student_id=student.id) }}" 
+                                       class="action-btn {% if student.user.is_active %}deactivate{% else %}activate{% endif %}"
+                                       onclick="return confirm('{% if student.user.is_active %}Deactivate{% else %}Activate{% endif %} student {{ student.full_name }}?')"
+                                       title="{% if student.user.is_active %}Deactivate{% else %}Activate{% endif %} Student">
+                                        <i class="fas {% if student.user.is_active %}fa-ban{% else %}fa-check-circle{% endif %}"></i>
+                                    </a>
+                                    <a href="#" class="action-btn view" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-btn message" title="Send Message">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="11" class="empty-state">
+                                <div class="empty-state-content">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3>No Students Found</h3>
+                                    <p>{% if search %}No students matching "{{ search }}" were found.{% else %}There are no students registered yet.{% endif %}</p>
+                                    {% if search %}
+                                    <a href="{{ url_for('admin_students') }}" class="btn-clear">
+                                        <i class="fas fa-times"></i> Clear Search
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer -->
+            <div class="table-footer">
+                <div class="footer-info">
+                    Showing {{ students|length }} student{% if students|length != 1 %}s{% endif %}
+                </div>
+                <div class="footer-actions">
+                    <button class="btn-refresh" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+/* Admin Wrapper */
+.admin-wrapper {
+    padding: 120px 0 40px;
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+}
+
+/* Admin Header */
+.admin-header {
+    margin-bottom: 40px;
+}
+
+.welcome-section {
+    position: relative;
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: var(--primary);
+}
+
+.welcome-badge i {
+    font-size: 0.9rem;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.welcome-title i {
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.welcome-subtitle {
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+/* Search Bar */
+.search-wrapper {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: var(--shadow-lg);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 20px 15px 45px;
+    border: none;
+    background: transparent;
+    color: var(--dark);
+    font-size: 0.95rem;
+    border-radius: 50px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.search-btn {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-right: 5px;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.search-clear {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef4444;
+    text-decoration: none;
+    transition: var(--transition);
+    margin-right: 5px;
+}
+
+.search-clear:hover {
+    background: #ef4444;
+    color: white;
+    transform: rotate(90deg);
+}
+
+/* Stats Cards */
+.stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.total-card .stat-icon {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.approved-card .stat-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.pending-card .stat-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.stat-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+}
+
+.stat-glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+    transform: skewX(-15deg) translateX(100px);
+    transition: transform 0.5s ease;
+}
+
+.stat-card:hover .stat-glow {
+    transform: skewX(-15deg) translateX(-50px);
+}
+
+/* Table Card */
+.table-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 25px;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-title i {
+    color: var(--primary);
+}
+
+.students-count {
+    padding: 5px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Modern Table */
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.modern-table thead th {
+    padding: 15px 20px;
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--gray);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.modern-table thead th:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.modern-table thead th:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+.modern-table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.modern-table tbody td {
+    padding: 15px 20px;
+    color: var(--dark);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.modern-table tbody td:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.modern-table tbody td:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+/* Student Info */
+.student-id {
+    font-size: 0.85rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.roll-number {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.student-name {
+    font-weight: 500;
+}
+
+/* Course Details */
+.course-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.course {
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.branch {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.semester-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.contact-info i {
+    color: var(--primary);
+}
+
+/* CGPA Badge */
+.cgpa-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.cgpa-badge.high {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.cgpa-badge.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.cgpa-badge.low {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.passing-year {
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+/* Resume Link */
+.resume-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.resume-link:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.no-resume {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(107, 114, 128, 0.1);
+    border-radius: 20px;
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+.no-resume i {
+    color: var(--gray);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-badge.inactive {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.action-btn.activate {
+    background: #10b981;
+}
+
+.action-btn.deactivate {
+    background: #f59e0b;
+}
+
+.action-btn.view {
+    background: #6366f1;
+}
+
+.action-btn.message {
+    background: #8b5cf6;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px !important;
+}
+
+.empty-state-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary);
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin-bottom: 20px;
+}
+
+.btn-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-clear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Table Footer */
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.footer-info {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.btn-refresh {
+    padding: 8px 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border: none;
+    border-radius: 30px;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-refresh:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-refresh i {
+    transition: transform 0.5s ease;
+}
+
+.btn-refresh:hover i {
+    transform: rotate(180deg);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .modern-table {
+        min-width: 1400px;
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-wrapper {
+        padding: 100px 0 40px;
+    }
+    
+    .search-wrapper {
+        margin-top: 20px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .action-btn {
+        width: 30px;
+        height: 30px;
+    }
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+// Particle Network Animation
+function createParticleNetwork() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    document.querySelector('.particle-network').appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    
+    function init() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+            ctx.fill();
+        });
+        
+        // Draw connections
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.1)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(draw);
+    }
+    
+    init();
+    draw();
+    
+    window.addEventListener('resize', init);
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+    createParticleNetwork();
+    
+    // Animate stats numbers
+    document.querySelectorAll('.stat-value').forEach(counter => {
+        const target = parseInt(counter.textContent);
+        if (!isNaN(target) && target > 0) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(current);
+                }
+            }, 20);
+        }
+    });
+});
+</script>
+{% endblock %}

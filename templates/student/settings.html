@@ -1,0 +1,2314 @@
+{% extends "base.html" %}
+{% block title %}Account Settings | Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-cog me-3"></i>Account Settings
+                        </h2>
+                        <p class="text-muted-light mb-0">Manage your account preferences and security</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-user-graduate me-2"></i>{{ student.full_name }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Navigation Tabs -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-body-futuristic p-0">
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-target="profile">
+                        <i class="fas fa-user-circle me-2"></i>Profile
+                    </button>
+                    <button class="settings-tab" data-target="account">
+                        <i class="fas fa-lock me-2"></i>Account Security
+                    </button>
+                    <button class="settings-tab" data-target="notifications">
+                        <i class="fas fa-bell me-2"></i>Notifications
+                    </button>
+                    <button class="settings-tab" data-target="preferences">
+                        <i class="fas fa-sliders-h me-2"></i>Preferences
+                    </button>
+                    <button class="settings-tab" data-target="privacy">
+                        <i class="fas fa-shield-alt me-2"></i>Privacy
+                    </button>
+                    <button class="settings-tab" data-target="connected">
+                        <i class="fas fa-link me-2"></i>Connected Accounts
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Settings -->
+        <div id="profile" class="settings-section active">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-circle me-3"></i>
+                        <h5 class="mb-0 text-white">Profile Information</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('student_settings') }}" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-lg-3 text-center mb-4 mb-lg-0">
+                                <div class="student-avatar-large">
+                                    {% if student.profile_pic %}
+                                    <img src="{{ student.profile_pic }}" alt="{{ student.full_name }}" class="img-fluid rounded-20">
+                                    {% else %}
+                                    <div class="avatar-placeholder">
+                                        {{ student.full_name[0]|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" class="btn-upload" onclick="document.getElementById('profilePic').click()">
+                                        <i class="fas fa-camera me-2"></i>Change Photo
+                                    </button>
+                                    <input type="file" id="profilePic" name="profile_pic" class="d-none" accept="image/*">
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-9">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Full Name</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-user input-icon"></i>
+                                                <input type="text" name="full_name" class="form-control-futuristic" 
+                                                       value="{{ student.full_name }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Roll Number</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-id-card input-icon"></i>
+                                                <input type="text" class="form-control-futuristic" 
+                                                       value="{{ student.roll_number }}" readonly disabled>
+                                            </div>
+                                            <small class="form-text-futuristic">Roll number cannot be changed</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Email Address</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-envelope input-icon"></i>
+                                                <input type="email" class="form-control-futuristic" 
+                                                       value="{{ student.user.email }}" readonly disabled>
+                                            </div>
+                                            <small class="form-text-futuristic">Email cannot be changed</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Contact Number</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-phone-alt input-icon"></i>
+                                                <input type="text" name="contact" class="form-control-futuristic" 
+                                                       value="{{ student.contact }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Course</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-graduation-cap input-icon"></i>
+                                                <input type="text" name="course" class="form-control-futuristic" 
+                                                       value="{{ student.course }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Branch</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-code-branch input-icon"></i>
+                                                <input type="text" name="branch" class="form-control-futuristic" 
+                                                       value="{{ student.branch }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Semester</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-layer-group input-icon"></i>
+                                                <input type="number" name="semester" class="form-control-futuristic" 
+                                                       value="{{ student.semester }}" min="1" max="8" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">CGPA</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-star input-icon"></i>
+                                                <input type="number" name="cgpa" class="form-control-futuristic" 
+                                                       value="{{ student.cgpa }}" step="0.01" min="0" max="10" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Passing Year</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-calendar-alt input-icon"></i>
+                                                <input type="number" name="passing_year" class="form-control-futuristic" 
+                                                       value="{{ student.passing_year }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Date of Birth</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-birthday-cake input-icon"></i>
+                                                <input type="date" name="dob" class="form-control-futuristic" 
+                                                       value="{{ student.dob|default('') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">LinkedIn Profile (Optional)</label>
+                                            <div class="input-wrapper">
+                                                <i class="fab fa-linkedin input-icon"></i>
+                                                <input type="url" name="linkedin" class="form-control-futuristic" 
+                                                       placeholder="https://linkedin.com/in/..." 
+                                                       value="{{ student.linkedin|default('') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">GitHub Profile (Optional)</label>
+                                            <div class="input-wrapper">
+                                                <i class="fab fa-github input-icon"></i>
+                                                <input type="url" name="github" class="form-control-futuristic" 
+                                                       placeholder="https://github.com/..." 
+                                                       value="{{ student.github|default('') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Address</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-map-marker-alt input-icon" style="top: 20px;"></i>
+                                                <textarea name="address" class="form-control-futuristic" rows="3" 
+                                                          placeholder="Enter your current address">{{ student.address|default('') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Bio / About Me</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                                <textarea name="bio" class="form-control-futuristic" rows="4" 
+                                                          placeholder="Tell companies about yourself, your interests, and career goals...">{{ student.bio|default('') }}</textarea>
+                                            </div>
+                                            <small class="form-text-futuristic">This will be visible to companies</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions mt-4">
+                                    <button type="submit" class="btn-submit-futuristic" name="update_profile" value="1">
+                                        <i class="fas fa-save me-2"></i>Save Changes
+                                    </button>
+                                    <button type="reset" class="btn-cancel-futuristic">
+                                        <i class="fas fa-undo me-2"></i>Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Security -->
+        <div id="account" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-lock me-3"></i>
+                        <h5 class="mb-0 text-white">Account Security</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('student_settings') }}" id="passwordForm">
+                        <!-- Password Change Section -->
+                        <h6 class="section-subtitle mb-3">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </h6>
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Current Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-lock input-icon"></i>
+                                        <input type="password" name="current_password" class="form-control-futuristic" 
+                                               placeholder="Enter current password" id="current_password" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('current_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">New Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-key input-icon"></i>
+                                        <input type="password" name="new_password" class="form-control-futuristic" 
+                                               placeholder="Enter new password" id="new_password" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('new_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="password-strength mt-2">
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Confirm New Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-check-circle input-icon"></i>
+                                        <input type="password" name="confirm_password" class="form-control-futuristic" 
+                                               placeholder="Confirm new password" id="confirm_password" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="password-match-indicator" id="passwordMatch"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="password-requirements mt-4">
+                            <p class="requirements-title"><i class="fas fa-shield-alt me-2"></i>Password must contain:</p>
+                            <ul class="requirements-list">
+                                <li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li>
+                                <li id="req-uppercase"><i class="fas fa-circle"></i> At least one uppercase letter</li>
+                                <li id="req-lowercase"><i class="fas fa-circle"></i> At least one lowercase letter</li>
+                                <li id="req-number"><i class="fas fa-circle"></i> At least one number</li>
+                                <li id="req-special"><i class="fas fa-circle"></i> At least one special character</li>
+                            </ul>
+                        </div>
+
+                        <!-- Two-Factor Authentication -->
+                        <div class="two-factor-section mt-5">
+                            <h6 class="section-subtitle mb-3">
+                                <i class="fas fa-mobile-alt me-2"></i>Two-Factor Authentication (2FA)
+                            </h6>
+                            
+                            <div class="two-factor-card">
+                                <div class="two-factor-info">
+                                    <div class="info-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <h6>Enhance your account security</h6>
+                                        <p class="text-muted">Add an extra layer of security to your account by enabling two-factor authentication.</p>
+                                    </div>
+                                </div>
+                                <div class="two-factor-status">
+                                    {% if student.two_factor_enabled %}
+                                    <span class="badge-2fa enabled">
+                                        <i class="fas fa-check-circle me-1"></i>2FA Enabled
+                                    </span>
+                                    <button class="btn-2fa disable" onclick="toggle2FA()">Disable</button>
+                                    {% else %}
+                                    <span class="badge-2fa disabled">
+                                        <i class="fas fa-times-circle me-1"></i>2FA Disabled
+                                    </span>
+                                    <button class="btn-2fa enable" onclick="toggle2FA()">Enable Now</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Login History -->
+                        <div class="login-history-section mt-5">
+                            <h6 class="section-subtitle mb-3">
+                                <i class="fas fa-history me-2"></i>Recent Login Activity
+                            </h6>
+                            
+                            <div class="login-history-list">
+                                <div class="login-item current">
+                                    <div class="login-device">
+                                        <i class="fas fa-laptop"></i>
+                                        <div>
+                                            <strong>Current Session</strong>
+                                            <p class="text-muted">Windows • Chrome • IP: 192.168.1.1</p>
+                                        </div>
+                                    </div>
+                                    <span class="login-time">Just now</span>
+                                </div>
+                                
+                                <div class="login-item">
+                                    <div class="login-device">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div>
+                                            <strong>Mobile Device</strong>
+                                            <p class="text-muted">iPhone • Safari • IP: 192.168.1.2</p>
+                                        </div>
+                                    </div>
+                                    <span class="login-time">2 hours ago</span>
+                                </div>
+                                
+                                <div class="login-item">
+                                    <div class="login-device">
+                                        <i class="fas fa-laptop"></i>
+                                        <div>
+                                            <strong>Windows PC</strong>
+                                            <p class="text-muted">Windows • Firefox • IP: 192.168.1.3</p>
+                                        </div>
+                                    </div>
+                                    <span class="login-time">Yesterday</span>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-revoke-all mt-3">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out All Other Devices
+                            </button>
+                        </div>
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic" name="update_password" value="1">
+                                <i class="fas fa-key me-2"></i>Update Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div id="notifications" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bell me-3"></i>
+                        <h5 class="mb-0 text-white">Notification Preferences</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('student_settings') }}">
+                        <h6 class="section-subtitle mb-3">Email Notifications</h6>
+                        
+                        <div class="notifications-list">
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-briefcase text-primary"></i>
+                                    <div>
+                                        <h6>New Placement Drives</h6>
+                                        <p class="text-muted">Get notified when new drives matching your profile are posted</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_new_drives" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <div>
+                                        <h6>Application Status Updates</h6>
+                                        <p class="text-muted">Get notified when your application status changes</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_status_updates" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-calendar-check text-info"></i>
+                                    <div>
+                                        <h6>Upcoming Deadlines</h6>
+                                        <p class="text-muted">Reminders about application deadlines</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_deadlines" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-star text-warning"></i>
+                                    <div>
+                                        <h6>Interview Schedules</h6>
+                                        <p class="text-muted">Get notified when companies schedule interviews</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_interviews" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-newspaper text-secondary"></i>
+                                    <div>
+                                        <h6>Weekly Digest</h6>
+                                        <p class="text-muted">Receive weekly summary of your applications and new opportunities</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_weekly_digest" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <h6 class="section-subtitle mb-3 mt-4">Notification Channels</h6>
+                        
+                        <div class="channel-options">
+                            <label class="channel-option">
+                                <input type="checkbox" name="channel_email" checked>
+                                <span class="channel-custom"></span>
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </label>
+                            <label class="channel-option">
+                                <input type="checkbox" name="channel_sms">
+                                <span class="channel-custom"></span>
+                                <i class="fas fa-sms"></i>
+                                SMS
+                            </label>
+                            <label class="channel-option">
+                                <input type="checkbox" name="channel_push" checked>
+                                <span class="channel-custom"></span>
+                                <i class="fas fa-bell"></i>
+                                Push
+                            </label>
+                            <label class="channel-option">
+                                <input type="checkbox" name="channel_whatsapp">
+                                <span class="channel-custom"></span>
+                                <i class="fab fa-whatsapp"></i>
+                                WhatsApp
+                            </label>
+                        </div>
+
+                        <h6 class="section-subtitle mb-3 mt-4">Quiet Hours</h6>
+                        
+                        <div class="quiet-hours">
+                            <div class="quiet-hours-toggle">
+                                <span>Do not disturb during quiet hours</span>
+                                <label class="switch">
+                                    <input type="checkbox" name="quiet_hours_enabled">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="quiet-hours-inputs mt-3">
+                                <div class="time-input">
+                                    <label>From</label>
+                                    <input type="time" name="quiet_hours_start" value="22:00" class="form-control-futuristic" disabled>
+                                </div>
+                                <div class="time-input">
+                                    <label>To</label>
+                                    <input type="time" name="quiet_hours_end" value="08:00" class="form-control-futuristic" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic" name="update_notifications" value="1">
+                                <i class="fas fa-save me-2"></i>Save Preferences
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div id="preferences" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-sliders-h me-3"></i>
+                        <h5 class="mb-0 text-white">Preferences</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('student_settings') }}">
+                        <h6 class="section-subtitle mb-3">Display Preferences</h6>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Theme</label>
+                                <p class="text-muted">Choose your preferred color theme</p>
+                            </div>
+                            <div class="theme-options-mini">
+                                <label class="theme-option-mini">
+                                    <input type="radio" name="theme" value="light" checked>
+                                    <span class="theme-preview light"></span>
+                                    <span>Light</span>
+                                </label>
+                                <label class="theme-option-mini">
+                                    <input type="radio" name="theme" value="dark">
+                                    <span class="theme-preview dark"></span>
+                                    <span>Dark</span>
+                                </label>
+                                <label class="theme-option-mini">
+                                    <input type="radio" name="theme" value="auto">
+                                    <span class="theme-preview auto"></span>
+                                    <span>Auto</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Language</label>
+                                <p class="text-muted">Choose your preferred language</p>
+                            </div>
+                            <select name="language" class="preference-select">
+                                <option value="en" selected>English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Time Zone</label>
+                                <p class="text-muted">Set your local time zone</p>
+                            </div>
+                            <select name="timezone" class="preference-select">
+                                <option value="ist" selected>Indian Standard Time (IST)</option>
+                                <option value="gmt">Greenwich Mean Time (GMT)</option>
+                                <option value="est">Eastern Standard Time (EST)</option>
+                                <option value="pst">Pacific Standard Time (PST)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Date Format</label>
+                                <p class="text-muted">Choose how dates are displayed</p>
+                            </div>
+                            <select name="date_format" class="preference-select">
+                                <option value="d-m-Y" selected>DD-MM-YYYY</option>
+                                <option value="m-d-Y">MM-DD-YYYY</option>
+                                <option value="Y-m-d">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+
+                        <h6 class="section-subtitle mb-3 mt-4">Job Preferences</h6>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Preferred Job Locations</label>
+                                <p class="text-muted">Comma-separated cities (e.g., Bangalore, Mumbai, Pune)</p>
+                            </div>
+                            <input type="text" name="preferred_locations" class="preference-input" 
+                                   value="{{ student.preferred_locations|default('') }}" placeholder="e.g., Bangalore, Mumbai">
+                        </div>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Preferred Job Roles</label>
+                                <p class="text-muted">Comma-separated roles (e.g., Software Engineer, Data Scientist)</p>
+                            </div>
+                            <input type="text" name="preferred_roles" class="preference-input" 
+                                   value="{{ student.preferred_roles|default('') }}" placeholder="e.g., Software Engineer">
+                        </div>
+                        
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label>Expected Package (Min LPA)</label>
+                                <p class="text-muted">Minimum expected annual package</p>
+                            </div>
+                            <input type="number" name="expected_package" class="preference-input" 
+                                   value="{{ student.expected_package|default('') }}" placeholder="e.g., 5" step="0.5" min="0">
+                        </div>
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic" name="update_preferences" value="1">
+                                <i class="fas fa-save me-2"></i>Save Preferences
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div id="privacy" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="350">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt me-3"></i>
+                        <h5 class="mb-0 text-white">Privacy Settings</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('student_settings') }}">
+                        <div class="privacy-list">
+                            <div class="privacy-item">
+                                <div class="privacy-info">
+                                    <h6>Profile Visibility</h6>
+                                    <p class="text-muted">Control who can see your profile</p>
+                                </div>
+                                <select name="profile_visibility" class="privacy-select">
+                                    <option value="all" selected>All Companies</option>
+                                    <option value="approved">Approved Companies Only</option>
+                                    <option value="none">Hidden</option>
+                                </select>
+                            </div>
+                            
+                            <div class="privacy-item">
+                                <div class="privacy-info">
+                                    <h6>Show Contact Information</h6>
+                                    <p class="text-muted">Display your email and phone to companies</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="show_contact" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="privacy-item">
+                                <div class="privacy-info">
+                                    <h6>Show Resume</h6>
+                                    <p class="text-muted">Make your resume downloadable by companies</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="show_resume" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="privacy-item">
+                                <div class="privacy-info">
+                                    <h6>Data Sharing</h6>
+                                    <p class="text-muted">Allow anonymized data for analytics</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="data_sharing" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="data-download-section mt-4">
+                            <h6 class="section-subtitle mb-3">Download Your Data</h6>
+                            <p class="text-muted mb-3">Get a copy of all your personal data and application history</p>
+                            <button type="button" class="btn-download-data" onclick="downloadData()">
+                                <i class="fas fa-download me-2"></i>Request Data Export
+                            </button>
+                        </div>
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic" name="update_privacy" value="1">
+                                <i class="fas fa-save me-2"></i>Save Privacy Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connected Accounts -->
+        <div id="connected" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-link me-3"></i>
+                        <h5 class="mb-0 text-white">Connected Accounts</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <div class="connected-accounts-list">
+                        <div class="connected-account-item">
+                            <div class="account-info">
+                                <div class="account-icon google">
+                                    <i class="fab fa-google"></i>
+                                </div>
+                                <div>
+                                    <h6>Google</h6>
+                                    <p class="text-muted">Not connected</p>
+                                </div>
+                            </div>
+                            <button class="btn-connect" onclick="connectAccount('google')">
+                                <i class="fas fa-plus-circle me-2"></i>Connect
+                            </button>
+                        </div>
+                        
+                        <div class="connected-account-item">
+                            <div class="account-info">
+                                <div class="account-icon github">
+                                    <i class="fab fa-github"></i>
+                                </div>
+                                <div>
+                                    <h6>GitHub</h6>
+                                    <p class="text-muted">Connect to showcase your projects</p>
+                                </div>
+                            </div>
+                            <button class="btn-connect" onclick="connectAccount('github')">
+                                <i class="fas fa-plus-circle me-2"></i>Connect
+                            </button>
+                        </div>
+                        
+                        <div class="connected-account-item">
+                            <div class="account-info">
+                                <div class="account-icon linkedin">
+                                    <i class="fab fa-linkedin"></i>
+                                </div>
+                                <div>
+                                    <h6>LinkedIn</h6>
+                                    <p class="text-muted">Connect to import your professional profile</p>
+                                </div>
+                            </div>
+                            <button class="btn-connect" onclick="connectAccount('linkedin')">
+                                <i class="fas fa-plus-circle me-2"></i>Connect
+                            </button>
+                        </div>
+                        
+                        <div class="connected-account-item connected">
+                            <div class="account-info">
+                                <div class="account-icon microsoft">
+                                    <i class="fab fa-microsoft"></i>
+                                </div>
+                                <div>
+                                    <h6>Microsoft</h6>
+                                    <p class="text-muted">Connected as student@college.edu</p>
+                                </div>
+                            </div>
+                            <button class="btn-disconnect" onclick="disconnectAccount('microsoft')">
+                                <i class="fas fa-unlink me-2"></i>Disconnect
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="social-preferences mt-4">
+                        <h6 class="section-subtitle mb-3">Social Sharing Preferences</h6>
+                        
+                        <div class="social-preference-item">
+                            <span>Share achievements on social media</span>
+                            <label class="switch">
+                                <input type="checkbox" name="share_achievements">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="social-preference-item">
+                            <span>Post when selected in a drive</span>
+                            <label class="switch">
+                                <input type="checkbox" name="share_selection">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="glass-card futuristic-card mt-4" data-aos="fade-up" data-aos-delay="450">
+            <div class="card-header-gradient-secondary" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-3"></i>
+                    <h5 class="mb-0 text-white">Danger Zone</h5>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <div class="danger-zone-content">
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-download text-info"></i>
+                            <div>
+                                <h6>Export My Data</h6>
+                                <p class="text-muted">Download all your personal information and application history</p>
+                            </div>
+                        </div>
+                        <button class="btn-export-zone" onclick="exportStudentData()">
+                            <i class="fas fa-download me-2"></i>Export Data
+                        </button>
+                    </div>
+                    
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-pause-circle text-warning"></i>
+                            <div>
+                                <h6>Deactivate Account</h6>
+                                <p class="text-muted">Temporarily disable your student account</p>
+                            </div>
+                        </div>
+                        <button class="btn-warning-zone" onclick="deactivateAccount()">
+                            <i class="fas fa-pause-circle me-2"></i>Deactivate
+                        </button>
+                    </div>
+                    
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                            <div>
+                                <h6>Delete Account</h6>
+                                <p class="text-muted">Permanently delete your account and all associated data</p>
+                            </div>
+                        </div>
+                        <button class="btn-danger-zone" onclick="deleteAccount()">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('student_dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Settings Tabs */
+.settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+}
+
+.settings-tab {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    background: transparent;
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.settings-tab:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.settings-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+/* Settings Sections */
+.settings-section {
+    display: none;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+/* Student Avatar */
+.student-avatar-large {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.rounded-20 {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-upload {
+    padding: 8px 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-upload:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+textarea + .input-icon {
+    top: 20px;
+    transform: none;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 45px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic:disabled,
+.form-control-futuristic[readonly] {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--glass-border);
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+textarea.form-control-futuristic {
+    padding-top: 15px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-submit-futuristic {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-cancel-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--gray);
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+}
+
+/* Section Subtitle */
+.section-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+/* Password Toggle */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* Password Strength */
+.password-strength {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    flex: 1;
+    background: var(--gray);
+    opacity: 0.3;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Password Requirements */
+.password-requirements {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.requirements-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.requirements-list li {
+    font-size: 0.8rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.requirements-list li i {
+    font-size: 0.5rem;
+}
+
+.requirements-list li.valid {
+    color: #10b981;
+}
+
+.requirements-list li.valid i {
+    color: #10b981;
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+}
+
+/* Two Factor Section */
+.two-factor-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.two-factor-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.info-text h6 {
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.two-factor-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge-2fa {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-2fa.enabled {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.badge-2fa.disabled {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.btn-2fa {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-2fa.enable {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.btn-2fa.disable {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gray);
+}
+
+/* Login History */
+.login-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+}
+
+.login-item.current {
+    border-left: 4px solid var(--primary);
+}
+
+.login-device {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-device i {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.login-device strong {
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.login-device p {
+    font-size: 0.7rem;
+    margin: 2px 0 0;
+}
+
+.login-time {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+.btn-revoke-all {
+    padding: 8px 20px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    background: var(--glass-bg);
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.btn-revoke-all:hover {
+    background: var(--gray);
+    color: white;
+}
+
+/* Notifications List */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.notification-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.notification-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-info i {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-info h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.notification-info p {
+    font-size: 0.75rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+/* Switch Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Channel Options */
+.channel-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.channel-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.channel-option input[type="checkbox"] {
+    display: none;
+}
+
+.channel-custom {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 2px solid var(--gray);
+    position: relative;
+    transition: var(--transition);
+}
+
+.channel-option input[type="checkbox"]:checked + .channel-custom {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-color: transparent;
+}
+
+.channel-option input[type="checkbox"]:checked + .channel-custom::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: -1px;
+    left: 3px;
+    font-size: 10px;
+    color: white;
+}
+
+/* Quiet Hours */
+.quiet-hours {
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+}
+
+.quiet-hours-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quiet-hours-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+.time-input {
+    flex: 1;
+}
+
+.time-input label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 5px;
+}
+
+.time-input input {
+    width: 100%;
+}
+
+/* Preferences */
+.preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.preference-info {
+    flex: 1;
+}
+
+.preference-info label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 2px;
+    display: block;
+}
+
+.preference-info p {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.theme-options-mini {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-option-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.theme-option-mini input[type="radio"] {
+    display: none;
+}
+
+.theme-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    margin-bottom: 5px;
+}
+
+.theme-preview.light {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+}
+
+.theme-preview.dark {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.theme-preview.auto {
+    background: linear-gradient(90deg, #f8fafc 50%, #0f172a 50%);
+}
+
+.theme-option-mini input[type="radio"]:checked + .theme-preview {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.theme-option-mini span:last-child {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+.preference-select {
+    padding: 8px 30px 8px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    color: var(--dark);
+    min-width: 200px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.preference-input {
+    padding: 8px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    color: var(--dark);
+    min-width: 250px;
+}
+
+/* Privacy Settings */
+.privacy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.privacy-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.privacy-info h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.privacy-select {
+    padding: 6px 30px 6px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    color: var(--dark);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.btn-download-data {
+    padding: 10px 20px;
+    border: 1px solid var(--primary);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-download-data:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Connected Accounts */
+.connected-accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.connected-account-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.account-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.account-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.account-icon.google {
+    background: linear-gradient(135deg, #DB4437, #F4B400);
+}
+
+.account-icon.github {
+    background: linear-gradient(135deg, #333, #24292e);
+}
+
+.account-icon.linkedin {
+    background: linear-gradient(135deg, #0077B5, #00A0DC);
+}
+
+.account-icon.microsoft {
+    background: linear-gradient(135deg, #00A4EF, #7FBA00);
+}
+
+.account-info h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.btn-connect {
+    padding: 6px 15px;
+    border: 1px solid var(--primary);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-connect:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-disconnect {
+    padding: 6px 15px;
+    border: 1px solid var(--gray);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-disconnect:hover {
+    background: var(--gray);
+    color: white;
+}
+
+.connected-account-item.connected {
+    border-left: 4px solid #10b981;
+}
+
+/* Social Preferences */
+.social-preferences {
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+}
+
+.social-preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.social-preference-item:last-child {
+    border-bottom: none;
+}
+
+.social-preference-item span {
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+/* Danger Zone */
+.danger-zone-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.danger-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.danger-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.danger-info i {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.danger-info h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.danger-info p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+.btn-export-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-warning-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-danger-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-export-zone:hover,
+.btn-warning-zone:hover,
+.btn-danger-zone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px currentColor;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .form-label-futuristic,
+[data-theme="dark"] .section-subtitle,
+[data-theme="dark"] .notification-info h6,
+[data-theme="dark"] .preference-info label,
+[data-theme="dark"] .privacy-info h6,
+[data-theme="dark"] .account-info h6,
+[data-theme="dark"] .social-preference-item span,
+[data-theme="dark"] .danger-info h6,
+[data-theme="dark"] .login-device strong,
+[data-theme="dark"] .info-text h6 {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic,
+[data-theme="dark"] .preference-select,
+[data-theme="dark"] .preference-input,
+[data-theme="dark"] .privacy-select {
+    color: var(--light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+    
+    .settings-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    
+    .settings-tab {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .student-avatar-large {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .avatar-placeholder {
+        font-size: 4rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit-futuristic,
+    .btn-cancel-futuristic {
+        width: 100%;
+    }
+    
+    .two-factor-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .quiet-hours-inputs {
+        flex-direction: column;
+    }
+    
+    .theme-options-mini {
+        flex-wrap: wrap;
+    }
+    
+    .preference-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .preference-select,
+    .preference-input {
+        width: 100%;
+    }
+    
+    .privacy-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .privacy-select {
+        width: 100%;
+    }
+    
+    .connected-account-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-connect,
+    .btn-disconnect {
+        width: 100%;
+    }
+    
+    .danger-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-export-zone,
+    .btn-warning-zone,
+    .btn-danger-zone {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Settings tab switching
+    const tabs = document.querySelectorAll('.settings-tab');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const target = this.dataset.target;
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === target) {
+                    section.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // Password strength checker
+    const password = document.getElementById('new_password');
+    const strengthBars = document.querySelectorAll('.strength-bar');
+    const reqLength = document.getElementById('req-length');
+    const reqUppercase = document.getElementById('req-uppercase');
+    const reqLowercase = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+
+    if (password) {
+        password.addEventListener('input', function() {
+            const val = this.value;
+            let strength = 0;
+            
+            const hasLength = val.length >= 8;
+            const hasUppercase = /[A-Z]/.test(val);
+            const hasLowercase = /[a-z]/.test(val);
+            const hasNumber = /[0-9]/.test(val);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+            
+            updateRequirement(reqLength, hasLength);
+            updateRequirement(reqUppercase, hasUppercase);
+            updateRequirement(reqLowercase, hasLowercase);
+            updateRequirement(reqNumber, hasNumber);
+            updateRequirement(reqSpecial, hasSpecial);
+            
+            if (hasLength) strength++;
+            if (hasUppercase) strength++;
+            if (hasLowercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+            
+            strengthBars.forEach((bar, index) => {
+                bar.classList.remove('active-weak', 'active-medium', 'active-strong', 'active-very-strong');
+                if (index < strength) {
+                    if (strength <= 2) bar.classList.add('active-weak');
+                    else if (strength <= 3) bar.classList.add('active-medium');
+                    else if (strength <= 4) bar.classList.add('active-strong');
+                    else bar.classList.add('active-very-strong');
+                }
+            });
+        });
+    }
+
+    function updateRequirement(element, isValid) {
+        if (isValid) {
+            element.classList.add('valid');
+            element.querySelector('i').className = 'fas fa-check-circle';
+        } else {
+            element.classList.remove('valid');
+            element.querySelector('i').className = 'fas fa-circle';
+        }
+    }
+
+    // Password match checker
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordMatch = document.getElementById('passwordMatch');
+
+    if (confirmPassword && password) {
+        confirmPassword.addEventListener('input', function() {
+            if (this.value) {
+                if (this.value === password.value) {
+                    this.classList.remove('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-check-circle me-1"></i>Passwords match';
+                    passwordMatch.className = 'password-match-indicator match';
+                } else {
+                    this.classList.add('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Passwords do not match';
+                    passwordMatch.className = 'password-match-indicator no-match';
+                }
+            } else {
+                passwordMatch.innerHTML = '';
+            }
+        });
+    }
+
+    // Quiet hours toggle
+    const quietHoursToggle = document.querySelector('input[name="quiet_hours_enabled"]');
+    const quietInputs = document.querySelectorAll('.quiet-hours-inputs input');
+    
+    if (quietHoursToggle) {
+        quietHoursToggle.addEventListener('change', function() {
+            quietInputs.forEach(input => {
+                input.disabled = !this.checked;
+            });
+        });
+    }
+
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Password visibility toggle
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = event.currentTarget.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// 2FA toggle
+function toggle2FA() {
+    alert('Two-factor authentication setup will be implemented here');
+}
+
+// Connect account
+function connectAccount(provider) {
+    alert(`Connecting to ${provider}...`);
+}
+
+// Disconnect account
+function disconnectAccount(provider) {
+    if (confirm(`Are you sure you want to disconnect your ${provider} account?`)) {
+        alert(`Disconnecting from ${provider}...`);
+    }
+}
+
+// Download data
+function downloadData() {
+    alert('Your data export request has been submitted. You will receive an email when it\'s ready.');
+}
+
+// Danger zone functions
+function exportStudentData() {
+    alert('Exporting your data...');
+}
+
+function deactivateAccount() {
+    if (confirm('Are you sure you want to deactivate your account? You can reactivate it by logging in again.')) {
+        alert('Account deactivation will be implemented here');
+    }
+}
+
+function deleteAccount() {
+    if (confirm('Are you absolutely sure? This will permanently delete all your data and cannot be undone!')) {
+        alert('Account deletion will be implemented here');
+    }
+}
+</script>
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

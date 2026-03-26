@@ -1,0 +1,671 @@
+{% extends "base.html" %}
+{% block title %}404 - Page Not Found{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <!-- Animated Background Elements -->
+    <div class="error-bg">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="grid-pattern"></div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center min-vh-100 align-items-center">
+            <div class="col-lg-8 text-center">
+                <!-- Error Code with Animation -->
+                <div class="error-code-container" data-aos="fade-down">
+                    <div class="error-code">404</div>
+                    <div class="error-glow"></div>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" data-aos="fade-up" data-aos-delay="100">
+                    <h1 class="gradient-title">Page Not Found</h1>
+                    <p class="error-description">
+                        Oops! The page you're looking for seems to have vanished into the digital void.
+                        It might have been moved, deleted, or never existed in the first place.
+                    </p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-section" data-aos="fade-up" data-aos-delay="200">
+                    <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" name="q" class="search-input" 
+                                   placeholder="Search for drives, companies, or opportunities..." 
+                                   autocomplete="off">
+                            <button type="submit" class="search-button">
+                                <span>Search</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="links-title">You might want to visit:</h3>
+                    <div class="links-grid">
+                        <a href="{{ url_for('index') }}" class="link-card glass-card">
+                            <div class="link-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="link-content">
+                                <h4>Homepage</h4>
+                                <p>Return to the main page</p>
+                            </div>
+                            <i class="fas fa-arrow-right link-arrow"></i>
+                        </a>
+
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.role == 'student' %}
+                            <a href="{{ url_for('student_dashboard') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Your Dashboard</h4>
+                                    <p>View your applications and drives</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                            {% elif current_user.role == 'company' %}
+                            <a href="{{ url_for('company_dashboard') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Company Dashboard</h4>
+                                    <p>Manage your placement drives</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                            {% elif current_user.role == 'admin' %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Admin Dashboard</h4>
+                                    <p>Oversee the placement portal</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('login') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Login</h4>
+                                    <p>Access your account</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('register_student') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Student Registration</h4>
+                                    <p>Join as a student</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('register_company') }}" class="link-card glass-card">
+                                <div class="link-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="link-content">
+                                    <h4>Company Registration</h4>
+                                    <p>Register your company</p>
+                                </div>
+                                <i class="fas fa-arrow-right link-arrow"></i>
+                            </a>
+                        {% endif %}
+
+                        <a href="#" onclick="history.back()" class="link-card glass-card">
+                            <div class="link-icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="link-content">
+                                <h4>Go Back</h4>
+                                <p>Return to previous page</p>
+                            </div>
+                            <i class="fas fa-arrow-right link-arrow"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="help-section" data-aos="fade-up" data-aos-delay="400">
+                    <div class="help-card glass-card">
+                        <div class="help-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="help-content">
+                            <h4>Need Assistance?</h4>
+                            <p>If you believe this is an error, our support team is here to help.</p>
+                            <div class="help-actions">
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-envelope me-2"></i>Contact Support
+                                </a>
+                                <span class="help-divider">|</span>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-question-circle me-2"></i>FAQ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Error Container */
+.error-container {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+}
+
+/* Animated Background */
+.error-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.floating-shape {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    animation: float 25s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.15);
+    top: -200px;
+    right: -100px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.15);
+    bottom: -200px;
+    left: -150px;
+    animation-delay: -8s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.15);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -16s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, 50px) scale(1.2); }
+    66% { transform: translate(-50px, -50px) scale(0.9); }
+}
+
+.grid-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+    animation: gridShift 20s linear infinite;
+}
+
+@keyframes gridShift {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+/* Error Code */
+.error-code-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.error-code {
+    font-size: 15rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+    position: relative;
+    z-index: 2;
+    animation: glitch 5s infinite;
+}
+
+.error-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+    filter: blur(50px);
+    z-index: 1;
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@keyframes glitch {
+    0%, 100% { transform: skew(0deg); }
+    2% { transform: skew(2deg); }
+    4% { transform: skew(-2deg); }
+    6% { transform: skew(0deg); }
+    98% { transform: skew(0deg); }
+}
+
+/* Error Message */
+.gradient-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.error-description {
+    font-size: 1.2rem;
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+}
+
+/* Search Section */
+.search-section {
+    max-width: 600px;
+    margin: 0 auto 60px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 60px;
+    padding: 5px 5px 5px 20px;
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+    transition: var(--transition);
+}
+
+.search-wrapper:hover,
+.search-wrapper:focus-within {
+    box-shadow: 0 30px 60px -10px rgba(99, 102, 241, 0.4);
+    border-color: var(--primary);
+}
+
+.search-icon {
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 15px 15px 10px;
+    border: none;
+    background: transparent;
+    color: var(--dark);
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.search-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-button:hover {
+    transform: translateX(5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Quick Links */
+.quick-links {
+    margin-bottom: 60px;
+}
+
+.links-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: var(--dark);
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.link-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.link-card:hover {
+    transform: translateY(-5px) translateX(5px);
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+}
+
+.link-card:hover::before {
+    opacity: 1;
+}
+
+.link-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--primary)10, var(--secondary)10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.3rem;
+    transition: var(--transition);
+}
+
+.link-card:hover .link-icon {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: rotate(5deg) scale(1.1);
+}
+
+.link-content {
+    flex: 1;
+    text-align: left;
+}
+
+.link-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+    transition: color 0.3s ease;
+}
+
+.link-card:hover .link-content h4 {
+    color: var(--primary);
+}
+
+.link-content p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+.link-arrow {
+    color: var(--gray);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.link-card:hover .link-arrow {
+    transform: translateX(5px);
+    color: var(--primary);
+}
+
+/* Help Section */
+.help-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+    transition: var(--transition);
+}
+
+.help-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px -10px rgba(99, 102, 241, 0.3);
+}
+
+.help-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    transform: rotate(5deg);
+    transition: var(--transition);
+}
+
+.help-card:hover .help-icon {
+    transform: rotate(0deg) scale(1.1);
+}
+
+.help-content {
+    flex: 1;
+    text-align: left;
+}
+
+.help-content h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 5px;
+    color: var(--dark);
+}
+
+.help-content p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0 0 10px;
+}
+
+.help-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.help-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+}
+
+.help-link:hover {
+    color: var(--secondary);
+    transform: translateX(5px);
+}
+
+.help-divider {
+    color: var(--gray);
+    opacity: 0.3;
+}
+
+/* Glass Card Effect */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .link-content h4,
+[data-theme="dark"] .links-title,
+[data-theme="dark"] .help-content h4,
+[data-theme="dark"] .error-description {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 10rem;
+    }
+    
+    .gradient-title {
+        font-size: 2rem;
+    }
+    
+    .error-description {
+        font-size: 1rem;
+        padding: 0 20px;
+    }
+    
+    .search-wrapper {
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        gap: 15px;
+    }
+    
+    .search-input {
+        width: 100%;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 50px;
+        padding: 15px 25px;
+    }
+    
+    .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .links-grid {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+    }
+    
+    .help-card {
+        flex-direction: column;
+        text-align: center;
+        margin: 0 20px;
+    }
+    
+    .help-content {
+        text-align: center;
+    }
+    
+    .help-actions {
+        justify-content: center;
+    }
+    
+    .link-card {
+        padding: 15px;
+    }
+}
+
+/* Animation for AOS */
+[data-aos] {
+    pointer-events: none;
+}
+
+[data-aos].aos-animate {
+    pointer-events: auto;
+}
+</style>
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+</script>
+{% endblock %}

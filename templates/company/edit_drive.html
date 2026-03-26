@@ -1,0 +1,1118 @@
+{% extends "base.html" %}
+{% block title %}Edit Drive | Company Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-edit me-3"></i>Edit Placement Drive
+                        </h2>
+                        <p class="text-muted-light mb-0">Update your placement drive information</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-building me-2"></i>{{ drive.status|title }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Drive Form -->
+        <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-briefcase me-3"></i>
+                    <h5 class="mb-0 text-white">Drive Information</h5>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <form method="POST" action="{{ url_for('edit_drive', drive_id=drive.id) }}" class="futuristic-form" id="editDriveForm">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Drive Status Alert -->
+                    {% if drive.status != 'pending' %}
+                    <div class="alert-futuristic info-alert mb-4">
+                        <div class="alert-icon-wrapper">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h6 class="alert-heading">⚠️ Drive Status: {{ drive.status|title }}</h6>
+                            <p class="alert-text mb-0">
+                                This drive is currently {{ drive.status }}. Editing will reset its status to pending for re-approval.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-4">
+                        <!-- Job Title -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                {{ form.job_title.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-briefcase input-icon"></i>
+                                    {% if form.job_title.errors %}
+                                        {{ form.job_title(class="form-control-futuristic is-invalid", placeholder="e.g., Software Engineer") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.job_title.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.job_title(class="form-control-futuristic", placeholder="e.g., Software Engineer", value=drive.job_title) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                {{ form.job_description.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                    {% if form.job_description.errors %}
+                                        {{ form.job_description(class="form-control-futuristic is-invalid", rows="6", placeholder="Describe the job role, responsibilities, requirements...") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.job_description.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.job_description(class="form-control-futuristic", rows="6", placeholder="Describe the job role, responsibilities, requirements...") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Include detailed information about the role, responsibilities, and requirements
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Package and Location Row -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.package.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-rupee-sign input-icon"></i>
+                                    {% if form.package.errors %}
+                                        {{ form.package(class="form-control-futuristic is-invalid", placeholder="e.g., 12", step="0.1") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.package.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.package(class="form-control-futuristic", placeholder="e.g., 12", step="0.1") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">in Lakhs per annum (LPA)</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.location.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-map-marker-alt input-icon"></i>
+                                    {% if form.location.errors %}
+                                        {{ form.location(class="form-control-futuristic is-invalid", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.location.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.location(class="form-control-futuristic", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dates Row -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.application_deadline.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-times input-icon"></i>
+                                    {% if form.application_deadline.errors %}
+                                        {{ form.application_deadline(class="form-control-futuristic is-invalid", type="date") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.application_deadline.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.application_deadline(class="form-control-futuristic", type="date") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Last date for students to apply</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.drive_date.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-check input-icon"></i>
+                                    {% if form.drive_date.errors %}
+                                        {{ form.drive_date(class="form-control-futuristic is-invalid", type="date") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.drive_date.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.drive_date(class="form-control-futuristic", type="date") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Date of placement drive/interview</small>
+                            </div>
+                        </div>
+
+                        <!-- Eligibility Criteria Row -->
+                        <div class="col-md-4">
+                            <div class="input-group-futuristic">
+                                {{ form.min_cgpa.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-star input-icon"></i>
+                                    {% if form.min_cgpa.errors %}
+                                        {{ form.min_cgpa(class="form-control-futuristic is-invalid", placeholder="e.g., 7.5", step="0.1", min="0", max="10") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.min_cgpa.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.min_cgpa(class="form-control-futuristic", placeholder="e.g., 7.5", step="0.1", min="0", max="10") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="input-group-futuristic">
+                                {{ form.allowed_branches.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-code-branch input-icon"></i>
+                                    {% if form.allowed_branches.errors %}
+                                        {{ form.allowed_branches(class="form-control-futuristic is-invalid", placeholder="e.g., CSE, IT, ECE") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.allowed_branches.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.allowed_branches(class="form-control-futuristic", placeholder="e.g., CSE, IT, ECE") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Separate branches with commas. Leave empty for all branches.
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Max Applications (Optional) -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Maximum Applications (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-users input-icon"></i>
+                                    <input type="number" name="max_applications" class="form-control-futuristic" 
+                                           placeholder="e.g., 100" value="{{ drive.max_applications|default('') }}" min="1">
+                                </div>
+                                <small class="form-text-futuristic">Leave empty for unlimited applications</small>
+                            </div>
+                        </div>
+
+                        <!-- Skills Required (Optional) -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Skills Required (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-code input-icon"></i>
+                                    <input type="text" name="skills" class="form-control-futuristic" 
+                                           placeholder="e.g., Python, Java, SQL" value="{{ drive.skills|default('') }}">
+                                </div>
+                                <small class="form-text-futuristic">Separate skills with commas</small>
+                            </div>
+                        </div>
+
+                        <!-- Additional Questions (Optional) -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Additional Questions for Students (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-question-circle input-icon" style="top: 20px;"></i>
+                                    <textarea name="additional_questions" class="form-control-futuristic" rows="3" 
+                                              placeholder="Enter any specific questions you want students to answer while applying...">{{ drive.additional_questions|default('') }}</textarea>
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    One question per line. Students will need to answer these during application.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="preview-section mt-5">
+                        <h6 class="section-subtitle">
+                            <i class="fas fa-eye me-2"></i>Drive Preview
+                        </h6>
+                        
+                        <div class="preview-card">
+                            <div class="preview-header">
+                                <div>
+                                    <h4 id="previewTitle">{{ drive.job_title }}</h4>
+                                    <p id="previewCompany">{{ drive.company.company_name }}</p>
+                                </div>
+                                <span class="package-badge" id="previewPackage">{{ drive.package }} LPA</span>
+                            </div>
+                            
+                            <div class="preview-body">
+                                <div class="preview-metrics">
+                                    <div class="preview-metric">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span id="previewLocation">{{ drive.location }}</span>
+                                    </div>
+                                    <div class="preview-metric">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <span id="previewDeadline">{{ drive.application_deadline.strftime('%d %b, %Y') }}</span>
+                                    </div>
+                                    <div class="preview-metric">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span id="previewDriveDate">{{ drive.drive_date.strftime('%d %b, %Y') }}</span>
+                                    </div>
+                                    <div class="preview-metric">
+                                        <i class="fas fa-star"></i>
+                                        <span id="previewCGPA">{{ drive.min_cgpa }} CGPA</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="preview-branches" id="previewBranches">
+                                    {% for branch in drive.allowed_branches.split(',') %}
+                                    <span class="branch-tag">{{ branch }}</span>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="preview-description" id="previewDescription">
+                                    {{ drive.job_description|truncate(200) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions mt-5">
+                        <button type="submit" class="btn-submit-futuristic" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>Update Drive
+                        </button>
+                        <a href="{{ url_for('company_dashboard') }}" class="btn-cancel-futuristic">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="button" class="btn-preview-futuristic" onclick="togglePreview()">
+                            <i class="fas fa-eye me-2"></i>Toggle Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="glass-card futuristic-card mt-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card-header-gradient-secondary" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-3"></i>
+                    <h5 class="mb-0 text-white">Danger Zone</h5>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <div class="danger-zone-content">
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-times-circle text-danger"></i>
+                            <div>
+                                <h6>Delete this drive</h6>
+                                <p class="text-muted">Once deleted, all applications for this drive will also be permanently removed.</p>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('delete_drive', drive_id=drive.id) }}" 
+                           class="btn-danger-zone"
+                           onclick="return confirm('Are you absolutely sure? This will permanently delete this drive and all associated applications. This action cannot be undone!')">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Drive
+                        </a>
+                    </div>
+                    
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-file-export text-info"></i>
+                            <div>
+                                <h6>Export applications</h6>
+                                <p class="text-muted">Download all applications for this drive as CSV</p>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('export_applications', drive_id=drive.id) }}" class="btn-export-zone">
+                            <i class="fas fa-download me-2"></i>Export CSV
+                        </a>
+                    </div>
+                    
+                    {% if drive.status == 'approved' %}
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <i class="fas fa-lock text-warning"></i>
+                            <div>
+                                <h6>Close this drive</h6>
+                                <p class="text-muted">Prevent new applications while keeping existing ones</p>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('close_drive', drive_id=drive.id) }}" 
+                           class="btn-warning-zone"
+                           onclick="return confirm('Close this drive? Students will no longer be able to apply.')">
+                            <i class="fas fa-lock me-2"></i>Close Drive
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('company_dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Alert */
+.alert-futuristic {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    border-left: 4px solid #3b82f6;
+    border-radius: 20px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    transform: rotate(10deg);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.alert-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.alert-text {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+textarea + .input-icon {
+    top: 20px;
+    transform: none;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic.is-invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+textarea.form-control-futuristic {
+    padding-top: 15px;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.invalid-feedback-futuristic {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* Package Badge */
+.package-badge {
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #10b98130;
+}
+
+/* Section Subtitle */
+.section-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--dark);
+}
+
+/* Preview Section */
+.preview-section {
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+    border: 1px dashed var(--glass-border);
+}
+
+.preview-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.preview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview-header h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 5px;
+    color: var(--dark);
+}
+
+.preview-header p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.preview-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.preview-metric {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.preview-metric i {
+    color: var(--primary);
+    font-size: 0.8rem;
+}
+
+.preview-branches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.branch-tag {
+    padding: 4px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.preview-description {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-submit-futuristic {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    min-width: 150px;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-cancel-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--gray);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+}
+
+.btn-preview-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+}
+
+.btn-preview-futuristic:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Danger Zone */
+.danger-zone-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.danger-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.danger-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.danger-info i {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.danger-info h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.danger-info p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+.btn-danger-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-danger-zone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #ef4444;
+}
+
+.btn-export-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-export-zone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #3b82f6;
+}
+
+.btn-warning-zone {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-warning-zone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #f59e0b;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .form-label-futuristic,
+[data-theme="dark"] .preview-header h4,
+[data-theme="dark"] .section-subtitle,
+[data-theme="dark"] .danger-info h6,
+[data-theme="dark"] .alert-heading {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic {
+    color: var(--light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-control-futuristic::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+[data-theme="dark"] .preview-card {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit-futuristic,
+    .btn-cancel-futuristic,
+    .btn-preview-futuristic {
+        width: 100%;
+    }
+    
+    .danger-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-danger-zone,
+    .btn-export-zone,
+    .btn-warning-zone {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .preview-metrics {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Live preview update
+    const form = document.getElementById('editDriveForm');
+    const titleInput = document.querySelector('input[name="job_title"]');
+    const packageInput = document.querySelector('input[name="package"]');
+    const locationInput = document.querySelector('input[name="location"]');
+    const deadlineInput = document.querySelector('input[name="application_deadline"]');
+    const driveDateInput = document.querySelector('input[name="drive_date"]');
+    const cgpaInput = document.querySelector('input[name="min_cgpa"]');
+    const branchesInput = document.querySelector('input[name="allowed_branches"]');
+    const descriptionInput = document.querySelector('textarea[name="job_description"]');
+
+    // Preview elements
+    const previewTitle = document.getElementById('previewTitle');
+    const previewPackage = document.getElementById('previewPackage');
+    const previewLocation = document.getElementById('previewLocation');
+    const previewDeadline = document.getElementById('previewDeadline');
+    const previewDriveDate = document.getElementById('previewDriveDate');
+    const previewCGPA = document.getElementById('previewCGPA');
+    const previewBranches = document.getElementById('previewBranches');
+    const previewDescription = document.getElementById('previewDescription');
+
+    function updatePreview() {
+        if (previewTitle) {
+            previewTitle.textContent = titleInput?.value || '{{ drive.job_title }}';
+        }
+        
+        if (previewPackage) {
+            const packageVal = packageInput?.value || '{{ drive.package }}';
+            previewPackage.textContent = packageVal + ' LPA';
+        }
+        
+        if (previewLocation) {
+            previewLocation.textContent = locationInput?.value || '{{ drive.location }}';
+        }
+        
+        if (previewDeadline) {
+            const date = deadlineInput?.value || '{{ drive.application_deadline.strftime("%Y-%m-%d") }}';
+            if (date) {
+                const formatted = new Date(date).toLocaleDateString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                previewDeadline.textContent = formatted;
+            }
+        }
+        
+        if (previewDriveDate) {
+            const date = driveDateInput?.value || '{{ drive.drive_date.strftime("%Y-%m-%d") }}';
+            if (date) {
+                const formatted = new Date(date).toLocaleDateString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                previewDriveDate.textContent = formatted;
+            }
+        }
+        
+        if (previewCGPA) {
+            previewCGPA.textContent = (cgpaInput?.value || '{{ drive.min_cgpa }}') + ' CGPA';
+        }
+        
+        if (previewBranches && branchesInput) {
+            const branches = branchesInput.value || '{{ drive.allowed_branches }}';
+            if (branches) {
+                const branchArray = branches.split(',').map(b => b.trim()).filter(b => b);
+                previewBranches.innerHTML = branchArray.map(b => 
+                    `<span class="branch-tag">${b}</span>`
+                ).join('');
+            }
+        }
+        
+        if (previewDescription && descriptionInput) {
+            let desc = descriptionInput.value || '{{ drive.job_description }}';
+            previewDescription.textContent = desc.length > 200 ? desc.substring(0, 200) + '...' : desc;
+        }
+    }
+
+    // Add input event listeners
+    const inputs = [titleInput, packageInput, locationInput, deadlineInput, driveDateInput, 
+                   cgpaInput, branchesInput, descriptionInput];
+    
+    inputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', updatePreview);
+        }
+    });
+
+    // Toggle preview function
+    window.togglePreview = function() {
+        const previewSection = document.querySelector('.preview-section');
+        if (previewSection) {
+            if (previewSection.style.display === 'none') {
+                previewSection.style.display = 'block';
+                updatePreview();
+            } else {
+                previewSection.style.display = 'none';
+            }
+        }
+    };
+
+    // Form submit with loading state
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
+            submitBtn.disabled = true;
+        });
+    }
+
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Confirmation for delete and close actions
+document.querySelectorAll('.btn-danger-zone, .btn-warning-zone').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        if (!confirm('Are you sure you want to proceed? This action cannot be undone.')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

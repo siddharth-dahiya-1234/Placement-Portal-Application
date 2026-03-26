@@ -1,0 +1,1517 @@
+{% extends "base.html" %}
+{% block title %}My Applications | Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-file-alt me-3"></i>My Applications
+                        </h2>
+                        <p class="text-muted-light mb-0">Track and manage all your placement applications</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-clock me-2"></i>{{ applications|length }} Total
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon stat-primary">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|length }}</div>
+                        <div class="stat-label">Total Applications</div>
+                        <div class="stat-trend">All time</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="150">
+                    <div class="stat-icon stat-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'applied')|list|length }}</div>
+                        <div class="stat-label">Under Review</div>
+                        <div class="stat-trend">Pending</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon stat-info">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'shortlisted')|list|length }}</div>
+                        <div class="stat-label">Shortlisted</div>
+                        <div class="stat-trend">Moving forward</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="250">
+                    <div class="stat-icon stat-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'selected')|list|length }}</div>
+                        <div class="stat-label">Selected</div>
+                        <div class="stat-trend">Congratulations!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="filters-section mb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="filters-wrapper glass-card">
+                <div class="filter-group">
+                    <span class="filter-label">Filter by:</span>
+                    <button class="filter-btn active" data-filter="all" onclick="filterApplications('all')">
+                        <i class="fas fa-globe me-2"></i>All
+                    </button>
+                    <button class="filter-btn" data-filter="applied" onclick="filterApplications('applied')">
+                        <i class="fas fa-clock me-2"></i>Under Review
+                    </button>
+                    <button class="filter-btn" data-filter="shortlisted" onclick="filterApplications('shortlisted')">
+                        <i class="fas fa-star me-2"></i>Shortlisted
+                    </button>
+                    <button class="filter-btn" data-filter="selected" onclick="filterApplications('selected')">
+                        <i class="fas fa-check-circle me-2"></i>Selected
+                    </button>
+                    <button class="filter-btn" data-filter="rejected" onclick="filterApplications('rejected')">
+                        <i class="fas fa-times-circle me-2"></i>Rejected
+                    </button>
+                </div>
+                <div class="search-group">
+                    <div class="search-wrapper-small">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search applications..." class="search-input-small">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Timeline -->
+        <div class="applications-container">
+            {% if applications %}
+                {% for app in applications %}
+                <div class="application-timeline-item glass-card" 
+                     data-status="{{ app.status }}"
+                     data-company="{{ app.drive.company.company_name.lower() }}"
+                     data-job="{{ app.drive.job_title.lower() }}"
+                     data-aos="fade-up" 
+                     data-aos-delay="{{ 350 + (loop.index * 50) }}">
+                    
+                    <!-- Timeline Indicator -->
+                    <div class="timeline-indicator {{ app.status }}">
+                        <div class="indicator-dot"></div>
+                        <div class="indicator-line"></div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="application-content">
+                        <div class="application-header">
+                            <div class="company-info">
+                                <div class="company-avatar">
+                                    {{ app.drive.company.company_name[0]|upper }}
+                                </div>
+                                <div>
+                                    <h3 class="company-name">{{ app.drive.company.company_name }}</h3>
+                                    <p class="job-title">{{ app.drive.job_title }}</p>
+                                </div>
+                            </div>
+                            <span class="status-badge-large {{ app.status }}">
+                                <span class="status-indicator"></span>
+                                {{ app.status|title }}
+                            </span>
+                        </div>
+
+                        <div class="application-details-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Applied On</span>
+                                    <span class="detail-value">{{ app.application_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Drive Date</span>
+                                    <span class="detail-value">{{ app.drive.drive_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Location</span>
+                                    <span class="detail-value">{{ app.drive.location }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-icon">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <span class="detail-label">Package</span>
+                                    <span class="detail-value">{{ app.drive.package }} LPA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Eligibility Match -->
+                        <div class="eligibility-section">
+                            <div class="eligibility-header">
+                                <span class="eligibility-title">
+                                    <i class="fas fa-check-circle me-2"></i>Your Profile Match
+                                </span>
+                                <span class="match-percentage">{{ app.match_percentage|default(85) }}%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: {{ app.match_percentage|default(85) }}%"></div>
+                            </div>
+                            <div class="match-criteria">
+                                <span class="criteria-item satisfied">
+                                    <i class="fas fa-check-circle"></i> CGPA: {{ student.cgpa }}/{{ app.drive.min_cgpa }}
+                                </span>
+                                <span class="criteria-item satisfied">
+                                    <i class="fas fa-check-circle"></i> Branch: {{ student.branch }}
+                                </span>
+                                {% if app.skills_match %}
+                                <span class="criteria-item satisfied">
+                                    <i class="fas fa-check-circle"></i> Skills Match
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Key Requirements -->
+                        <div class="requirements-section">
+                            <h4 class="requirements-title">Key Requirements</h4>
+                            <div class="requirements-grid">
+                                <div class="requirement-item">
+                                    <span class="requirement-label">Minimum CGPA</span>
+                                    <span class="requirement-value">{{ app.drive.min_cgpa }}</span>
+                                </div>
+                                <div class="requirement-item">
+                                    <span class="requirement-label">Allowed Branches</span>
+                                    <span class="requirement-value">{{ app.drive.allowed_branches }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline of Events -->
+                        <div class="application-timeline">
+                            <div class="timeline-step completed">
+                                <div class="step-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-content">
+                                    <span class="step-title">Application Submitted</span>
+                                    <span class="step-date">{{ app.application_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="timeline-step {% if app.status in ['shortlisted', 'selected'] %}completed{% elif app.status == 'rejected' %}failed{% else %}pending{% endif %}">
+                                <div class="step-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="step-content">
+                                    <span class="step-title">Shortlisting</span>
+                                    <span class="step-date">
+                                        {% if app.shortlist_date %}
+                                            {{ app.shortlist_date.strftime('%d %b, %Y') }}
+                                        {% elif app.status == 'shortlisted' %}
+                                            In progress
+                                        {% else %}
+                                            Pending
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="timeline-step {% if app.status == 'selected' %}completed{% elif app.status == 'rejected' %}failed{% else %}pending{% endif %}">
+                                <div class="step-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <span class="step-title">Selection</span>
+                                    <span class="step-date">
+                                        {% if app.selection_date %}
+                                            {{ app.selection_date.strftime('%d %b, %Y') }}
+                                        {% elif app.status == 'selected' %}
+                                            Selected
+                                        {% else %}
+                                            Pending
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="application-actions">
+                            <a href="{{ url_for('view_drive', drive_id=app.drive.id) }}" class="action-btn primary">
+                                <i class="fas fa-eye me-2"></i>View Drive Details
+                            </a>
+                            
+                            {% if app.drive.company.website %}
+                            <a href="{{ app.drive.company.website }}" target="_blank" class="action-btn secondary">
+                                <i class="fas fa-globe me-2"></i>Company Website
+                            </a>
+                            {% endif %}
+                            
+                            {% if app.status == 'shortlisted' %}
+                            <button class="action-btn success" onclick="prepareForInterview({{ app.id }})">
+                                <i class="fas fa-calendar-check me-2"></i>Prepare for Interview
+                            </button>
+                            {% elif app.status == 'selected' %}
+                            <button class="action-btn success" onclick="acceptOffer({{ app.id }})">
+                                <i class="fas fa-check-double me-2"></i>Accept Offer
+                            </button>
+                            {% endif %}
+                            
+                            <button class="action-btn info" onclick="viewApplicationDetails({{ app.id }})">
+                                <i class="fas fa-info-circle me-2"></i>More Details
+                            </button>
+                        </div>
+
+                        <!-- Feedback Section (for rejected applications) -->
+                        {% if app.status == 'rejected' and app.feedback %}
+                        <div class="feedback-section">
+                            <div class="feedback-header">
+                                <i class="fas fa-comment"></i>
+                                <span>Feedback from Company</span>
+                            </div>
+                            <p class="feedback-text">{{ app.feedback }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                <div class="pagination-section" data-aos="fade-up" data-aos-delay="400">
+                    <div class="pagination-info">
+                        Showing <span class="fw-bold">1-{{ applications|length }}</span> of 
+                        <span class="fw-bold">{{ total_applications|default(applications|length) }}</span> applications
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn" {% if current_page == 1 %}disabled{% endif %}>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">...</button>
+                        <button class="page-btn">5</button>
+                        <button class="page-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state glass-card" data-aos="fade-up" data-aos-delay="350">
+                    <div class="empty-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>No Applications Yet</h3>
+                    <p class="text-muted">You haven't applied to any placement drives. Start exploring opportunities!</p>
+                    
+                    <div class="suggestions-section">
+                        <h4 class="suggestions-title">Ready to start your journey?</h4>
+                        <div class="suggestions-grid">
+                            <a href="{{ url_for('student_dashboard') }}" class="suggestion-card glass-card">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Browse Open Drives</span>
+                            </a>
+                            <a href="{{ url_for('student_profile') }}" class="suggestion-card glass-card">
+                                <i class="fas fa-user"></i>
+                                <span>Update Your Profile</span>
+                            </a>
+                            <a href="#" class="suggestion-card glass-card" onclick="uploadResume()">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>Upload Resume</span>
+                            </a>
+                            <a href="#" class="suggestion-card glass-card" onclick="getRecommendations()">
+                                <i class="fas fa-magic"></i>
+                                <span>Get Recommendations</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="tips-section mt-4">
+                        <div class="tips-card glass-card">
+                            <div class="tips-header">
+                                <i class="fas fa-lightbulb"></i>
+                                <h4>Tips for a successful application</h4>
+                            </div>
+                            <div class="tips-list">
+                                <div class="tip-item">
+                                    <span class="tip-number">1</span>
+                                    <p>Keep your resume updated with latest projects and skills</p>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-number">2</span>
+                                    <p>Research companies before applying</p>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-number">3</span>
+                                    <p>Tailor your application to match job requirements</p>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-number">4</span>
+                                    <p>Apply early - don't wait until the deadline</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Stat Cards */
+.stat-card-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-futuristic:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon.stat-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon.stat-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-icon.stat-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-icon.stat-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-trend {
+    font-size: 0.7rem;
+    color: var(--primary);
+    margin-top: 2px;
+}
+
+/* Filters Section */
+.filters-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-right: 5px;
+}
+
+.filter-btn {
+    padding: 6px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--gray);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+}
+
+.search-wrapper-small {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-wrapper-small i {
+    position: absolute;
+    left: 12px;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.search-input-small {
+    padding: 8px 15px 8px 35px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    background: var(--glass-bg);
+    color: var(--dark);
+    font-size: 0.85rem;
+    width: 200px;
+}
+
+.search-input-small:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Application Timeline Item */
+.applications-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.application-timeline-item {
+    display: flex;
+    gap: 20px;
+    padding: 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    transition: var(--transition);
+    position: relative;
+}
+
+.application-timeline-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Timeline Indicator */
+.timeline-indicator {
+    position: relative;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.indicator-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gray);
+    border: 3px solid var(--glass-border);
+    z-index: 2;
+}
+
+.indicator-line {
+    position: absolute;
+    top: 30px;
+    width: 2px;
+    height: calc(100% + 30px);
+    background: linear-gradient(to bottom, var(--primary), transparent);
+    opacity: 0.3;
+}
+
+.timeline-indicator.applied .indicator-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 15px #f59e0b;
+}
+
+.timeline-indicator.shortlisted .indicator-dot {
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary);
+}
+
+.timeline-indicator.selected .indicator-dot {
+    background: #10b981;
+    box-shadow: 0 0 15px #10b981;
+}
+
+.timeline-indicator.rejected .indicator-dot {
+    background: #ef4444;
+    box-shadow: 0 0 15px #ef4444;
+}
+
+/* Application Content */
+.application-content {
+    flex: 1;
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.company-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.company-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 5px;
+    color: var(--dark);
+}
+
+.job-title {
+    font-size: 0.95rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Status Badge Large */
+.status-badge-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-badge-large.applied {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid #f59e0b30;
+}
+.status-badge-large.applied .status-indicator {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+.status-badge-large.shortlisted {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid var(--primary)30;
+}
+.status-badge-large.shortlisted .status-indicator {
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.status-badge-large.selected {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid #10b98130;
+}
+.status-badge-large.selected .status-indicator {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-badge-large.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid #ef444430;
+}
+.status-badge-large.rejected .status-indicator {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Application Details Grid */
+.application-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detail-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.detail-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.detail-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Eligibility Section */
+.eligibility-section {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.eligibility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.eligibility-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.match-percentage {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.progress-track {
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 2px;
+}
+
+.match-criteria {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.criteria-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+}
+
+.criteria-item.satisfied {
+    color: #10b981;
+}
+
+.criteria-item i {
+    font-size: 0.7rem;
+}
+
+/* Requirements Section */
+.requirements-section {
+    margin-bottom: 20px;
+}
+
+.requirements-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.requirement-item {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 10px;
+}
+
+.requirement-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+}
+
+.requirement-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Application Timeline Steps */
+.application-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+}
+
+.timeline-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    position: relative;
+}
+
+.timeline-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    width: 30px;
+    height: 2px;
+    background: var(--glass-border);
+}
+
+.timeline-step.completed:not(:last-child)::after {
+    background: linear-gradient(90deg, #10b981, var(--primary));
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+.timeline-step.completed .step-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: transparent;
+    color: white;
+}
+
+.timeline-step.failed .step-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: transparent;
+    color: white;
+}
+
+.timeline-step.pending .step-icon {
+    opacity: 0.5;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.step-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.step-date {
+    font-size: 0.65rem;
+    color: var(--gray);
+}
+
+/* Application Actions */
+.application-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.action-btn.secondary {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gray);
+}
+
+.action-btn.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.action-btn.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px currentColor;
+}
+
+/* Feedback Section */
+.feedback-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 15px;
+    border-left: 4px solid #ef4444;
+}
+
+.feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #ef4444;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.feedback-text {
+    color: var(--gray);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--primary)20, var(--accent)20);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+/* Suggestions Section */
+.suggestions-section {
+    max-width: 500px;
+    margin: 20px auto 0;
+}
+
+.suggestions-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--dark);
+}
+
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.suggestion-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.suggestion-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.suggestion-card i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.suggestion-card span {
+    font-size: 0.8rem;
+    color: var(--dark);
+}
+
+/* Tips Section */
+.tips-card {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.tips-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tips-header i {
+    font-size: 1.3rem;
+    color: #f59e0b;
+}
+
+.tips-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--dark);
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tip-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tip-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-item p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0;
+    text-align: left;
+}
+
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.pagination-info {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.page-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.page-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Dark Mode */
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .company-name,
+[data-theme="dark"] .detail-value,
+[data-theme="dark"] .eligibility-title,
+[data-theme="dark"] .requirements-title,
+[data-theme="dark"] .step-title,
+[data-theme="dark"] .empty-state h3,
+[data-theme="dark"] .suggestions-title,
+[data-theme="dark"] .tips-header h4,
+[data-theme="dark"] .suggestion-card span {
+    color: var(--light);
+}
+
+[data-theme="dark"] .search-input-small {
+    color: var(--light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .search-input-small::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .filters-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        justify-content: center;
+    }
+    
+    .search-wrapper-small {
+        width: 100%;
+    }
+    
+    .search-input-small {
+        width: 100%;
+    }
+    
+    .application-timeline-item {
+        flex-direction: column;
+    }
+    
+    .timeline-indicator {
+        display: none;
+    }
+    
+    .application-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .application-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .application-timeline {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .timeline-step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .application-actions {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .suggestions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pagination-section {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+
+<script>
+// Filter applications by status
+function filterApplications(status) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filter items
+    const items = document.querySelectorAll('.application-timeline-item');
+    items.forEach(item => {
+        if (status === 'all') {
+            item.style.display = 'flex';
+        } else {
+            const itemStatus = item.dataset.status;
+            item.style.display = itemStatus === status ? 'flex' : 'none';
+        }
+    });
+}
+
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const items = document.querySelectorAll('.application-timeline-item');
+        
+        items.forEach(item => {
+            const company = item.dataset.company;
+            const job = item.dataset.job;
+            const matches = company.includes(searchTerm) || job.includes(searchTerm);
+            item.style.display = matches ? 'flex' : 'none';
+        });
+    });
+}
+
+// Prepare for interview
+function prepareForInterview(applicationId) {
+    // You can redirect to interview preparation resources
+    alert('Interview preparation resources will be available soon!');
+}
+
+// Accept offer
+function acceptOffer(applicationId) {
+    if (confirm('Congratulations! Are you sure you want to accept this offer?')) {
+        // API call to accept offer
+        fetch(`/student/application/${applicationId}/accept`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Offer accepted successfully!');
+                location.reload();
+            }
+        });
+    }
+}
+
+// View application details
+function viewApplicationDetails(applicationId) {
+    // You can show a modal with more details or redirect
+    alert('More details will be shown here');
+}
+
+// Upload resume
+function uploadResume() {
+    window.location.href = "{{ url_for('student_profile') }}";
+}
+
+// Get recommendations
+function getRecommendations() {
+    alert('AI-powered recommendations coming soon!');
+}
+
+// AOS initialization
+document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+</script>
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

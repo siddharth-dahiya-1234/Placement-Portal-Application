@@ -1,0 +1,1002 @@
+{% extends "base.html" %}
+{% block title %}Create Placement Drive | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Form Card -->
+        <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-duration="1000">
+            <!-- Form Header with Icon -->
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-plus-circle me-3"></i>Create New Placement Drive
+                        </h2>
+                        <p class="text-muted-light mb-0">Post a new job opportunity for talented students</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-building me-2"></i>Company Portal
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Alert -->
+            <div class="alert-futuristic info-alert" data-aos="fade-up" data-aos-delay="100">
+                <div class="alert-icon-wrapper">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="alert-content">
+                    <h6 class="alert-heading">📋 Important Note</h6>
+                    <p class="alert-text mb-0">
+                        After creation, your drive will be pending admin approval. Students can only apply after approval.
+                        This ensures quality control and proper verification of all opportunities.
+                    </p>
+                </div>
+                <div class="alert-decoration"></div>
+            </div>
+
+            <!-- Main Form -->
+            <div class="card-body-futuristic">
+                <form method="POST" action="" class="futuristic-form" id="driveForm">
+                    {{ form.hidden_tag() }}
+
+                    <div class="row g-4">
+                        <!-- Job Title -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                {{ form.job_title.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-briefcase input-icon"></i>
+                                    {% if form.job_title.errors %}
+                                        {{ form.job_title(class="form-control-futuristic is-invalid", placeholder="e.g., Software Engineer, Data Analyst, Product Manager") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.job_title.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.job_title(class="form-control-futuristic", placeholder="e.g., Software Engineer, Data Analyst, Product Manager") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Enter the exact job title/position name</small>
+                            </div>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                {{ form.job_description.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                    {% if form.job_description.errors %}
+                                        {{ form.job_description(class="form-control-futuristic is-invalid", rows="6", placeholder="Describe the role, responsibilities, requirements, perks, etc...") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.job_description.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.job_description(class="form-control-futuristic", rows="6", placeholder="Describe the role, responsibilities, requirements, perks, etc...") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Provide detailed information about the position - this helps attract the right candidates
+                                </small>
+                                <div id="descCounter" class="char-counter" style="margin-top: 8px; font-size: 0.7rem; color: var(--gray);">
+                                    <i class="fas fa-keyboard me-1"></i>2000 characters remaining
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Two Columns: Package and Location -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.package.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-rupee-sign input-icon"></i>
+                                    {% if form.package.errors %}
+                                        {{ form.package(class="form-control-futuristic is-invalid", placeholder="e.g., 12") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.package.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.package(class="form-control-futuristic", placeholder="e.g., 12") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Annual package in Lakhs per annum (LPA)</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.location.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-map-marker-alt input-icon"></i>
+                                    {% if form.location.errors %}
+                                        {{ form.location(class="form-control-futuristic is-invalid", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.location.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.location(class="form-control-futuristic", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Two Columns: CGPA and Branches -->
+                        <div class="col-md-4">
+                            <div class="input-group-futuristic">
+                                {{ form.min_cgpa.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-star input-icon"></i>
+                                    {% if form.min_cgpa.errors %}
+                                        {{ form.min_cgpa(class="form-control-futuristic is-invalid", placeholder="e.g., 7.5", step="0.1", min="0", max="10") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.min_cgpa.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.min_cgpa(class="form-control-futuristic", placeholder="e.g., 7.5", step="0.1", min="0", max="10") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">Minimum CGPA required (0-10 scale)</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="input-group-futuristic">
+                                {{ form.allowed_branches.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-code-branch input-icon"></i>
+                                    {% if form.allowed_branches.errors %}
+                                        {{ form.allowed_branches(class="form-control-futuristic is-invalid", placeholder="e.g., CSE, ECE, ME, CE") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.allowed_branches.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.allowed_branches(class="form-control-futuristic", placeholder="e.g., CSE, ECE, ME, CE") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Separate branches with commas. Leave empty for all branches.
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Two Date Fields with Full Calendar Support -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.application_deadline.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-times input-icon"></i>
+                                    {% if form.application_deadline.errors %}
+                                        {{ form.application_deadline(class="form-control-futuristic is-invalid", type="date") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.application_deadline.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.application_deadline(class="form-control-futuristic", type="date") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-clock me-1"></i>Last date for students to apply
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.drive_date.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-check input-icon"></i>
+                                    {% if form.drive_date.errors %}
+                                        {{ form.drive_date(class="form-control-futuristic is-invalid", type="date") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.drive_date.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.drive_date(class="form-control-futuristic", type="date") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-calendar-week me-1"></i>Date of interview/selection process
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Additional Options (Optional) -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Maximum Applications (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-users input-icon"></i>
+                                    <input type="number" name="max_applications" class="form-control-futuristic" 
+                                           placeholder="e.g., 100" min="1" value="100">
+                                </div>
+                                <small class="form-text-futuristic">Leave empty for unlimited applications</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Skills Required (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-code input-icon"></i>
+                                    <input type="text" name="skills" class="form-control-futuristic" 
+                                           placeholder="e.g., Python, Java, SQL, React">
+                                </div>
+                                <small class="form-text-futuristic">Separate skills with commas</small>
+                            </div>
+                        </div>
+
+                        <!-- Additional Questions -->
+                        <div class="col-md-12">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Additional Questions for Students (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-question-circle input-icon" style="top: 20px;"></i>
+                                    <textarea name="additional_questions" class="form-control-futuristic" rows="3" 
+                                              placeholder="Enter any specific questions you want students to answer while applying..."></textarea>
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    One question per line. Students will need to answer these during application.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="preview-section mt-5">
+                        <div class="preview-header">
+                            <i class="fas fa-eye"></i>
+                            <h6>Live Preview</h6>
+                            <span class="preview-badge">As students will see</span>
+                        </div>
+                        <div class="preview-card glass-card">
+                            <div class="preview-content">
+                                <div class="preview-company">
+                                    <div class="preview-avatar" id="previewAvatar">{{ company.company_name[0]|upper if company else 'C' }}</div>
+                                    <div>
+                                        <h4 id="previewCompanyName">{% if company %}{{ company.company_name }}{% else %}Your Company{% endif %}</h4>
+                                        <p id="previewLocation">Location will appear here</p>
+                                    </div>
+                                </div>
+                                <h3 class="preview-title" id="previewTitle">Job Title</h3>
+                                <div class="preview-package" id="previewPackage">Package: -- LPA</div>
+                                <div class="preview-description" id="previewDescription">
+                                    Job description will appear here...
+                                </div>
+                                <div class="preview-deadline" id="previewDeadline">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Deadline: Not set
+                                </div>
+                                <div class="preview-branches" id="previewBranches">
+                                    <span class="branch-tag">All branches</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions mt-5">
+                        {{ form.submit(class="btn-submit-futuristic", id="submitBtn") }}
+                        <a href="{{ url_for('company_dashboard') }}" class="btn-cancel-futuristic">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="button" class="btn-preview-futuristic" onclick="toggleFullPreview()">
+                            <i class="fas fa-expand me-2"></i>Expand Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('company_dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Alert */
+.alert-futuristic {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    border-left: 4px solid #3b82f6;
+    border-radius: 20px;
+    padding: 20px 25px;
+    margin: 0 25px 25px 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    transform: rotate(10deg);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.alert-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.alert-text {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 30px;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1.5rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+textarea + .input-icon {
+    top: 20px;
+    transform: none;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic:focus + .input-icon {
+    color: var(--primary);
+    opacity: 1;
+}
+
+.form-control-futuristic.is-invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+textarea.form-control-futuristic {
+    padding-top: 15px;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.invalid-feedback-futuristic {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+.char-counter {
+    transition: color 0.3s ease;
+}
+
+/* Preview Section */
+.preview-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+    border: 1px dashed var(--glass-border);
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.preview-header i {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.preview-header h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--dark);
+}
+
+.preview-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    color: var(--primary);
+}
+
+.preview-card {
+    padding: 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.preview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.preview-content {
+    max-width: 100%;
+}
+
+.preview-company {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.preview-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.preview-company h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.preview-company p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+.preview-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 10px 0;
+    color: var(--dark);
+}
+
+.preview-package {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.preview-description {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.preview-deadline {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 12px;
+}
+
+.preview-deadline i {
+    color: var(--primary);
+    margin-right: 5px;
+}
+
+.preview-branches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.branch-tag {
+    padding: 3px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.btn-submit-futuristic {
+    flex: 2;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px -6px #10b981;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -8px #10b981;
+}
+
+.btn-cancel-futuristic {
+    flex: 1;
+    padding: 14px 30px;
+    border: 2px solid var(--glass-border);
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: transparent;
+    color: var(--gray);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-preview-futuristic {
+    flex: 1;
+    padding: 14px 30px;
+    border: 2px solid var(--glass-border);
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: transparent;
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-preview-futuristic:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: transparent;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .form-label-futuristic,
+[data-theme="dark"] .alert-heading,
+[data-theme="dark"] .preview-header h6,
+[data-theme="dark"] .preview-company h4,
+[data-theme="dark"] .preview-title {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic {
+    color: var(--light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-control-futuristic::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+    
+    .alert-futuristic {
+        margin: 0 15px 20px 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .card-body-futuristic {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit-futuristic,
+    .btn-cancel-futuristic,
+    .btn-preview-futuristic {
+        width: 100%;
+    }
+    
+    .preview-section {
+        padding: 15px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Live preview update
+    const titleInput = document.getElementById('job_title');
+    const descInput = document.getElementById('job_description');
+    const packageInput = document.getElementById('package');
+    const locationInput = document.getElementById('location');
+    const deadlineInput = document.getElementById('application_deadline');
+    const branchesInput = document.getElementById('allowed_branches');
+    
+    const previewTitle = document.getElementById('previewTitle');
+    const previewDescription = document.getElementById('previewDescription');
+    const previewPackage = document.getElementById('previewPackage');
+    const previewLocation = document.getElementById('previewLocation');
+    const previewDeadline = document.getElementById('previewDeadline');
+    const previewBranches = document.getElementById('previewBranches');
+    
+    function updatePreview() {
+        if (previewTitle) {
+            previewTitle.textContent = titleInput?.value || 'Job Title';
+        }
+        
+        if (previewDescription) {
+            let desc = descInput?.value || 'Job description will appear here...';
+            previewDescription.textContent = desc.length > 150 ? desc.substring(0, 150) + '...' : desc;
+        }
+        
+        if (previewPackage) {
+            const packageVal = packageInput?.value;
+            previewPackage.textContent = packageVal ? `Package: ${packageVal} LPA` : 'Package: -- LPA';
+        }
+        
+        if (previewLocation) {
+            previewLocation.textContent = locationInput?.value || 'Location will appear here';
+        }
+        
+        if (previewDeadline) {
+            const date = deadlineInput?.value;
+            if (date) {
+                const formatted = new Date(date).toLocaleDateString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                previewDeadline.innerHTML = `<i class="fas fa-calendar-alt"></i> Deadline: ${formatted}`;
+            } else {
+                previewDeadline.innerHTML = `<i class="fas fa-calendar-alt"></i> Deadline: Not set`;
+            }
+        }
+        
+        if (previewBranches && branchesInput) {
+            const branches = branchesInput.value;
+            if (branches) {
+                const branchArray = branches.split(',').map(b => b.trim()).filter(b => b);
+                previewBranches.innerHTML = branchArray.map(b => 
+                    `<span class="branch-tag">${b}</span>`
+                ).join('');
+            } else {
+                previewBranches.innerHTML = '<span class="branch-tag">All branches</span>';
+            }
+        }
+    }
+    
+    // Add event listeners
+    const inputs = [titleInput, descInput, packageInput, locationInput, deadlineInput, branchesInput];
+    inputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('change', updatePreview);
+        }
+    });
+    
+    updatePreview();
+    
+    // Character counter for description
+    const descTextarea = document.getElementById('job_description');
+    const counterSpan = document.getElementById('descCounter');
+    if (descTextarea && counterSpan) {
+        const maxLength = 2000;
+        function updateCounter() {
+            const len = descTextarea.value.length;
+            const remaining = maxLength - len;
+            counterSpan.innerHTML = `<i class="fas fa-keyboard me-1"></i>${remaining} characters remaining`;
+            if (remaining < 100) {
+                counterSpan.style.color = '#ef4444';
+                counterSpan.style.fontWeight = '500';
+            } else {
+                counterSpan.style.color = 'var(--gray)';
+                counterSpan.style.fontWeight = 'normal';
+            }
+            if (len > maxLength) {
+                descTextarea.value = descTextarea.value.substring(0, maxLength);
+                counterSpan.innerHTML = `<i class="fas fa-keyboard me-1"></i>0 characters remaining`;
+            }
+        }
+        descTextarea.addEventListener('input', updateCounter);
+        updateCounter();
+    }
+    
+    // Date constraints
+    const driveDateInput = document.getElementById('drive_date');
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (deadlineInput) {
+        deadlineInput.min = today;
+        deadlineInput.addEventListener('change', function() {
+            if (driveDateInput) {
+                driveDateInput.min = this.value;
+                if (driveDateInput.value && driveDateInput.value < this.value) {
+                    driveDateInput.value = this.value;
+                }
+            }
+        });
+    }
+    
+    if (driveDateInput) {
+        driveDateInput.min = today;
+        driveDateInput.addEventListener('change', function() {
+            if (deadlineInput && deadlineInput.value && this.value < deadlineInput.value) {
+                alert('Drive date cannot be earlier than the application deadline.');
+                this.value = deadlineInput.value;
+            }
+        });
+    }
+    
+    // Form submit with loading state
+    const form = document.getElementById('driveForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Drive...';
+            submitBtn.disabled = true;
+        });
+    }
+    
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Toggle full preview modal
+function toggleFullPreview() {
+    alert('Full preview modal will show here. You can implement a modal with the complete drive preview.');
+}
+</script>
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

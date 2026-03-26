@@ -1,0 +1,996 @@
+{% extends "base.html" %}
+{% block title %}Manage Companies | Placement Portal{% endblock %}
+{% block content %}
+
+<!-- Animated Background -->
+<div class="dashboard-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="particle-network" id="particleNetwork"></div>
+</div>
+
+<div class="admin-wrapper">
+    <div class="container-fluid px-4">
+        <!-- Header Section -->
+        <div class="admin-header" data-aos="fade-down">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="welcome-section">
+                        <div class="welcome-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Admin Panel</span>
+                        </div>
+                        <h1 class="welcome-title">
+                            <i class="fas fa-building"></i> Manage <span class="gradient-text">Companies</span>
+                        </h1>
+                        <p class="welcome-subtitle">
+                            View, approve, reject, or blacklist company registrations
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Search Bar -->
+                    <div class="search-wrapper">
+                        <form method="GET" action="{{ url_for('admin_companies') }}" class="search-form">
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" name="search" class="search-input" 
+                                       placeholder="Search companies..." value="{{ search }}">
+                                <button type="submit" class="search-btn">Search</button>
+                                {% if search %}
+                                <a href="{{ url_for('admin_companies') }}" class="search-clear">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row" data-aos="fade-up">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="stat-card total-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Total Companies</span>
+                            <span class="stat-value" id="totalCompanies">{{ companies|length }}</span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card approved-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Approved</span>
+                            <span class="stat-value" id="approvedCompanies">
+                                {{ companies|selectattr('approval_status', 'equalto', 'approved')|list|length }}
+                            </span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card pending-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-label">Pending</span>
+                            <span class="stat-value" id="pendingCompanies">
+                                {{ companies|selectattr('approval_status', 'equalto', 'pending')|list|length }}
+                            </span>
+                        </div>
+                        <div class="stat-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Companies Table Card -->
+        <div class="table-card" data-aos="fade-up">
+            <div class="table-header">
+                <div class="header-left">
+                    <h5 class="table-title">
+                        <i class="fas fa-list"></i>
+                        All Companies
+                    </h5>
+                </div>
+                <div class="header-right">
+                    <span class="companies-count">{{ companies|length }} total</span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Company</th>
+                            <th>HR Details</th>
+                            <th>Contact</th>
+                            <th>Website</th>
+                            <th>Status</th>
+                            <th>Blacklist</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in companies %}
+                        <tr class="fade-in" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+                            <td>
+                                <span class="company-id">#{{ company.id }}</span>
+                            </td>
+                            <td>
+                                <div class="company-info">
+                                    <div class="company-avatar">
+                                        {{ company.company_name[0]|upper }}
+                                    </div>
+                                    <div class="company-name">
+                                        <strong>{{ company.company_name }}</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="hr-details">
+                                    <div class="hr-name">
+                                        <i class="fas fa-user-tie"></i> {{ company.hr_name }}
+                                    </div>
+                                    <div class="hr-email">
+                                        <i class="fas fa-envelope"></i> {{ company.hr_email }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="contact-info">
+                                    <i class="fas fa-phone"></i> {{ company.hr_contact }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ company.website }}" target="_blank" class="website-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    <span>Visit</span>
+                                </a>
+                            </td>
+                            <td>
+                                {% if company.approval_status == 'approved' %}
+                                    <span class="status-badge approved">
+                                        <i class="fas fa-check-circle"></i>
+                                        Approved
+                                    </span>
+                                {% elif company.approval_status == 'pending' %}
+                                    <span class="status-badge pending">
+                                        <i class="fas fa-clock"></i>
+                                        Pending
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge rejected">
+                                        <i class="fas fa-times-circle"></i>
+                                        Rejected
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if company.is_blacklisted %}
+                                    <span class="blacklist-badge blacklisted">
+                                        <i class="fas fa-ban"></i>
+                                        Blacklisted
+                                    </span>
+                                {% else %}
+                                    <span class="blacklist-badge active">
+                                        <i class="fas fa-check-circle"></i>
+                                        Active
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    {% if company.approval_status == 'pending' %}
+                                        <a href="{{ url_for('approve_company', company_id=company.id) }}" 
+                                           class="action-btn approve"
+                                           onclick="return confirm('Approve {{ company.company_name }}?')"
+                                           title="Approve Company">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="{{ url_for('reject_company', company_id=company.id) }}" 
+                                           class="action-btn reject"
+                                           onclick="return confirm('Reject {{ company.company_name }}?')"
+                                           title="Reject Company">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <a href="{{ url_for('toggle_company_blacklist', company_id=company.id) }}" 
+                                       class="action-btn {% if company.is_blacklisted %}activate{% else %}blacklist{% endif %}"
+                                       onclick="return confirm('{% if company.is_blacklisted %}Activate{% else %}Blacklist{% endif %} {{ company.company_name }}?')"
+                                       title="{% if company.is_blacklisted %}Activate{% else %}Blacklist{% endif %} Company">
+                                        <i class="fas {% if company.is_blacklisted %}fa-check-circle{% else %}fa-ban{% endif %}"></i>
+                                    </a>
+                                    
+                                    <a href="#" class="action-btn view" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="empty-state">
+                                <div class="empty-state-content">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <h3>No Companies Found</h3>
+                                    <p>{% if search %}No companies matching "{{ search }}" were found.{% else %}There are no companies registered yet.{% endif %}</p>
+                                    {% if search %}
+                                    <a href="{{ url_for('admin_companies') }}" class="btn-clear">
+                                        <i class="fas fa-times"></i> Clear Search
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer -->
+            <div class="table-footer">
+                <div class="footer-info">
+                    Showing {{ companies|length }} companies
+                </div>
+                <div class="footer-actions">
+                    <button class="btn-refresh" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+/* Admin Wrapper */
+.admin-wrapper {
+    padding: 120px 0 40px;
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+}
+
+/* Admin Header */
+.admin-header {
+    margin-bottom: 40px;
+}
+
+.welcome-section {
+    position: relative;
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: var(--primary);
+}
+
+.welcome-badge i {
+    font-size: 0.9rem;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.welcome-title i {
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.welcome-subtitle {
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+/* Search Bar */
+.search-wrapper {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: var(--shadow-lg);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 20px 15px 45px;
+    border: none;
+    background: transparent;
+    color: var(--dark);
+    font-size: 0.95rem;
+    border-radius: 50px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.search-btn {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-right: 5px;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.search-clear {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef4444;
+    text-decoration: none;
+    transition: var(--transition);
+    margin-right: 5px;
+}
+
+.search-clear:hover {
+    background: #ef4444;
+    color: white;
+    transform: rotate(90deg);
+}
+
+/* Stats Cards */
+.stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.total-card .stat-icon {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.approved-card .stat-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.pending-card .stat-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+}
+
+.stat-glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+    transform: skewX(-15deg) translateX(100px);
+    transition: transform 0.5s ease;
+}
+
+.stat-card:hover .stat-glow {
+    transform: skewX(-15deg) translateX(-50px);
+}
+
+/* Table Card */
+.table-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 25px;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-title i {
+    color: var(--primary);
+}
+
+.companies-count {
+    padding: 5px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Modern Table */
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.modern-table thead th {
+    padding: 15px 20px;
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--gray);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.modern-table thead th:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.modern-table thead th:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+.modern-table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.modern-table tbody td {
+    padding: 15px 20px;
+    color: var(--dark);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.modern-table tbody td:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.modern-table tbody td:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+/* Company Info */
+.company-id {
+    font-size: 0.85rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.company-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.company-name {
+    font-weight: 500;
+}
+
+/* HR Details */
+.hr-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hr-name, .hr-email {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.hr-name i, .hr-email i {
+    color: var(--primary);
+    width: 16px;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.contact-info i {
+    color: var(--primary);
+}
+
+/* Website Link */
+.website-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 20px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.website-link:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(2px);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.approved {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.status-badge.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Blacklist Badges */
+.blacklist-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.blacklist-badge.blacklisted {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.blacklist-badge.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.action-btn.approve {
+    background: #10b981;
+}
+
+.action-btn.reject {
+    background: #ef4444;
+}
+
+.action-btn.blacklist {
+    background: #f59e0b;
+}
+
+.action-btn.activate {
+    background: #10b981;
+}
+
+.action-btn.view {
+    background: #6366f1;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px !important;
+}
+
+.empty-state-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary);
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin-bottom: 20px;
+}
+
+.btn-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-clear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Table Footer */
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.footer-info {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.btn-refresh {
+    padding: 8px 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border: none;
+    border-radius: 30px;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-refresh:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-refresh i {
+    transition: transform 0.5s ease;
+}
+
+.btn-refresh:hover i {
+    transform: rotate(180deg);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .modern-table {
+        min-width: 1200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-wrapper {
+        padding: 100px 0 40px;
+    }
+    
+    .search-wrapper {
+        margin-top: 20px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .action-btn {
+        width: 30px;
+        height: 30px;
+    }
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+// Particle Network Animation
+function createParticleNetwork() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    document.querySelector('.particle-network').appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    
+    function init() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+            ctx.fill();
+        });
+        
+        // Draw connections
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.1)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(draw);
+    }
+    
+    init();
+    draw();
+    
+    window.addEventListener('resize', init);
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+    createParticleNetwork();
+    
+    // Animate stats numbers
+    document.querySelectorAll('.stat-value').forEach(counter => {
+        const target = parseInt(counter.textContent);
+        if (!isNaN(target) && target > 0) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(current);
+                }
+            }, 20);
+        }
+    });
+    
+    // Auto-dismiss alerts (preserved from original)
+    setTimeout(function() {
+        let alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            alert.style.transition = 'opacity 0.5s';
+            alert.style.opacity = '0';
+            setTimeout(function() {
+                alert.remove();
+            }, 500);
+        });
+    }, 5000);
+});
+</script>
+{% endblock %}

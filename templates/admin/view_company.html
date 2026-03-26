@@ -1,0 +1,1025 @@
+{% extends "base.html" %}
+{% block title %}View Company | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-building me-3"></i>Company Details
+                        </h2>
+                        <p class="text-muted-light mb-0">View and manage company information</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>Admin Portal
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Profile Card -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-id-card me-3"></i>
+                        <h5 class="mb-0 text-white">Company Profile</h5>
+                    </div>
+                    <div>
+                        <span class="status-badge-futuristic {{ company.approval_status }}">
+                            <i class="fas fa-circle me-1"></i>{{ company.approval_status|title }}
+                        </span>
+                        {% if company.is_blacklisted %}
+                        <span class="status-badge-futuristic blacklisted ms-2">
+                            <i class="fas fa-ban me-1"></i>Blacklisted
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <div class="row">
+                    <div class="col-lg-3 text-center mb-4 mb-lg-0">
+                        <div class="company-logo-large">
+                            {% if company.logo %}
+                            <img src="{{ company.logo }}" alt="{{ company.company_name }}" class="img-fluid rounded-20">
+                            {% else %}
+                            <div class="logo-placeholder">
+                                {{ company.company_name[0]|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-3">
+                            <span class="company-status {{ company.approval_status }}">
+                                {{ company.approval_status|upper }}
+                            </span>
+                        </div>
+                        
+                        <div class="company-actions mt-4">
+                            <a href="{{ url_for('approve_company', company_id=company.id) }}" 
+                               class="btn-action-futuristic success w-100 mb-2 {% if company.approval_status == 'approved' %}disabled{% endif %}"
+                               onclick="return confirm('Approve this company?')">
+                                <i class="fas fa-check-circle me-2"></i>Approve Company
+                            </a>
+                            <a href="{{ url_for('reject_company', company_id=company.id) }}" 
+                               class="btn-action-futuristic danger w-100 mb-2 {% if company.approval_status == 'rejected' %}disabled{% endif %}"
+                               onclick="return confirm('Reject this company?')">
+                                <i class="fas fa-times-circle me-2"></i>Reject Company
+                            </a>
+                            <a href="{{ url_for('toggle_company_blacklist', company_id=company.id) }}" 
+                               class="btn-action-futuristic warning w-100 mb-2">
+                                {% if company.is_blacklisted %}
+                                <i class="fas fa-check-circle me-2"></i>Remove from Blacklist
+                                {% else %}
+                                <i class="fas fa-ban me-2"></i>Blacklist Company
+                                {% endif %}
+                            </a>
+                            <a href="{{ url_for('delete_company', company_id=company.id) }}" 
+                               class="btn-action-futuristic danger-outline w-100"
+                               onclick="return confirm('Are you absolutely sure? This will delete ALL drives and applications associated with this company. This action cannot be undone!')">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Permanently
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-9">
+                        <div class="company-info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Company Name</span>
+                                    <span class="info-value">{{ company.company_name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">HR Name</span>
+                                    <span class="info-value">{{ company.hr_name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value">{{ company.hr_email }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Contact</span>
+                                    <span class="info-value">{{ company.hr_contact }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Website</span>
+                                    <span class="info-value">
+                                        {% if company.website %}
+                                        <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+                                        {% else %}
+                                        Not provided
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Industry</span>
+                                    <span class="info-value">{{ company.industry|default('Not specified') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Location</span>
+                                    <span class="info-value">{{ company.location|default('Not specified') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Registered On</span>
+                                    <span class="info-value">{{ company.created_at.strftime('%d %b, %Y') if company.created_at else 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="description-card mt-4">
+                            <h6 class="description-title">
+                                <i class="fas fa-align-left me-2"></i>Company Description
+                            </h6>
+                            <p class="description-text">{{ company.description|default('No description provided.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon stat-primary">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ drives|length }}</div>
+                        <div class="stat-label">Total Drives</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="250">
+                    <div class="stat-icon stat-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ drives|selectattr('status', 'equalto', 'approved')|list|length }}</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon stat-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ drives|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="350">
+                    <div class="stat-icon stat-info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_applications|default(0) }}</div>
+                        <div class="stat-label">Applications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placement Drives Section -->
+        <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-briefcase me-3"></i>
+                        <h5 class="mb-0 text-white">Placement Drives by {{ company.company_name }}</h5>
+                    </div>
+                    <span class="badge-futuristic">{{ drives|length }} Drives</span>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                {% if drives %}
+                <div class="table-responsive">
+                    <table class="table-futuristic">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                                <th><i class="fas fa-briefcase me-1"></i>Job Title</th>
+                                <th><i class="fas fa-rupee-sign me-1"></i>Package</th>
+                                <th><i class="fas fa-map-marker-alt me-1"></i>Location</th>
+                                <th><i class="fas fa-calendar-alt me-1"></i>Deadline</th>
+                                <th><i class="fas fa-users me-1"></i>Applicants</th>
+                                <th><i class="fas fa-tag me-1"></i>Status</th>
+                                <th><i class="fas fa-cog me-1"></i>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for drive in drives %}
+                            <tr>
+                                <td><span class="id-badge">#{{ drive.id }}</span></td>
+                                <td><strong>{{ drive.job_title }}</strong></td>
+                                <td><span class="package-badge">{{ drive.package }} LPA</span></td>
+                                <td>{{ drive.location }}</td>
+                                <td>
+                                    <span class="date-badge {% if drive.application_deadline < now %}expired{% endif %}">
+                                        <i class="far fa-calendar-alt me-1"></i>
+                                        {{ drive.application_deadline.strftime('%d %b, %Y') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="applicant-count">{{ drive_applications[drive.id]|default(0) }}</span>
+                                </td>
+                                <td>
+                                    <span class="status-chip {{ drive.status }}">
+                                        <span class="status-indicator"></span>
+                                        {{ drive.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        <a href="{{ url_for('admin_view_drive', drive_id=drive.id) }}" 
+                                           class="action-icon view" title="View Drive">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if drive.status == 'pending' %}
+                                        <a href="{{ url_for('approve_drive', drive_id=drive.id) }}" 
+                                           class="action-icon approve" title="Approve"
+                                           onclick="return confirm('Approve this drive?')">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="{{ url_for('reject_drive', drive_id=drive.id) }}" 
+                                           class="action-icon reject" title="Reject"
+                                           onclick="return confirm('Reject this drive?')">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if drive.status == 'approved' %}
+                                        <a href="{{ url_for('admin_close_drive', drive_id=drive.id) }}" 
+                                           class="action-icon close" title="Close Drive"
+                                           onclick="return confirm('Close this drive?')">
+                                            <i class="fas fa-lock"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h5>No Drives Found</h5>
+                    <p>This company hasn't created any placement drives yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('admin_companies') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Companies List
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* All the existing styles from your dashboards plus these additional styles */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-badge-futuristic {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: inline-block;
+}
+
+.status-badge-futuristic.approved {
+    background: rgba(16, 185, 129, 0.3);
+}
+
+.status-badge-futuristic.pending {
+    background: rgba(245, 158, 11, 0.3);
+}
+
+.status-badge-futuristic.rejected {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.status-badge-futuristic.blacklisted {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Company Logo */
+.company-logo-large {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary)20, var(--secondary)20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+.logo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: linear-gradient(135deg, var(--primary)10, var(--secondary)10);
+}
+
+.rounded-20 {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Company Status */
+.company-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.company-status.approved {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid #10b98140;
+}
+
+.company-status.pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid #f59e0b40;
+}
+
+.company-status.rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef444440;
+}
+
+/* Action Buttons */
+.company-actions {
+    width: 100%;
+}
+
+.btn-action-futuristic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-action-futuristic.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-action-futuristic.success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-action-futuristic.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-action-futuristic.danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #ef4444;
+}
+
+.btn-action-futuristic.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.btn-action-futuristic.warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #f59e0b;
+}
+
+.btn-action-futuristic.danger-outline {
+    background: transparent;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-action-futuristic.danger-outline:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-action-futuristic.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Company Info Grid */
+.company-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.info-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.info-value a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.info-value a:hover {
+    text-decoration: underline;
+}
+
+/* Description Card */
+.description-card {
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+}
+
+.description-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.description-text {
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Stat Cards */
+.stat-card-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-futuristic:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon.stat-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon.stat-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.stat-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-icon.stat-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table Styles */
+.table-futuristic {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-futuristic thead th {
+    padding: 12px 15px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--glass-border);
+}
+
+.table-futuristic tbody tr {
+    background: rgba(99, 102, 241, 0.02);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.table-futuristic tbody tr:hover {
+    background: rgba(99, 102, 241, 0.05);
+    transform: scale(1.01);
+    box-shadow: var(--shadow-sm);
+}
+
+.table-futuristic td {
+    padding: 15px;
+    border: none;
+    color: var(--dark);
+}
+
+/* Badges */
+.id-badge {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.package-badge {
+    background: linear-gradient(135deg, #10b98120, #05966920);
+    color: #10b981;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border: 1px solid #10b98130;
+    white-space: nowrap;
+}
+
+.date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.date-badge.expired {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.applicant-count {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Status Chip */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-chip.approved {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+.status-chip.approved .status-indicator {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-chip.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+.status-chip.pending .status-indicator {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+.status-chip.closed {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+.status-chip.closed .status-indicator {
+    background: #6b7280;
+    box-shadow: 0 0 10px #6b7280;
+}
+
+.status-chip.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+.status-chip.rejected .status-indicator {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Action Group */
+.action-group {
+    display: flex;
+    gap: 5px;
+}
+
+.action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.8rem;
+}
+
+.action-icon.view {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.action-icon.approve {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.action-icon.reject {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.action-icon.close {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.action-icon:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    background: linear-gradient(135deg, var(--primary)20, var(--accent)20);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.empty-state h5 {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .applicant-count,
+[data-theme="dark"] .table-futuristic td {
+    color: var(--light);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .company-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .company-logo-large {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-futuristic {
+        min-width: 800px;
+    }
+}
+</style>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+</script>
+{% endblock %}

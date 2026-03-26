@@ -1,0 +1,1363 @@
+{% extends "base.html" %}
+{% block title %}Company Profile | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-building me-3"></i>Company Profile
+                        </h2>
+                        <p class="text-muted-light mb-0">Manage your company information and settings</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>{{ company.approval_status|title }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Overview Card -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-id-card me-3"></i>
+                        <h5 class="mb-0 text-white">Profile Overview</h5>
+                    </div>
+                    <div>
+                        {% if company.is_blacklisted %}
+                        <span class="status-badge-futuristic blacklisted">
+                            <i class="fas fa-ban me-1"></i>Blacklisted
+                        </span>
+                        {% else %}
+                        <span class="status-badge-futuristic active">
+                            <i class="fas fa-check-circle me-1"></i>Active
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <div class="row">
+                    <!-- Company Logo Section -->
+                    <div class="col-lg-3 text-center mb-4 mb-lg-0">
+                        <div class="company-logo-large">
+                            {% if company.logo %}
+                            <img src="{{ company.logo }}" alt="{{ company.company_name }}" class="img-fluid rounded-20">
+                            {% else %}
+                            <div class="logo-placeholder">
+                                {{ company.company_name[0]|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="company-stats-mini mt-3">
+                            <div class="stat-mini-item">
+                                <span class="stat-mini-value">{{ total_drives|default(0) }}</span>
+                                <span class="stat-mini-label">Drives</span>
+                            </div>
+                            <div class="stat-mini-item">
+                                <span class="stat-mini-value">{{ total_applications|default(0) }}</span>
+                                <span class="stat-mini-label">Applications</span>
+                            </div>
+                            <div class="stat-mini-item">
+                                <span class="stat-mini-value">{{ selected_candidates|default(0) }}</span>
+                                <span class="stat-mini-label">Selected</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Key Information -->
+                    <div class="col-lg-9">
+                        <div class="company-info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Company Name</span>
+                                    <span class="info-value">{{ company.company_name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Industry</span>
+                                    <span class="info-value">{{ company.industry|default('Not specified') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Location</span>
+                                    <span class="info-value">{{ company.location|default('Not specified') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Website</span>
+                                    <span class="info-value">
+                                        {% if company.website %}
+                                        <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+                                        {% else %}
+                                        Not provided
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Member Since</span>
+                                    <span class="info-value">{{ company.created_at.strftime('%d %b, %Y') if company.created_at else 'N/A' }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Verification Status</span>
+                                    <span class="info-value status-{{ company.approval_status }}">
+                                        {{ company.approval_status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Description -->
+                <div class="description-card mt-4">
+                    <h6 class="description-title">
+                        <i class="fas fa-align-left me-2"></i>About Company
+                    </h6>
+                    <p class="description-text">{{ company.description|default('No description provided.') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="150">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-edit me-3"></i>
+                    <h5 class="mb-0 text-white">Edit Profile Information</h5>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <form method="POST" action="{{ url_for('company_profile') }}" enctype="multipart/form-data" class="futuristic-form" id="companyProfileForm">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Company Logo Upload -->
+                    <div class="logo-upload-section mb-4">
+                        <label class="form-label-futuristic">Company Logo</label>
+                        <div class="upload-area" id="logoUploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <h6>Drag & drop your logo here</h6>
+                                <p>or click to browse (JPG, PNG, SVG)</p>
+                            </div>
+                            {{ form.logo(class="file-input", id="companyLogo", accept="image/*") }}
+                            <div class="file-info" id="logoFileInfo" style="display: none;">
+                                <i class="fas fa-image text-primary"></i>
+                                <span id="logoFileName"></span>
+                                <span id="logoFileSize"></span>
+                                <button type="button" class="remove-file" onclick="removeLogo()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <small class="form-text-futuristic">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Recommended size: 200x200px. Max size: 2MB
+                        </small>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Company Name -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.company_name.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-building input-icon"></i>
+                                    {% if form.company_name.errors %}
+                                        {{ form.company_name(class="form-control-futuristic is-invalid", placeholder="Enter company name") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.company_name.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.company_name(class="form-control-futuristic", placeholder="Enter company name") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Industry -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.industry.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-industry input-icon"></i>
+                                    {% if form.industry.errors %}
+                                        {{ form.industry(class="form-control-futuristic is-invalid", placeholder="e.g., Technology, Finance, Healthcare") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.industry.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.industry(class="form-control-futuristic", placeholder="e.g., Technology, Finance, Healthcare") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.location.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-map-marker-alt input-icon"></i>
+                                    {% if form.location.errors %}
+                                        {{ form.location(class="form-control-futuristic is-invalid", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.location.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.location(class="form-control-futuristic", placeholder="e.g., Bangalore, Mumbai, Remote") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Website -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                {{ form.website.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-globe input-icon"></i>
+                                    {% if form.website.errors %}
+                                        {{ form.website(class="form-control-futuristic is-invalid", placeholder="https://www.company.com") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.website.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.website(class="form-control-futuristic", placeholder="https://www.company.com") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HR Name -->
+                        <div class="col-md-4">
+                            <div class="input-group-futuristic">
+                                {{ form.hr_name.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user-tie input-icon"></i>
+                                    {% if form.hr_name.errors %}
+                                        {{ form.hr_name(class="form-control-futuristic is-invalid", placeholder="HR Contact Person") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.hr_name.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.hr_name(class="form-control-futuristic", placeholder="HR Contact Person") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HR Email -->
+                        <div class="col-md-4">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">HR Email</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" class="form-control-futuristic" 
+                                           value="{{ company.hr_email }}" readonly disabled>
+                                </div>
+                                <small class="form-text-futuristic">Email cannot be changed</small>
+                            </div>
+                        </div>
+
+                        <!-- HR Contact -->
+                        <div class="col-md-4">
+                            <div class="input-group-futuristic">
+                                {{ form.hr_contact.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-phone-alt input-icon"></i>
+                                    {% if form.hr_contact.errors %}
+                                        {{ form.hr_contact(class="form-control-futuristic is-invalid", placeholder="10-digit mobile number") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.hr_contact.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.hr_contact(class="form-control-futuristic", placeholder="10-digit mobile number") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company Description -->
+                        <div class="col-12">
+                            <div class="input-group-futuristic">
+                                {{ form.description.label(class="form-label-futuristic") }}
+                                <div class="input-wrapper">
+                                    <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                    {% if form.description.errors %}
+                                        {{ form.description(class="form-control-futuristic is-invalid", rows="6", placeholder="Tell us about your company, mission, culture, etc.") }}
+                                        <div class="invalid-feedback-futuristic">
+                                            {% for error in form.description.errors %}
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.description(class="form-control-futuristic", rows="6", placeholder="Tell us about your company, mission, culture, etc.") }}
+                                    {% endif %}
+                                </div>
+                                <small class="form-text-futuristic">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    A compelling company description helps attract top talent
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Social Media Links (Optional) -->
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">LinkedIn (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fab fa-linkedin input-icon"></i>
+                                    <input type="url" name="linkedin" class="form-control-futuristic" 
+                                           placeholder="https://linkedin.com/company/..." 
+                                           value="{{ company.linkedin|default('') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group-futuristic">
+                                <label class="form-label-futuristic">Twitter (Optional)</label>
+                                <div class="input-wrapper">
+                                    <i class="fab fa-twitter input-icon"></i>
+                                    <input type="url" name="twitter" class="form-control-futuristic" 
+                                           placeholder="https://twitter.com/..." 
+                                           value="{{ company.twitter|default('') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions mt-5">
+                        <button type="submit" class="btn-submit-futuristic" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="{{ url_for('company_dashboard') }}" class="btn-cancel-futuristic">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="button" class="btn-preview-futuristic" onclick="previewChanges()">
+                            <i class="fas fa-eye me-2"></i>Preview Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Company Statistics -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon stat-primary">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_drives|default(0) }}</div>
+                        <div class="stat-label">Total Drives</div>
+                        <div class="stat-trend">+{{ new_drives|default(0) }} this month</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="250">
+                    <div class="stat-icon stat-success">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ active_drives|default(0) }}</div>
+                        <div class="stat-label">Active Drives</div>
+                        <div class="stat-trend">{{ active_percentage|default(0) }}% of total</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon stat-info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_applications|default(0) }}</div>
+                        <div class="stat-label">Applications</div>
+                        <div class="stat-trend">{{ new_applications|default(0) }} new</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="350">
+                    <div class="stat-icon stat-warning">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ selected_candidates|default(0) }}</div>
+                        <div class="stat-label">Selected</div>
+                        <div class="stat-trend">{{ selection_rate|default(0) }}% success rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-history me-3"></i>
+                    <h5 class="mb-0 text-white">Recent Activity</h5>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic p-0">
+                <div class="activity-timeline">
+                    {% if recent_activities %}
+                        {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon {{ activity.type }}">
+                                <i class="fas {{ activity.icon }}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">{{ activity.text }}</p>
+                                <span class="activity-time">{{ activity.time }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state-mini p-4">
+                            <i class="fas fa-history"></i>
+                            <p>No recent activity</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('company_dashboard') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-badge-futuristic {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: inline-block;
+}
+
+.status-badge-futuristic.active {
+    background: rgba(16, 185, 129, 0.3);
+}
+
+.status-badge-futuristic.blacklisted {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Company Logo */
+.company-logo-large {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+.logo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.rounded-20 {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Company Stats Mini */
+.company-stats-mini {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+}
+
+.stat-mini-item {
+    text-align: center;
+}
+
+.stat-mini-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+.stat-mini-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Company Info Grid */
+.company-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.info-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.info-value a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.info-value a:hover {
+    text-decoration: underline;
+}
+
+.info-value.status-approved {
+    color: #10b981;
+}
+
+.info-value.status-pending {
+    color: #f59e0b;
+}
+
+/* Description Card */
+.description-card {
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    margin-top: 20px;
+}
+
+.description-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.description-text {
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Logo Upload Section */
+.logo-upload-section {
+    margin-bottom: 20px;
+}
+
+.upload-area {
+    border: 2px dashed rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+    background: rgba(99, 102, 241, 0.02);
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.upload-text h6 {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 3px;
+}
+
+.upload-text p {
+    color: var(--gray);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.file-info i {
+    font-size: 1.2rem;
+}
+
+#logoFileName {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+#logoFileSize {
+    color: var(--gray);
+    font-size: 0.75rem;
+}
+
+.remove-file {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    transition: var(--transition);
+}
+
+.remove-file:hover {
+    color: #ef4444;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+textarea + .input-icon {
+    top: 20px;
+    transform: none;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic.is-invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.form-control-futuristic:disabled,
+.form-control-futuristic[readonly] {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--glass-border);
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+textarea.form-control-futuristic {
+    padding-top: 15px;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.invalid-feedback-futuristic {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-submit-futuristic {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    min-width: 150px;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-cancel-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--gray);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+}
+
+.btn-preview-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+}
+
+.btn-preview-futuristic:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Stat Cards */
+.stat-card-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-futuristic:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon.stat-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon.stat-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.stat-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-icon.stat-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-trend {
+    font-size: 0.7rem;
+    color: var(--primary);
+    margin-top: 2px;
+}
+
+/* Activity Timeline */
+.activity-timeline {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.activity-item:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.drive {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.activity-icon.application {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.activity-icon.status {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-text {
+    font-size: 0.85rem;
+    color: var(--dark);
+    margin: 0 0 2px;
+}
+
+.activity-time {
+    font-size: 0.65rem;
+    color: var(--gray);
+}
+
+/* Empty State Mini */
+.empty-state-mini {
+    text-align: center;
+}
+
+.empty-state-mini i {
+    font-size: 2rem;
+    color: var(--gray);
+    opacity: 0.3;
+    margin-bottom: 8px;
+}
+
+.empty-state-mini p {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .form-label-futuristic,
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .description-title,
+[data-theme="dark"] .activity-text,
+[data-theme="dark"] .upload-text h6 {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic {
+    color: var(--light);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-control-futuristic::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+    
+    .company-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .company-logo-large {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .logo-placeholder {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit-futuristic,
+    .btn-cancel-futuristic,
+    .btn-preview-futuristic {
+        width: 100%;
+    }
+    
+    .company-stats-mini {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Logo upload handling
+    const uploadArea = document.getElementById('logoUploadArea');
+    const fileInput = document.getElementById('companyLogo');
+    const fileInfo = document.getElementById('logoFileInfo');
+    const fileName = document.getElementById('logoFileName');
+    const fileSize = document.getElementById('logoFileSize');
+
+    if (uploadArea && fileInput) {
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop area when dragging over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFileSelect();
+        }
+
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file (JPG, PNG, SVG).');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Validate file size (2MB max)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must be less than 2MB.');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Display file info
+                fileName.textContent = file.name;
+                fileSize.textContent = `(${(file.size / 1024).toFixed(2)} KB)`;
+                fileInfo.style.display = 'flex';
+                
+                // Hide upload text
+                uploadArea.querySelector('.upload-text').style.opacity = '0.3';
+            }
+        }
+    }
+
+    // Form submit with loading state
+    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('companyProfileForm');
+    
+    if (submitBtn && form) {
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+            submitBtn.disabled = true;
+        });
+    }
+
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Remove logo function
+function removeLogo() {
+    const fileInput = document.getElementById('companyLogo');
+    const fileInfo = document.getElementById('logoFileInfo');
+    const uploadArea = document.getElementById('logoUploadArea');
+    
+    fileInput.value = '';
+    fileInfo.style.display = 'none';
+    uploadArea.querySelector('.upload-text').style.opacity = '1';
+}
+
+// Preview changes function
+function previewChanges() {
+    alert('Preview functionality will show how your profile appears to students');
+    // You can implement a modal preview here
+}
+</script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

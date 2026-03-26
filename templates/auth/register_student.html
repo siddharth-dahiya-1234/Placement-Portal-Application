@@ -1,0 +1,1378 @@
+{% extends "base.html" %}
+{% block title %}Student Registration{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Animated Background Elements -->
+            <div class="position-relative">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
+                
+                <!-- Main Registration Card -->
+                <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-duration="1000">
+                    <!-- Header with Gradient - Matching base.html primary colors -->
+                    <div class="card-header-gradient">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="gradient-title mb-2">
+                                    <i class="fas fa-user-graduate me-3"></i>Student Registration
+                                </h2>
+                                <p class="text-muted-light mb-0">Begin your journey to a successful career</p>
+                            </div>
+                            <div class="header-badge">
+                                <span class="badge-futuristic">
+                                    <i class="fas fa-shield-alt me-2"></i>Secure Portal
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="form-wrapper">
+                        <form method="POST" action="" enctype="multipart/form-data" class="futuristic-form" id="studentRegForm">
+                            {{ form.hidden_tag() }}
+
+                            <!-- Progress Steps -->
+                            <div class="form-progress mb-5">
+                                <div class="progress-step active" data-step="1">
+                                    <div class="step-number">1</div>
+                                    <div class="step-label">Personal Info</div>
+                                    <div class="step-icon"><i class="fas fa-user"></i></div>
+                                </div>
+                                <div class="progress-line"></div>
+                                <div class="progress-step" data-step="2">
+                                    <div class="step-number">2</div>
+                                    <div class="step-label">Academic Details</div>
+                                    <div class="step-icon"><i class="fas fa-graduation-cap"></i></div>
+                                </div>
+                                <div class="progress-line"></div>
+                                <div class="progress-step" data-step="3">
+                                    <div class="step-number">3</div>
+                                    <div class="step-label">Documents</div>
+                                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                                </div>
+                                <div class="progress-line"></div>
+                                <div class="progress-step" data-step="4">
+                                    <div class="step-number">4</div>
+                                    <div class="step-label">Security</div>
+                                    <div class="step-icon"><i class="fas fa-lock"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 1: Personal Information -->
+                            <div class="form-section active" id="section1">
+                                <div class="section-header">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-user-circle me-2"></i>Personal Information
+                                    </h5>
+                                    <p class="section-subtitle">Tell us about yourself</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <!-- Full Name -->
+                                    <div class="col-md-12">
+                                        <div class="input-group-futuristic">
+                                            {{ form.full_name.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-user input-icon"></i>
+                                                {{ form.full_name(class="form-control-futuristic", placeholder="Enter your full name") }}
+                                            </div>
+                                            {% if form.full_name.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.full_name.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-12">
+                                        <div class="input-group-futuristic">
+                                            {{ form.email.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-envelope input-icon"></i>
+                                                {{ form.email(class="form-control-futuristic", placeholder="student@college.edu") }}
+                                            </div>
+                                            {% if form.email.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.email.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                            <small class="form-text-futuristic">Use your college email for verification</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Roll Number and Contact Row -->
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.roll_number.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-id-card input-icon"></i>
+                                                {{ form.roll_number(class="form-control-futuristic", placeholder="e.g., 2021CS101") }}
+                                            </div>
+                                            {% if form.roll_number.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.roll_number.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.contact.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-phone-alt input-icon"></i>
+                                                {{ form.contact(class="form-control-futuristic", placeholder="10-digit mobile number") }}
+                                            </div>
+                                            {% if form.contact.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.contact.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 2: Academic Details -->
+                            <div class="form-section" id="section2">
+                                <div class="section-header">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-graduation-cap me-2"></i>Academic Details
+                                    </h5>
+                                    <p class="section-subtitle">Your educational information</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <!-- Course, Branch, Semester Row -->
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            {{ form.course.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-book input-icon"></i>
+                                                {{ form.course(class="form-control-futuristic", placeholder="e.g., B.Tech") }}
+                                            </div>
+                                            {% if form.course.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.course.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            {{ form.branch.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-code-branch input-icon"></i>
+                                                {{ form.branch(class="form-control-futuristic", placeholder="e.g., Computer Science") }}
+                                            </div>
+                                            {% if form.branch.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.branch.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group-futuristic">
+                                            {{ form.semester.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-layer-group input-icon"></i>
+                                                {{ form.semester(class="form-control-futuristic", placeholder="e.g., 6") }}
+                                            </div>
+                                            {% if form.semester.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.semester.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- CGPA and Passing Year Row -->
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.cgpa.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-star input-icon"></i>
+                                                {{ form.cgpa(class="form-control-futuristic", placeholder="e.g., 8.5", step="0.01") }}
+                                            </div>
+                                            {% if form.cgpa.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.cgpa.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.passing_year.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-calendar-alt input-icon"></i>
+                                                {{ form.passing_year(class="form-control-futuristic", placeholder="e.g., 2025") }}
+                                            </div>
+                                            {% if form.passing_year.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.passing_year.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 3: Documents -->
+                            <div class="form-section" id="section3">
+                                <div class="section-header">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-file-upload me-2"></i>Document Upload
+                                    </h5>
+                                    <p class="section-subtitle">Upload your latest resume</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <div class="upload-area" id="uploadArea">
+                                            <div class="upload-icon">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </div>
+                                            <div class="upload-text">
+                                                <h6>Drag & drop your resume here</h6>
+                                                <p>or click to browse</p>
+                                            </div>
+                                            {{ form.resume(class="file-input", id="resumeFile", accept=".pdf") }}
+                                            <div class="file-info" id="fileInfo" style="display: none;">
+                                                <i class="fas fa-file-pdf text-danger"></i>
+                                                <span id="fileName"></span>
+                                                <span id="fileSize"></span>
+                                                <button type="button" class="remove-file" onclick="removeFile()">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {% if form.resume.errors %}
+                                            <div class="error-message mt-2">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.resume.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                        <small class="form-text-futuristic">
+                                            <i class="fas fa-info-circle me-1"></i>Upload your resume in PDF format (max 2MB)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 4: Security -->
+                            <div class="form-section" id="section4">
+                                <div class="section-header">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-shield-alt me-2"></i>Account Security
+                                    </h5>
+                                    <p class="section-subtitle">Setup your login credentials</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <!-- Password -->
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.password.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-lock input-icon"></i>
+                                                {{ form.password(class="form-control-futuristic", placeholder="Minimum 6 characters", id="password") }}
+                                                <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            {% if form.password.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.password.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                            <!-- Password Strength Indicator -->
+                                            <div class="password-strength mt-2">
+                                                <div class="strength-bar"></div>
+                                                <div class="strength-bar"></div>
+                                                <div class="strength-bar"></div>
+                                                <div class="strength-bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Confirm Password -->
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            {{ form.confirm_password.label(class="form-label-futuristic") }}
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-check-circle input-icon"></i>
+                                                {{ form.confirm_password(class="form-control-futuristic", placeholder="Re-enter password", id="confirm_password") }}
+                                                <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            {% if form.confirm_password.errors %}
+                                                <div class="error-message">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.confirm_password.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="password-match-indicator" id="passwordMatch"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Password Requirements -->
+                                <div class="password-requirements mt-3">
+                                    <p class="requirements-title"><i class="fas fa-shield-alt me-2"></i>Password must contain:</p>
+                                    <ul class="requirements-list">
+                                        <li id="req-length"><i class="fas fa-circle"></i> At least 6 characters</li>
+                                        <li id="req-uppercase"><i class="fas fa-circle"></i> At least one uppercase letter</li>
+                                        <li id="req-lowercase"><i class="fas fa-circle"></i> At least one lowercase letter</li>
+                                        <li id="req-number"><i class="fas fa-circle"></i> At least one number</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Navigation Buttons -->
+                            <div class="form-navigation mt-5">
+                                <button type="button" class="btn-nav prev-btn" id="prevBtn" disabled>
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </button>
+                                
+                                <button type="button" class="btn-nav next-btn" id="nextBtn">
+                                    Next<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                                
+                                {{ form.submit(class="btn-submit-futuristic", id="submitBtn", style="display: none;") }}
+                            </div>
+
+                            <!-- Progress Percentage -->
+                            <div class="form-progress-percentage">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" id="formProgress" style="width: 25%"></div>
+                                </div>
+                                <span class="progress-text" id="progressText">25% Complete</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer-futuristic">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <p class="mb-0">
+                                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                                    Already have an account? <a href="{{ url_for('login') }}" class="footer-link">Login here</a>
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <div class="trust-badges">
+                                    <span class="badge-item"><i class="fas fa-lock"></i> Encrypted</span>
+                                    <span class="badge-item"><i class="fas fa-check-circle"></i> Verified</span>
+                                    <span class="badge-item"><i class="fas fa-shield-alt"></i> Secure</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* All styles updated to match base.html color scheme */
+:root {
+    --gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    --gradient-2: linear-gradient(45deg, #667eea, #764ba2);
+    --glass-effect: rgba(255, 255, 255, 0.95);
+    --shadow-neon: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] {
+    --glass-effect: rgba(15, 23, 42, 0.95);
+}
+
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Main Card */
+.futuristic-card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl), var(--shadow-neon);
+    position: relative;
+    z-index: 1;
+}
+
+.card-header-gradient {
+    background: var(--gradient-1);
+    padding: 30px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Form Wrapper */
+.form-wrapper {
+    padding: 40px;
+}
+
+/* Progress Steps */
+.form-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-bottom: 30px;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.step-number {
+    width: 45px;
+    height: 45px;
+    background: var(--glass-bg);
+    border: 2px solid var(--gray);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--gray);
+    transition: var(--transition);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray);
+    transition: var(--transition);
+}
+
+.step-icon {
+    display: none;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.progress-step.active .step-number {
+    background: var(--gradient-1);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 0 20px var(--primary);
+    transform: scale(1.1);
+}
+
+.progress-step.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.progress-step.completed .step-number {
+    background: var(--gradient-1);
+    border-color: transparent;
+    color: white;
+}
+
+.progress-step.completed .step-number::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1.2rem;
+}
+
+.progress-step.completed .step-number span {
+    display: none;
+}
+
+.progress-line {
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gray), var(--gray));
+    opacity: 0.2;
+    margin: 0 10px;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-1);
+    transition: left 0.5s ease;
+}
+
+/* Form Sections */
+.form-section {
+    display: none;
+    animation: slideIn 0.5s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.section-header {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.section-subtitle {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1.2rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 1rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic.is-invalid {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--gray);
+    opacity: 0.8;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Password Toggle */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* Password Strength */
+.password-strength {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    flex: 1;
+    background: var(--gray);
+    opacity: 0.3;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.strength-bar.active-weak {
+    background: #ef4444;
+    opacity: 1;
+}
+
+.strength-bar.active-medium {
+    background: #f59e0b;
+    opacity: 1;
+}
+
+.strength-bar.active-strong {
+    background: #10b981;
+    opacity: 1;
+}
+
+.strength-bar.active-very-strong {
+    background: var(--primary);
+    opacity: 1;
+}
+
+/* Password Requirements */
+.password-requirements {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.requirements-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.requirements-list li {
+    font-size: 0.85rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.requirements-list li i {
+    font-size: 0.5rem;
+    color: var(--gray);
+}
+
+.requirements-list li.valid {
+    color: var(--primary);
+}
+
+.requirements-list li.valid i {
+    color: var(--primary);
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+}
+
+/* Upload Area */
+.upload-area {
+    border: 2px dashed rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+    background: rgba(99, 102, 241, 0.02);
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.upload-text h6 {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.upload-text p {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.file-info i {
+    font-size: 1.2rem;
+}
+
+#fileName {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+#fileSize {
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+.remove-file {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+}
+
+.remove-file:hover {
+    color: #ef4444;
+}
+
+/* Navigation Buttons */
+.form-navigation {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.btn-nav {
+    padding: 12px 35px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--dark);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-nav:hover:not(:disabled) {
+    background: var(--gradient-1);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.btn-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-submit-futuristic {
+    padding: 12px 40px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--gradient-1);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    letter-spacing: 0.5px;
+}
+
+.btn-submit-futuristic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-submit-futuristic:hover::before {
+    left: 100%;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px var(--primary);
+}
+
+/* Progress Percentage */
+.form-progress-percentage {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.progress-bar-container {
+    flex: 1;
+    height: 6px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--gradient-1);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 100px;
+}
+
+/* Card Footer */
+.card-footer-futuristic {
+    background: rgba(0, 0, 0, 0.02);
+    padding: 20px 40px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.trust-badges {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.badge-item i {
+    color: var(--primary);
+}
+
+.footer-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Password Match Indicator */
+.password-match-indicator {
+    margin-top: 5px;
+    font-size: 0.85rem;
+}
+
+.password-match-indicator.match {
+    color: #10b981;
+}
+
+.password-match-indicator.no-match {
+    color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-header-gradient {
+        padding: 25px 20px;
+    }
+    
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-wrapper {
+        padding: 20px;
+    }
+    
+    .form-progress {
+        padding: 0;
+    }
+    
+    .step-label {
+        display: none;
+    }
+    
+    .step-icon {
+        display: block;
+    }
+    
+    .progress-step.active .step-icon {
+        display: block;
+    }
+    
+    .badge-futuristic {
+        display: inline-block;
+        margin-top: 10px;
+    }
+    
+    .trust-badges {
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .requirements-list {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .form-navigation {
+        flex-direction: column;
+    }
+    
+    .btn-nav, .btn-submit-futuristic {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Multi-step form navigation
+    const sections = document.querySelectorAll('.form-section');
+    const steps = document.querySelectorAll('.progress-step');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const formProgress = document.getElementById('formProgress');
+    const progressText = document.getElementById('progressText');
+    let currentStep = 0;
+    const totalSteps = sections.length;
+
+    function updateForm() {
+        // Update sections
+        sections.forEach((section, index) => {
+            section.classList.toggle('active', index === currentStep);
+        });
+        
+        // Update steps
+        steps.forEach((step, index) => {
+            if (index === currentStep) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else if (index < currentStep) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+        
+        // Update buttons
+        prevBtn.disabled = currentStep === 0;
+        
+        if (currentStep === totalSteps - 1) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+        } else {
+            nextBtn.style.display = 'inline-flex';
+            submitBtn.style.display = 'none';
+        }
+        
+        // Update progress bar
+        const progress = ((currentStep + 1) / totalSteps) * 100;
+        formProgress.style.width = progress + '%';
+        progressText.textContent = Math.round(progress) + '% Complete';
+    }
+
+    // Validate current section before proceeding
+    function validateSection(sectionIndex) {
+        const currentSection = sections[sectionIndex];
+        const requiredInputs = currentSection.querySelectorAll('input[required], select[required]');
+        let isValid = true;
+        
+        requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+                input.classList.add('is-invalid');
+                
+                // Remove is-invalid class when user starts typing
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                }, { once: true });
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+        
+        return isValid;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < totalSteps - 1) {
+            if (validateSection(currentStep)) {
+                currentStep++;
+                updateForm();
+                
+                // Scroll to top of form smoothly
+                document.querySelector('.form-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateForm();
+            
+            // Scroll to top of form smoothly
+            document.querySelector('.form-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('resumeFile');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+
+    if (uploadArea && fileInput) {
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop area when dragging over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFileSelect();
+        }
+
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Validate file type
+                if (file.type !== 'application/pdf') {
+                    alert('Please upload a PDF file only.');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Validate file size (2MB max)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must be less than 2MB.');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                // Display file info
+                fileName.textContent = file.name;
+                fileSize.textContent = `(${(file.size / 1024).toFixed(2)} KB)`;
+                fileInfo.style.display = 'flex';
+                
+                // Hide upload text
+                uploadArea.querySelector('.upload-text').style.opacity = '0.3';
+            }
+        }
+    }
+
+    // Password strength checker
+    const password = document.getElementById('password');
+    const strengthBars = document.querySelectorAll('.strength-bar');
+    const reqLength = document.getElementById('req-length');
+    const reqUppercase = document.getElementById('req-uppercase');
+    const reqLowercase = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+
+    if (password) {
+        password.addEventListener('input', function() {
+            const val = this.value;
+            let strength = 0;
+            
+            // Check requirements
+            const hasLength = val.length >= 6;
+            const hasUppercase = /[A-Z]/.test(val);
+            const hasLowercase = /[a-z]/.test(val);
+            const hasNumber = /[0-9]/.test(val);
+            
+            // Update requirement indicators
+            updateRequirement(reqLength, hasLength);
+            updateRequirement(reqUppercase, hasUppercase);
+            updateRequirement(reqLowercase, hasLowercase);
+            updateRequirement(reqNumber, hasNumber);
+            
+            // Calculate strength
+            if (hasLength) strength++;
+            if (hasUppercase) strength++;
+            if (hasLowercase) strength++;
+            if (hasNumber) strength++;
+            
+            // Update strength bars
+            strengthBars.forEach((bar, index) => {
+                bar.classList.remove('active-weak', 'active-medium', 'active-strong', 'active-very-strong');
+                if (index < strength) {
+                    if (strength === 1) bar.classList.add('active-weak');
+                    else if (strength === 2) bar.classList.add('active-medium');
+                    else if (strength === 3) bar.classList.add('active-strong');
+                    else if (strength === 4) bar.classList.add('active-very-strong');
+                }
+            });
+        });
+    }
+
+    function updateRequirement(element, isValid) {
+        if (isValid) {
+            element.classList.add('valid');
+            element.querySelector('i').className = 'fas fa-check-circle';
+        } else {
+            element.classList.remove('valid');
+            element.querySelector('i').className = 'fas fa-circle';
+        }
+    }
+
+    // Password match checker
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordMatch = document.getElementById('passwordMatch');
+
+    if (confirmPassword && password) {
+        confirmPassword.addEventListener('input', function() {
+            if (this.value) {
+                if (this.value === password.value) {
+                    this.classList.remove('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-check-circle me-1"></i>Passwords match';
+                    passwordMatch.className = 'password-match-indicator match';
+                } else {
+                    this.classList.add('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Passwords do not match';
+                    passwordMatch.className = 'password-match-indicator no-match';
+                }
+            } else {
+                passwordMatch.innerHTML = '';
+            }
+        });
+    }
+
+    // Password visibility toggle
+    window.togglePassword = function(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = event.currentTarget.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    };
+
+    // Remove file function
+    window.removeFile = function() {
+        const fileInput = document.getElementById('resumeFile');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadArea = document.querySelector('.upload-area');
+        
+        fileInput.value = '';
+        fileInfo.style.display = 'none';
+        uploadArea.querySelector('.upload-text').style.opacity = '1';
+    };
+
+    // Form submit with loading state
+    const form = document.getElementById('studentRegForm');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Registering...';
+            submitBtn.disabled = true;
+        });
+    }
+
+    // Initialize
+    updateForm();
+});
+</script>
+{% endblock %}

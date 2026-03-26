@@ -1,0 +1,1026 @@
+{% extends "base.html" %}
+{% block title %}View Student | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-user-graduate me-3"></i>Student Details
+                        </h2>
+                        <p class="text-muted-light mb-0">View and manage student information</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>Admin Portal
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Profile Card -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-id-card me-3"></i>
+                        <h5 class="mb-0 text-white">Student Profile</h5>
+                    </div>
+                    <div>
+                        <span class="status-badge-futuristic {% if student.user.is_active %}active{% else %}inactive{% endif %}">
+                            <i class="fas fa-circle me-1"></i>{{ 'Active' if student.user.is_active else 'Inactive' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                <div class="row">
+                    <div class="col-lg-3 text-center mb-4 mb-lg-0">
+                        <div class="student-avatar-large">
+                            {% if student.profile_pic %}
+                            <img src="{{ student.profile_pic }}" alt="{{ student.full_name }}" class="img-fluid rounded-20">
+                            {% else %}
+                            <div class="avatar-placeholder">
+                                {{ student.full_name[0]|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="student-actions mt-4">
+                            <a href="{{ url_for('toggle_student_status', student_id=student.id) }}" 
+                               class="btn-action-futuristic {% if student.user.is_active %}warning{% else %}success{% endif %} w-100 mb-2"
+                               onclick="return confirm('{% if student.user.is_active %}Deactivate{% else %}Activate{% endif %} this student account?')">
+                                <i class="fas {% if student.user.is_active %}fa-ban{% else %}fa-check-circle{% endif %} me-2"></i>
+                                {% if student.user.is_active %}Deactivate Account{% else %}Activate Account{% endif %}
+                            </a>
+                            <a href="{{ url_for('delete_student', student_id=student.id) }}" 
+                               class="btn-action-futuristic danger-outline w-100"
+                               onclick="return confirm('Are you absolutely sure? This will delete ALL applications associated with this student. This action cannot be undone!')">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Permanently
+                            </a>
+                            {% if student.resume_path %}
+                            <a href="{{ url_for('static', filename='uploads/' + student.resume_path) }}" 
+                               target="_blank" class="btn-action-futuristic info w-100 mt-2">
+                                <i class="fas fa-file-pdf me-2"></i>View Resume
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-9">
+                        <div class="student-info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Full Name</span>
+                                    <span class="info-value">{{ student.full_name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Roll Number</span>
+                                    <span class="info-value">{{ student.roll_number }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value">{{ student.user.email }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Contact</span>
+                                    <span class="info-value">{{ student.contact }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Course</span>
+                                    <span class="info-value">{{ student.course }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-code-branch"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Branch</span>
+                                    <span class="info-value">{{ student.branch }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Semester</span>
+                                    <span class="info-value">{{ student.semester }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">CGPA</span>
+                                    <span class="info-value">{{ student.cgpa }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Passing Year</span>
+                                    <span class="info-value">{{ student.passing_year }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Registered On</span>
+                                    <span class="info-value">{{ student.user.created_at.strftime('%d %b, %Y') if student.user.created_at else 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon stat-primary">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|length }}</div>
+                        <div class="stat-label">Total Applications</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="250">
+                    <div class="stat-icon stat-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'selected')|list|length }}</div>
+                        <div class="stat-label">Selected</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon stat-info">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'shortlisted')|list|length }}</div>
+                        <div class="stat-label">Shortlisted</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-futuristic" data-aos="fade-up" data-aos-delay="350">
+                    <div class="stat-icon stat-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'applied')|list|length }}</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Timeline -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="card-header-gradient-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-history me-3"></i>
+                        <h5 class="mb-0 text-white">Application History</h5>
+                    </div>
+                    <span class="badge-futuristic">{{ applications|length }} Total</span>
+                </div>
+            </div>
+            
+            <div class="card-body-futuristic">
+                {% if applications %}
+                <div class="applications-timeline">
+                    {% for app in applications %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker 
+                            {% if app.status == 'selected' %}success
+                            {% elif app.status == 'shortlisted' %}primary
+                            {% elif app.status == 'rejected' %}danger
+                            {% else %}warning{% endif %}">
+                            <i class="fas 
+                                {% if app.status == 'selected' %}fa-check-circle
+                                {% elif app.status == 'shortlisted' %}fa-star
+                                {% elif app.status == 'rejected' %}fa-times-circle
+                                {% else %}fa-clock{% endif %}"></i>
+                        </div>
+                        <div class="timeline-content glass-card-hover">
+                            <div class="timeline-header">
+                                <div class="company-info">
+                                    <div class="company-mini-avatar">
+                                        {{ app.drive.company.company_name[0]|upper }}
+                                    </div>
+                                    <div>
+                                        <h6>{{ app.drive.company.company_name }}</h6>
+                                        <p class="job-role">{{ app.drive.job_title }}</p>
+                                    </div>
+                                </div>
+                                <span class="status-chip {{ app.status }}">
+                                    <span class="status-indicator"></span>
+                                    {{ app.status }}
+                                </span>
+                            </div>
+                            
+                            <div class="timeline-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Applied: {{ app.application_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Drive Date: {{ app.drive.drive_date.strftime('%d %b, %Y') }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Location: {{ app.drive.location }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-rupee-sign"></i>
+                                    <span>Package: {{ app.drive.package }} LPA</span>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-actions">
+                                <a href="{{ url_for('admin_view_drive', drive_id=app.drive.id) }}" 
+                                   class="btn-timeline view">
+                                    <i class="fas fa-eye me-1"></i>View Drive
+                                </a>
+                                {% if app.status == 'applied' or app.status == 'shortlisted' %}
+                                <a href="#" class="btn-timeline success" onclick="updateApplicationStatus({{ app.id }}, 'selected')">
+                                    <i class="fas fa-check me-1"></i>Mark Selected
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5>No Applications Found</h5>
+                    <p>This student hasn't applied to any drives yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('admin_students') }}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back to Students List
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-badge-futuristic {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: inline-block;
+}
+
+.status-badge-futuristic.active {
+    background: rgba(16, 185, 129, 0.3);
+}
+
+.status-badge-futuristic.inactive {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Student Avatar */
+.student-avatar-large {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.rounded-20 {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Action Buttons */
+.student-actions {
+    width: 100%;
+}
+
+.btn-action-futuristic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-action-futuristic.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-action-futuristic.success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-action-futuristic.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.btn-action-futuristic.warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #f59e0b;
+}
+
+.btn-action-futuristic.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.btn-action-futuristic.info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #3b82f6;
+}
+
+.btn-action-futuristic.danger-outline {
+    background: transparent;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-action-futuristic.danger-outline:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* Student Info Grid */
+.student-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.info-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+/* Stat Cards */
+.stat-card-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-futuristic:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-icon.stat-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.stat-icon.stat-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.stat-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.stat-icon.stat-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Applications Timeline */
+.applications-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 15px;
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    width: 2px;
+    height: calc(100% + 20px);
+    background: linear-gradient(to bottom, var(--primary), transparent);
+    opacity: 0.3;
+}
+
+.timeline-marker {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 10px 20px -5px currentColor;
+}
+
+.timeline-marker.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.timeline-marker.primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.timeline-marker.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.timeline-marker.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.timeline-content {
+    flex: 1;
+    background: rgba(99, 102, 241, 0.03);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.timeline-content:hover {
+    background: rgba(99, 102, 241, 0.05);
+    transform: translateX(5px);
+    border-color: var(--primary);
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.company-mini-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.company-info h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.job-role {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Status Chip */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-chip.selected {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+.status-chip.selected .status-indicator {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-chip.shortlisted {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+.status-chip.shortlisted .status-indicator {
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.status-chip.applied {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+.status-chip.applied .status-indicator {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+.status-chip.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+.status-chip.rejected .status-indicator {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Timeline Details */
+.timeline-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+    padding: 15px 0;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.detail-item i {
+    color: var(--primary);
+    font-size: 0.7rem;
+    width: 16px;
+}
+
+/* Timeline Actions */
+.timeline-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-timeline {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gray);
+}
+
+.btn-timeline.view:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-timeline.success:hover {
+    background: #10b981;
+    color: white;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    background: linear-gradient(135deg, var(--primary)20, var(--accent)20);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.empty-state h5 {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .company-info h6,
+[data-theme="dark"] .empty-state h5 {
+    color: var(--light);
+}
+
+[data-theme="dark"] .btn-back {
+    color: var(--light);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .student-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .student-avatar-large {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .timeline-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-actions {
+        flex-direction: column;
+    }
+    
+    .btn-timeline {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+function updateApplicationStatus(appId, status) {
+    if (confirm(`Are you sure you want to mark this application as ${status}?`)) {
+        // You'll need to create this route or use the existing update_application_status
+        fetch(`/admin/application/${appId}/status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error updating status');
+            }
+        });
+    }
+}
+
+// AOS initialization
+document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+</script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}

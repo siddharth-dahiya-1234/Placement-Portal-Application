@@ -1,0 +1,2215 @@
+{% extends "base.html" %}
+{% block title %}Admin Settings | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <!-- Animated Background Elements -->
+    <div class="position-relative">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+
+        <!-- Page Header -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up">
+            <div class="card-header-gradient">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="gradient-title mb-2">
+                            <i class="fas fa-cog me-3"></i>Admin Settings
+                        </h2>
+                        <p class="text-muted-light mb-0">Configure system preferences and manage your account</p>
+                    </div>
+                    <div class="header-badge">
+                        <span class="badge-futuristic">
+                            <i class="fas fa-shield-alt me-2"></i>Admin Portal
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Navigation Tabs -->
+        <div class="glass-card futuristic-card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-body-futuristic p-0">
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-target="profile">
+                        <i class="fas fa-user-circle me-2"></i>Profile
+                    </button>
+                    <button class="settings-tab" data-target="account">
+                        <i class="fas fa-lock me-2"></i>Account Security
+                    </button>
+                    <button class="settings-tab" data-target="notifications">
+                        <i class="fas fa-bell me-2"></i>Notifications
+                    </button>
+                    <button class="settings-tab" data-target="system">
+                        <i class="fas fa-server me-2"></i>System Configuration
+                    </button>
+                    <button class="settings-tab" data-target="appearance">
+                        <i class="fas fa-palette me-2"></i>Appearance
+                    </button>
+                    <button class="settings-tab" data-target="backup">
+                        <i class="fas fa-database me-2"></i>Backup & Restore
+                    </button>
+                    <button class="settings-tab" data-target="api">
+                        <i class="fas fa-code me-2"></i>API Access
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Settings -->
+        <div id="profile" class="settings-section active">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-circle me-3"></i>
+                        <h5 class="mb-0 text-white">Profile Information</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('admin_settings') }}" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-lg-3 text-center mb-4 mb-lg-0">
+                                <div class="admin-avatar-large">
+                                    {% if admin.profile_pic %}
+                                    <img src="{{ admin.profile_pic }}" alt="Admin" class="img-fluid rounded-20">
+                                    {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user-shield"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" class="btn-upload" onclick="document.getElementById('profilePic').click()">
+                                        <i class="fas fa-camera me-2"></i>Change Photo
+                                    </button>
+                                    <input type="file" id="profilePic" name="profile_pic" class="d-none" accept="image/*">
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-9">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Full Name</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-user input-icon"></i>
+                                                <input type="text" name="full_name" class="form-control-futuristic" 
+                                                       value="{{ admin.full_name|default('Admin User') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Email Address</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-envelope input-icon"></i>
+                                                <input type="email" name="email" class="form-control-futuristic" 
+                                                       value="{{ current_user.email }}" readonly disabled>
+                                            </div>
+                                            <small class="form-text-futuristic">Email cannot be changed</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Department</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-building input-icon"></i>
+                                                <input type="text" name="department" class="form-control-futuristic" 
+                                                       value="{{ admin.department|default('Placement Cell') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Designation</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-id-card input-icon"></i>
+                                                <input type="text" name="designation" class="form-control-futuristic" 
+                                                       value="{{ admin.designation|default('Placement Officer') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Phone Number</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-phone-alt input-icon"></i>
+                                                <input type="text" name="phone" class="form-control-futuristic" 
+                                                       value="{{ admin.phone|default('') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Office Location</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-map-marker-alt input-icon"></i>
+                                                <input type="text" name="location" class="form-control-futuristic" 
+                                                       value="{{ admin.location|default('Main Building') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="input-group-futuristic">
+                                            <label class="form-label-futuristic">Bio / Description</label>
+                                            <div class="input-wrapper">
+                                                <i class="fas fa-align-left input-icon" style="top: 20px;"></i>
+                                                <textarea name="bio" class="form-control-futuristic" rows="4" 
+                                                          placeholder="Tell us a bit about yourself...">{{ admin.bio|default('') }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions mt-4">
+                                    <button type="submit" class="btn-submit-futuristic">
+                                        <i class="fas fa-save me-2"></i>Save Changes
+                                    </button>
+                                    <button type="reset" class="btn-cancel-futuristic">
+                                        <i class="fas fa-undo me-2"></i>Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Security -->
+        <div id="account" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-lock me-3"></i>
+                        <h5 class="mb-0 text-white">Account Security</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('admin_settings') }}" id="passwordForm">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Current Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-lock input-icon"></i>
+                                        <input type="password" name="current_password" class="form-control-futuristic" 
+                                               placeholder="Enter current password" id="current_password">
+                                        <button type="button" class="password-toggle" onclick="togglePassword('current_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6"></div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">New Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-key input-icon"></i>
+                                        <input type="password" name="new_password" class="form-control-futuristic" 
+                                               placeholder="Enter new password" id="new_password">
+                                        <button type="button" class="password-toggle" onclick="togglePassword('new_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="password-strength mt-2">
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Confirm New Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-check-circle input-icon"></i>
+                                        <input type="password" name="confirm_password" class="form-control-futuristic" 
+                                               placeholder="Confirm new password" id="confirm_password">
+                                        <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="password-match-indicator" id="passwordMatch"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="password-requirements mt-4">
+                            <p class="requirements-title"><i class="fas fa-shield-alt me-2"></i>Password must contain:</p>
+                            <ul class="requirements-list">
+                                <li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li>
+                                <li id="req-uppercase"><i class="fas fa-circle"></i> At least one uppercase letter</li>
+                                <li id="req-lowercase"><i class="fas fa-circle"></i> At least one lowercase letter</li>
+                                <li id="req-number"><i class="fas fa-circle"></i> At least one number</li>
+                                <li id="req-special"><i class="fas fa-circle"></i> At least one special character</li>
+                            </ul>
+                        </div>
+
+                        <div class="two-factor-section mt-4">
+                            <h6 class="section-subtitle">
+                                <i class="fas fa-mobile-alt me-2"></i>Two-Factor Authentication (2FA)
+                            </h6>
+                            <div class="two-factor-card">
+                                <div class="two-factor-info">
+                                    <p class="mb-2">Enhance your account security with two-factor authentication</p>
+                                    {% if admin.two_factor_enabled %}
+                                    <span class="badge-2fa enabled">
+                                        <i class="fas fa-check-circle me-1"></i>2FA Enabled
+                                    </span>
+                                    {% else %}
+                                    <span class="badge-2fa disabled">
+                                        <i class="fas fa-times-circle me-1"></i>2FA Disabled
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn-2fa" onclick="toggle2FA()">
+                                    {% if admin.two_factor_enabled %}
+                                    Disable 2FA
+                                    {% else %}
+                                    Enable 2FA
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic" name="update_password" value="1">
+                                <i class="fas fa-key me-2"></i>Update Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Settings -->
+        <div id="notifications" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bell me-3"></i>
+                        <h5 class="mb-0 text-white">Notification Preferences</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('admin_settings') }}">
+                        <div class="notifications-list">
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-building text-primary"></i>
+                                    <div>
+                                        <h6>New Company Registrations</h6>
+                                        <p class="text-muted">Get notified when a new company registers</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_company_registration" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-briefcase text-success"></i>
+                                    <div>
+                                        <h6>New Placement Drives</h6>
+                                        <p class="text-muted">Get notified when companies create new drives</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_new_drive" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-check-circle text-info"></i>
+                                    <div>
+                                        <h6>Drive Approvals</h6>
+                                        <p class="text-muted">Get notified when drives need approval</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_drive_approval" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-user-graduate text-warning"></i>
+                                    <div>
+                                        <h6>Student Applications</h6>
+                                        <p class="text-muted">Get notified about new applications</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_application" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                    <div>
+                                        <h6>System Alerts</h6>
+                                        <p class="text-muted">Get notified about system issues</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_system" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <i class="fas fa-newspaper text-secondary"></i>
+                                    <div>
+                                        <h6>Weekly Reports</h6>
+                                        <p class="text-muted">Receive weekly summary reports</p>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="notify_weekly_report" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-channels mt-4">
+                            <h6 class="section-subtitle">
+                                <i class="fas fa-bell me-2"></i>Notification Channels
+                            </h6>
+                            <div class="channel-options">
+                                <label class="channel-option">
+                                    <input type="checkbox" name="channel_email" checked>
+                                    <span class="channel-custom"></span>
+                                    <i class="fas fa-envelope"></i>
+                                    Email
+                                </label>
+                                <label class="channel-option">
+                                    <input type="checkbox" name="channel_sms">
+                                    <span class="channel-custom"></span>
+                                    <i class="fas fa-sms"></i>
+                                    SMS
+                                </label>
+                                <label class="channel-option">
+                                    <input type="checkbox" name="channel_push" checked>
+                                    <span class="channel-custom"></span>
+                                    <i class="fas fa-bell"></i>
+                                    Push
+                                </label>
+                                <label class="channel-option">
+                                    <input type="checkbox" name="channel_slack">
+                                    <span class="channel-custom"></span>
+                                    <i class="fab fa-slack"></i>
+                                    Slack
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic">
+                                <i class="fas fa-save me-2"></i>Save Preferences
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Configuration -->
+        <div id="system" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-server me-3"></i>
+                        <h5 class="mb-0 text-white">System Configuration</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('admin_settings') }}">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Institute Name</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-university input-icon"></i>
+                                        <input type="text" name="institute_name" class="form-control-futuristic" 
+                                               value="{{ config.INSTITUTE_NAME|default('University Institute') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Placement Cell Email</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="email" name="placement_email" class="form-control-futuristic" 
+                                               value="{{ config.PLACEMENT_EMAIL|default('placement@institute.edu') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Contact Number</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-phone-alt input-icon"></i>
+                                        <input type="text" name="contact_number" class="form-control-futuristic" 
+                                               value="{{ config.CONTACT_NUMBER|default('+91 1234567890') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="input-group-futuristic">
+                                    <label class="form-label-futuristic">Website URL</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-globe input-icon"></i>
+                                        <input type="url" name="website" class="form-control-futuristic" 
+                                               value="{{ config.WEBSITE|default('https://institute.edu') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="system-settings-grid mt-4">
+                            <h6 class="section-subtitle">
+                                <i class="fas fa-sliders-h me-2"></i>Platform Settings
+                            </h6>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span>Maintenance Mode</span>
+                                    <small class="text-muted">Put the platform in maintenance mode</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="maintenance_mode">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span>Allow New Registrations</span>
+                                    <small class="text-muted">Enable/disable new user registrations</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="allow_registrations" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span>Auto-Approve Companies</span>
+                                    <small class="text-muted">Automatically approve company registrations</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="auto_approve_companies">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span>Email Verification</span>
+                                    <small class="text-muted">Require email verification for new accounts</small>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="email_verification" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic">
+                                <i class="fas fa-save me-2"></i>Save Configuration
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div id="appearance" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="350">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-palette me-3"></i>
+                        <h5 class="mb-0 text-white">Appearance Settings</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <form method="POST" action="{{ url_for('admin_settings') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="section-subtitle mb-3">Theme Preferences</h6>
+                                
+                                <div class="theme-options">
+                                    <label class="theme-option">
+                                        <input type="radio" name="theme" value="light" checked>
+                                        <span class="theme-card light">
+                                            <span class="theme-preview">
+                                                <span class="preview-header light"></span>
+                                                <span class="preview-body"></span>
+                                            </span>
+                                            <span class="theme-name">Light Mode</span>
+                                        </span>
+                                    </label>
+                                    
+                                    <label class="theme-option">
+                                        <input type="radio" name="theme" value="dark">
+                                        <span class="theme-card dark">
+                                            <span class="theme-preview">
+                                                <span class="preview-header dark"></span>
+                                                <span class="preview-body dark"></span>
+                                            </span>
+                                            <span class="theme-name">Dark Mode</span>
+                                        </span>
+                                    </label>
+                                    
+                                    <label class="theme-option">
+                                        <input type="radio" name="theme" value="auto">
+                                        <span class="theme-card auto">
+                                            <span class="theme-preview">
+                                                <span class="preview-header auto"></span>
+                                                <span class="preview-body"></span>
+                                            </span>
+                                            <span class="theme-name">Auto (System)</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6 class="section-subtitle mb-3">Color Scheme</h6>
+                                
+                                <div class="color-schemes">
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="default" checked>
+                                        <span class="color-preview default"></span>
+                                        <span>Default</span>
+                                    </label>
+                                    
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="purple">
+                                        <span class="color-preview purple"></span>
+                                        <span>Purple</span>
+                                    </label>
+                                    
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="blue">
+                                        <span class="color-preview blue"></span>
+                                        <span>Blue</span>
+                                    </label>
+                                    
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="green">
+                                        <span class="color-preview green"></span>
+                                        <span>Green</span>
+                                    </label>
+                                    
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="orange">
+                                        <span class="color-preview orange"></span>
+                                        <span>Orange</span>
+                                    </label>
+                                    
+                                    <label class="color-option">
+                                        <input type="radio" name="color_scheme" value="red">
+                                        <span class="color-preview red"></span>
+                                        <span>Red</span>
+                                    </label>
+                                </div>
+                                
+                                <h6 class="section-subtitle mb-3 mt-4">Layout Density</h6>
+                                
+                                <div class="density-options">
+                                    <label class="density-option">
+                                        <input type="radio" name="density" value="comfortable" checked>
+                                        <span class="density-preview comfortable"></span>
+                                        <span>Comfortable</span>
+                                    </label>
+                                    
+                                    <label class="density-option">
+                                        <input type="radio" name="density" value="compact">
+                                        <span class="density-preview compact"></span>
+                                        <span>Compact</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn-submit-futuristic">
+                                <i class="fas fa-save me-2"></i>Save Appearance
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup & Restore -->
+        <div id="backup" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-database me-3"></i>
+                        <h5 class="mb-0 text-white">Backup & Restore</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <div class="backup-info mb-4">
+                        <div class="backup-stats">
+                            <div class="backup-stat">
+                                <span class="stat-label">Last Backup</span>
+                                <span class="stat-value">{{ last_backup|default('Never') }}</span>
+                            </div>
+                            <div class="backup-stat">
+                                <span class="stat-label">Database Size</span>
+                                <span class="stat-value">{{ db_size|default('25.6 MB') }}</span>
+                            </div>
+                            <div class="backup-stat">
+                                <span class="stat-label">Total Backups</span>
+                                <span class="stat-value">{{ backup_count|default('12') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-actions">
+                        <button class="btn-backup primary" onclick="createBackup()">
+                            <i class="fas fa-database me-2"></i>Create Backup Now
+                        </button>
+                        <button class="btn-backup success" onclick="downloadBackup()">
+                            <i class="fas fa-download me-2"></i>Download Latest Backup
+                        </button>
+                        <button class="btn-backup warning" onclick="scheduleBackup()">
+                            <i class="fas fa-clock me-2"></i>Schedule Automated Backups
+                        </button>
+                        <button class="btn-backup danger" onclick="restoreBackup()">
+                            <i class="fas fa-undo-alt me-2"></i>Restore from Backup
+                        </button>
+                    </div>
+                    
+                    <div class="backup-history mt-4">
+                        <h6 class="section-subtitle mb-3">
+                            <i class="fas fa-history me-2"></i>Backup History
+                        </h6>
+                        
+                        <div class="backup-list">
+                            <div class="backup-item">
+                                <div class="backup-details">
+                                    <i class="fas fa-database text-primary"></i>
+                                    <div>
+                                        <strong>backup_20240315_1200.sql</strong>
+                                        <p class="text-muted">March 15, 2024 • 12:00 PM • 15.2 MB</p>
+                                    </div>
+                                </div>
+                                <div class="backup-item-actions">
+                                    <button class="btn-icon-sm" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Restore">
+                                        <i class="fas fa-undo-alt"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="backup-item">
+                                <div class="backup-details">
+                                    <i class="fas fa-database text-primary"></i>
+                                    <div>
+                                        <strong>backup_20240314_1200.sql</strong>
+                                        <p class="text-muted">March 14, 2024 • 12:00 PM • 14.8 MB</p>
+                                    </div>
+                                </div>
+                                <div class="backup-item-actions">
+                                    <button class="btn-icon-sm" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Restore">
+                                        <i class="fas fa-undo-alt"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="backup-item">
+                                <div class="backup-details">
+                                    <i class="fas fa-database text-primary"></i>
+                                    <div>
+                                        <strong>backup_20240313_1200.sql</strong>
+                                        <p class="text-muted">March 13, 2024 • 12:00 PM • 14.5 MB</p>
+                                    </div>
+                                </div>
+                                <div class="backup-item-actions">
+                                    <button class="btn-icon-sm" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Restore">
+                                        <i class="fas fa-undo-alt"></i>
+                                    </button>
+                                    <button class="btn-icon-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Access -->
+        <div id="api" class="settings-section">
+            <div class="glass-card futuristic-card" data-aos="fade-up" data-aos-delay="450">
+                <div class="card-header-gradient-secondary">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-code me-3"></i>
+                        <h5 class="mb-0 text-white">API Access</h5>
+                    </div>
+                </div>
+                
+                <div class="card-body-futuristic">
+                    <div class="api-key-section mb-4">
+                        <h6 class="section-subtitle mb-3">Your API Keys</h6>
+                        
+                        <div class="api-key-card">
+                            <div class="api-key-info">
+                                <div>
+                                    <strong>Production API Key</strong>
+                                    <p class="text-muted">Last used: 2 hours ago</p>
+                                </div>
+                                <code class="api-key">pk_live_••••••••••••••••••••••</code>
+                            </div>
+                            <div class="api-key-actions">
+                                <button class="btn-icon-sm" title="Copy">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="btn-icon-sm" title="Regenerate">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="btn-icon-sm" title="Revoke">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="api-key-card">
+                            <div class="api-key-info">
+                                <div>
+                                    <strong>Test API Key</strong>
+                                    <p class="text-muted">Last used: 1 day ago</p>
+                                </div>
+                                <code class="api-key">pk_test_••••••••••••••••••••••</code>
+                            </div>
+                            <div class="api-key-actions">
+                                <button class="btn-icon-sm" title="Copy">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="btn-icon-sm" title="Regenerate">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="btn-icon-sm" title="Revoke">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-generate-api mt-3">
+                            <i class="fas fa-plus-circle me-2"></i>Generate New API Key
+                        </button>
+                    </div>
+                    
+                    <div class="api-docs-section">
+                        <h6 class="section-subtitle mb-3">API Documentation</h6>
+                        
+                        <div class="api-endpoints">
+                            <div class="endpoint">
+                                <span class="endpoint-method get">GET</span>
+                                <code>/api/v1/drives</code>
+                                <span class="endpoint-desc">Get all placement drives</span>
+                            </div>
+                            <div class="endpoint">
+                                <span class="endpoint-method get">GET</span>
+                                <code>/api/v1/drives/{id}</code>
+                                <span class="endpoint-desc">Get drive details</span>
+                            </div>
+                            <div class="endpoint">
+                                <span class="endpoint-method post">POST</span>
+                                <code>/api/v1/drives</code>
+                                <span class="endpoint-desc">Create new drive</span>
+                            </div>
+                            <div class="endpoint">
+                                <span class="endpoint-method get">GET</span>
+                                <code>/api/v1/applications</code>
+                                <span class="endpoint-desc">Get applications</span>
+                            </div>
+                            <div class="endpoint">
+                                <span class="endpoint-method get">GET</span>
+                                <code>/api/v1/students</code>
+                                <span class="endpoint-desc">Get student list</span>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="btn-view-docs mt-3">
+                            <i class="fas fa-book me-2"></i>View Full Documentation
+                        </a>
+                    </div>
+                    
+                    <div class="api-usage mt-4">
+                        <h6 class="section-subtitle mb-3">API Usage</h6>
+                        
+                        <div class="usage-stats">
+                            <div class="usage-stat">
+                                <span class="stat-label">Today</span>
+                                <span class="stat-value">1,234</span>
+                            </div>
+                            <div class="usage-stat">
+                                <span class="stat-label">This Week</span>
+                                <span class="stat-value">8,567</span>
+                            </div>
+                            <div class="usage-stat">
+                                <span class="stat-label">This Month</span>
+                                <span class="stat-value">32,891</span>
+                            </div>
+                            <div class="usage-stat">
+                                <span class="stat-label">Rate Limit</span>
+                                <span class="stat-value">1000/hr</span>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-track mt-2">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="progress-text">65% of monthly quota used</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save All Button -->
+        <div class="text-center mt-4">
+            <button class="btn-save-all" onclick="saveAllSettings()">
+                <i class="fas fa-check-circle me-2"></i>Save All Settings
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating Shapes */
+.floating-shape {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    background: rgba(139, 92, 246, 0.2);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: rgba(236, 72, 153, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.futuristic-card {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.card-header-gradient-secondary {
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+    padding: 15px 25px;
+}
+
+.gradient-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.badge-futuristic {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card Body */
+.card-body-futuristic {
+    padding: 25px;
+}
+
+/* Settings Tabs */
+.settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 20px;
+}
+
+.settings-tab {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    background: transparent;
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.settings-tab:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.settings-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+/* Settings Sections */
+.settings-section {
+    display: none;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+/* Admin Avatar */
+.admin-avatar-large {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+.admin-avatar-large .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: white;
+}
+
+.rounded-20 {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-upload {
+    padding: 8px 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    color: var(--dark);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-upload:hover {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+/* Input Groups */
+.input-group-futuristic {
+    margin-bottom: 1rem;
+}
+
+.form-label-futuristic {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.7;
+    z-index: 1;
+    font-size: 1rem;
+}
+
+.form-control-futuristic {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-control-futuristic:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-control-futuristic:disabled,
+.form-control-futuristic[readonly] {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--glass-border);
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+.form-text-futuristic {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* Password Toggle */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: 5px;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* Password Strength */
+.password-strength {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    flex: 1;
+    background: var(--gray);
+    opacity: 0.3;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Password Requirements */
+.password-requirements {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.requirements-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.requirements-list li {
+    font-size: 0.8rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.requirements-list li i {
+    font-size: 0.5rem;
+    color: var(--gray);
+}
+
+.requirements-list li.valid {
+    color: #10b981;
+}
+
+.requirements-list li.valid i {
+    color: #10b981;
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+}
+
+/* Two Factor Section */
+.two-factor-section {
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.two-factor-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.badge-2fa {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-2fa.enabled {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid #10b98130;
+}
+
+.badge-2fa.disabled {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid #ef444430;
+}
+
+.btn-2fa {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-2fa:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-submit-futuristic {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-submit-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px #10b981;
+}
+
+.btn-cancel-futuristic {
+    padding: 12px 30px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--glass-bg);
+    color: var(--gray);
+}
+
+.btn-cancel-futuristic:hover {
+    background: var(--gray);
+    color: white;
+}
+
+/* Notifications List */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.notification-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.notification-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-info i {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    background: rgba(99, 102, 241, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.notification-info h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+    color: var(--dark);
+}
+
+.notification-info p {
+    font-size: 0.75rem;
+    margin: 0;
+    color: var(--gray);
+}
+
+/* Switch Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Notification Channels */
+.channel-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.channel-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.channel-option input[type="checkbox"] {
+    display: none;
+}
+
+.channel-custom {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 2px solid var(--gray);
+    position: relative;
+    transition: var(--transition);
+}
+
+.channel-option input[type="checkbox"]:checked + .channel-custom {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-color: transparent;
+}
+
+.channel-option input[type="checkbox"]:checked + .channel-custom::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: -1px;
+    left: 3px;
+    font-size: 10px;
+    color: white;
+}
+
+/* System Settings */
+.system-settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+}
+
+.setting-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-info span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.setting-info small {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+/* Theme Options */
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.theme-option {
+    cursor: pointer;
+}
+
+.theme-option input[type="radio"] {
+    display: none;
+}
+
+.theme-card {
+    display: block;
+    padding: 15px;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.theme-option input[type="radio"]:checked + .theme-card {
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px -5px var(--primary);
+}
+
+.theme-preview {
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.preview-header {
+    height: 20px;
+    background: var(--primary);
+}
+
+.preview-header.light { background: #f8fafc; }
+.preview-header.dark { background: #0f172a; }
+.preview-header.auto { background: linear-gradient(90deg, #f8fafc 50%, #0f172a 50%); }
+
+.preview-body {
+    height: 60px;
+    background: var(--light);
+}
+
+.preview-body.dark {
+    background: var(--dark);
+}
+
+.theme-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--dark);
+    text-align: center;
+    display: block;
+}
+
+/* Color Schemes */
+.color-schemes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.color-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.color-option input[type="radio"] {
+    display: none;
+}
+
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.color-option input[type="radio"]:checked + .color-preview {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.color-preview.default { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.color-preview.purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.color-preview.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.color-preview.green { background: linear-gradient(135deg, #10b981, #059669); }
+.color-preview.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.color-preview.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+.color-option span:last-child {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+/* Density Options */
+.density-options {
+    display: flex;
+    gap: 20px;
+}
+
+.density-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.density-option input[type="radio"] {
+    display: none;
+}
+
+.density-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.density-preview.comfortable {
+    background: repeating-linear-gradient(45deg, var(--primary) 0px, var(--primary) 5px, transparent 5px, transparent 15px);
+}
+
+.density-preview.compact {
+    background: repeating-linear-gradient(45deg, var(--primary) 0px, var(--primary) 3px, transparent 3px, transparent 8px);
+}
+
+.density-option input[type="radio"]:checked + .density-preview {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.density-option span {
+    font-size: 0.7rem;
+    color: var(--gray);
+}
+
+/* Backup Actions */
+.backup-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+}
+
+.backup-stat {
+    text-align: center;
+}
+
+.backup-stat .stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.backup-stat .stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.backup-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.btn-backup {
+    padding: 12px;
+    border: none;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-backup.primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.btn-backup.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-backup.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.btn-backup.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-backup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px currentColor;
+}
+
+/* Backup List */
+.backup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.backup-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.backup-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.backup-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.backup-details i {
+    font-size: 1.2rem;
+}
+
+.backup-details strong {
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.backup-details p {
+    font-size: 0.7rem;
+    margin: 2px 0 0;
+    color: var(--gray);
+}
+
+.backup-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-icon-sm {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-icon-sm:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* API Section */
+.api-key-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.api-key-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.api-key-info code {
+    padding: 8px 12px;
+    background: var(--dark);
+    color: var(--light);
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.btn-generate-api {
+    padding: 10px 20px;
+    border: 1px dashed var(--primary);
+    border-radius: 15px;
+    background: transparent;
+    color: var(--primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.btn-generate-api:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* API Endpoints */
+.api-endpoints {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.endpoint {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.endpoint-method {
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.endpoint-method.get {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.endpoint-method.post {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.endpoint code {
+    color: var(--primary);
+}
+
+.endpoint-desc {
+    color: var(--gray);
+    margin-left: auto;
+    font-size: 0.75rem;
+}
+
+.btn-view-docs {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 30px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.btn-view-docs:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* API Usage */
+.usage-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.usage-stat {
+    text-align: center;
+}
+
+.usage-stat .stat-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-transform: uppercase;
+}
+
+.usage-stat .stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Progress Track */
+.progress-track {
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+}
+
+.progress-text {
+    font-size: 0.65rem;
+    color: var(--gray);
+}
+
+/* Save All Button */
+.btn-save-all {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-save-all:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -10px var(--primary);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .stat-number,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .notification-info h6,
+[data-theme="dark"] .setting-info span,
+[data-theme="dark"] .theme-name,
+[data-theme="dark"] .api-key-info strong,
+[data-theme="dark"] .usage-stat .stat-value {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic {
+    color: var(--light);
+}
+
+[data-theme="dark"] .form-control-futuristic::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gradient-title {
+        font-size: 1.8rem;
+    }
+    
+    .settings-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    
+    .settings-tab {
+        white-space: nowrap;
+    }
+    
+    .theme-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .backup-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .usage-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .gradient-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .api-key-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .endpoint {
+        flex-wrap: wrap;
+    }
+    
+    .endpoint-desc {
+        margin-left: 0;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Settings tab switching
+    const tabs = document.querySelectorAll('.settings-tab');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const target = this.dataset.target;
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show target section
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === target) {
+                    section.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // Password strength checker
+    const password = document.getElementById('new_password');
+    const strengthBars = document.querySelectorAll('.strength-bar');
+    const reqLength = document.getElementById('req-length');
+    const reqUppercase = document.getElementById('req-uppercase');
+    const reqLowercase = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+
+    if (password) {
+        password.addEventListener('input', function() {
+            const val = this.value;
+            let strength = 0;
+            
+            // Check requirements
+            const hasLength = val.length >= 8;
+            const hasUppercase = /[A-Z]/.test(val);
+            const hasLowercase = /[a-z]/.test(val);
+            const hasNumber = /[0-9]/.test(val);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+            
+            // Update requirement indicators
+            updateRequirement(reqLength, hasLength);
+            updateRequirement(reqUppercase, hasUppercase);
+            updateRequirement(reqLowercase, hasLowercase);
+            updateRequirement(reqNumber, hasNumber);
+            updateRequirement(reqSpecial, hasSpecial);
+            
+            // Calculate strength
+            if (hasLength) strength++;
+            if (hasUppercase) strength++;
+            if (hasLowercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+            
+            // Update strength bars
+            strengthBars.forEach((bar, index) => {
+                bar.classList.remove('active-weak', 'active-medium', 'active-strong', 'active-very-strong');
+                if (index < strength) {
+                    if (strength <= 2) bar.classList.add('active-weak');
+                    else if (strength <= 3) bar.classList.add('active-medium');
+                    else if (strength <= 4) bar.classList.add('active-strong');
+                    else bar.classList.add('active-very-strong');
+                }
+            });
+        });
+    }
+
+    function updateRequirement(element, isValid) {
+        if (isValid) {
+            element.classList.add('valid');
+            element.querySelector('i').className = 'fas fa-check-circle';
+        } else {
+            element.classList.remove('valid');
+            element.querySelector('i').className = 'fas fa-circle';
+        }
+    }
+
+    // Password match checker
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordMatch = document.getElementById('passwordMatch');
+
+    if (confirmPassword && password) {
+        confirmPassword.addEventListener('input', function() {
+            if (this.value) {
+                if (this.value === password.value) {
+                    this.classList.remove('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-check-circle me-1"></i>Passwords match';
+                    passwordMatch.className = 'password-match-indicator match';
+                } else {
+                    this.classList.add('is-invalid');
+                    passwordMatch.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Passwords do not match';
+                    passwordMatch.className = 'password-match-indicator no-match';
+                }
+            } else {
+                passwordMatch.innerHTML = '';
+            }
+        });
+    }
+
+    // AOS initialization
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+});
+
+// Password visibility toggle
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = event.currentTarget.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// 2FA toggle
+function toggle2FA() {
+    alert('Two-factor authentication setup will be implemented here');
+}
+
+// Backup functions
+function createBackup() {
+    alert('Creating backup... This may take a few moments.');
+}
+
+function downloadBackup() {
+    alert('Downloading latest backup...');
+}
+
+function scheduleBackup() {
+    alert('Backup scheduling options will be shown here');
+}
+
+function restoreBackup() {
+    alert('Restore from backup functionality will be implemented here');
+}
+
+// Save all settings
+function saveAllSettings() {
+    alert('All settings saved successfully!');
+}
+</script>
+
+<!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{% endblock %}
